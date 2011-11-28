@@ -49,7 +49,7 @@ namespace ForRest.Provider
                         Type[] interfaces = type.GetInterfaces();
                         if(((IList)interfaces).Contains(typeof(T)))
                         {
-                            object obj = (T)Activator.CreateInstance(type);
+                            object obj = (T)Activator.CreateInstance(type.MakeGenericType(typeof(string)));
                             T t = (T) obj;
                             genericList.Add(t);
                         }
@@ -63,35 +63,30 @@ namespace ForRest.Provider
             return genericList;
         }
         
-        public List<string> CreateItemsList(string applicationPatch)
+        public List<string> CreateItemsList<T>(string applicationPatch)
         {
             string folder = Path.Combine(Path.GetDirectoryName(applicationPatch), "Plugins");
+            //string[] item = new string[] {};
             List<ITree> pluginList = GetPlugins<ITree>(folder);
             List<string> itemsList = new List<string>();
             foreach (ITree tree in pluginList)
             {
                 string name = tree.GetPluginName();
                 string description = tree.GetPluginDescription();
+                //item[0] = string.Format("{0}", name);
+                //item[1] = string.Format("{0}", description);
+                //item[2] = string.Format("{0}", tree.GetType().FullName);
                 string item = string.Format("{0}, {1}, {2}", tree.GetType().FullName, name, description);
                 itemsList.Add(item);
             }
             return itemsList;
         }
 
-        public string test()
+        public object CreateInstance(Type openGeneric, params Type[] types)
         {
             Assembly ass = Assembly.LoadFile(@"c:\ForRest.BST.dll");
-            Type[] testtype = ass.GetTypes();
-           // object bstIns = Activator.CreateInstance(testtype);
-            //PropertyInfo prp = testtype.GetProperty("Add");
-            //return prp.ToString();
-            string types = null;
-            foreach(Type t in testtype)
-            {
-                if (t.FullName != null) types = t.FullName + '\n';
-            }
-            //object obj = Activator.CreateInstance(types);
-            return types;
+            object obj = Activator.CreateInstance(openGeneric.MakeGenericType(typeof (string)));
+            return obj;
         }
     }
 }

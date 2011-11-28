@@ -13,5 +13,9 @@ namespace ForRest.Provider.BLL
     {
         string GetPluginName();
         string GetPluginDescription();
+        void Clear();
+        //bool Contains(T data);
+        //void Add(T data);
+        //bool Remove(T data);
     }
 }

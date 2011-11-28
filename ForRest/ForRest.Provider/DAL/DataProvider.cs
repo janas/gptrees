@@ -37,7 +37,6 @@ namespace ForRest.Provider.DAL
                         readedText.Add(cellBuilder.ToString());
                         cellBuilder = new StringBuilder();
                         specialCharacters = false;
-                        //rowCellCount[row] = cellCount;
                         cellCount++;
                         row++;
                         i++;
