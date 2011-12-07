@@ -6,16 +6,20 @@
 
 namespace ForRest.Provider.BLL
 {
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    public interface ITree<T>
+    {
+        void Clear();
+        bool Contains(T data);
+        void Add(T data);
+        bool Remove(T data);
+    }
+
     public interface ITree
     {
-        string GetPluginName();
-        string GetPluginDescription();
-        void Clear();
-        //bool Contains(T data);
-        //void Add(T data);
-        //bool Remove(T data);
+        
     }
 }
