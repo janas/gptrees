@@ -3,11 +3,11 @@ using ForRest.Provider.BLL;
 
 namespace ForRest.BST
 {
-    public class BinarySearchTree<T> : Tree<T>
+    public class BinarySearchTree<T> : Tree<T>, ITree
     {
         private BinarySearchTreeNode<T> _root;
-        private int _count = 0;
-        private IComparer<T> comparer = Comparer<T>.Default; 
+        private int _count;
+        private IComparer<T> _comparer = Comparer<T>.Default; 
 
         public BinarySearchTree()
         {
@@ -18,16 +18,6 @@ namespace ForRest.BST
         public int Count
         {
             get { return _count; }
-        }
-
-        public override string GetPluginName()
-        {
-            return "Binary Search Tree Plugin";
-        }
-
-        public override string GetPluginDescription()
-        {
-            return "Plugin that implements Binary Search Tree Algorithms";
         }
 
         public override void Clear()
@@ -41,7 +31,7 @@ namespace ForRest.BST
             BinarySearchTreeNode<T> current = _root;
             while (current != null)
             {
-                int result = comparer.Compare(current.Value, data);
+                int result = _comparer.Compare(current.Value, data);
                 if (result == 0)
                     return true;
                 if (result > 0)
@@ -59,7 +49,7 @@ namespace ForRest.BST
             int result;
             while (current != null)
             {
-                result = comparer.Compare(current.Value, data);
+                result = _comparer.Compare(current.Value, data);
                 if (result == 0)
                     return;
                 else if (result > 0)
@@ -78,7 +68,7 @@ namespace ForRest.BST
                 _root = node;
             else
             {
-                result = comparer.Compare(parent.Value, data);
+                result = _comparer.Compare(parent.Value, data);
                 if (result > 0)
                     parent.Left = node;
                 else
@@ -91,7 +81,7 @@ namespace ForRest.BST
             if (_root == null)
                 return false;
             BinarySearchTreeNode<T> current = _root, parent = null;
-            int result = comparer.Compare(current.Value, data);
+            int result = _comparer.Compare(current.Value, data);
             while (result !=0 )
             {
                 if (result > 0)
@@ -106,7 +96,7 @@ namespace ForRest.BST
                 }
                 if (current == null)
                     return false;
-                result = comparer.Compare(current.Value, data);
+                result = _comparer.Compare(current.Value, data);
             }
             _count--;
 
@@ -116,7 +106,7 @@ namespace ForRest.BST
                     _root = parent.Left;
                 else
                 {
-                    result = comparer.Compare(parent.Value, current.Value);
+                    result = _comparer.Compare(parent.Value, current.Value);
                     if (result > 0)
                         parent.Left = current.Left;
                     else if (result < 0)
@@ -130,7 +120,7 @@ namespace ForRest.BST
                     _root = current.Right;
                 else
                 {
-                    result = comparer.Compare(parent.Value, current.Value);
+                    result = _comparer.Compare(parent.Value, current.Value);
                     if (result > 0)
                         parent.Left = current.Right;
                     else if (result < 0)
@@ -152,7 +142,7 @@ namespace ForRest.BST
                     _root = leftmost;
                 else
                 {
-                    result = comparer.Compare(parent.Value, current.Value);
+                    result = _comparer.Compare(parent.Value, current.Value);
                     if (result > 0)
                         parent.Left = leftmost;
                     else if(result < 0)
