@@ -34,9 +34,9 @@
             this.btnRemoveNode = new System.Windows.Forms.Button();
             this.groupBoxSelectTree = new System.Windows.Forms.GroupBox();
             this.comboBoxSelectTree = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxControlsCreate = new System.Windows.Forms.GroupBox();
             this.groupBoxSelectTree.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxControlsCreate.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnAddTree
@@ -81,37 +81,40 @@
             // 
             // comboBoxSelectTree
             // 
+            this.comboBoxSelectTree.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSelectTree.FormattingEnabled = true;
             this.comboBoxSelectTree.Location = new System.Drawing.Point(6, 19);
             this.comboBoxSelectTree.Name = "comboBoxSelectTree";
             this.comboBoxSelectTree.Size = new System.Drawing.Size(126, 21);
             this.comboBoxSelectTree.TabIndex = 0;
             // 
-            // groupBox1
+            // groupBoxControlsCreate
             // 
-            this.groupBox1.Controls.Add(this.groupBoxSelectTree);
-            this.groupBox1.Controls.Add(this.btnRemoveNode);
-            this.groupBox1.Controls.Add(this.btnAddTree);
-            this.groupBox1.Controls.Add(this.btnAddNode);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(155, 230);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
+            this.groupBoxControlsCreate.Controls.Add(this.groupBoxSelectTree);
+            this.groupBoxControlsCreate.Controls.Add(this.btnRemoveNode);
+            this.groupBoxControlsCreate.Controls.Add(this.btnAddTree);
+            this.groupBoxControlsCreate.Controls.Add(this.btnAddNode);
+            this.groupBoxControlsCreate.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxControlsCreate.Name = "groupBoxControlsCreate";
+            this.groupBoxControlsCreate.Size = new System.Drawing.Size(155, 230);
+            this.groupBoxControlsCreate.TabIndex = 4;
+            this.groupBoxControlsCreate.TabStop = false;
+            this.groupBoxControlsCreate.Text = "Controls";
             // 
             // Create
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 362);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBoxControlsCreate);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Create";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Create";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateFormClosing);
             this.groupBoxSelectTree.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
+            this.groupBoxControlsCreate.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -123,6 +126,6 @@
         private System.Windows.Forms.Button btnRemoveNode;
         private System.Windows.Forms.GroupBox groupBoxSelectTree;
         private System.Windows.Forms.ComboBox comboBoxSelectTree;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxControlsCreate;
     }
 }

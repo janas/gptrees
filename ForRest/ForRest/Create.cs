@@ -14,6 +14,12 @@ namespace ForRest
         public Create()
         {
             InitializeComponent();
+            FillTrees();
+        }
+
+        private void FillTrees()
+        {
+            comboBoxSelectTree.Items.Add("asdasd");
         }
 
         private void BtnAddTreeClick(object sender, EventArgs e)
@@ -29,6 +35,12 @@ namespace ForRest
         private void BtnRemoveNodeClick(object sender, EventArgs e)
         {
 
+        }
+
+        private void CreateFormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
         }
     }
 }
