@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\ITree.cs" />
+    <Compile Include="BLL\ITreeFactory.cs" />
     <Compile Include="BLL\Node.cs" />
     <Compile Include="BLL\NodeList.cs" />
+    <Compile Include="BLL\PerformanceSet.cs" />
     <Compile Include="Provider.cs" />
     <Compile Include="BLL\Tree.cs" />
     <Compile Include="DAL\DataProvider.cs" />
