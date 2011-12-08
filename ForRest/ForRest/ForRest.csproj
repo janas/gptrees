@@ -52,6 +52,12 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BatchProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BatchProcess.Designer.cs">
+      <DependentUpon>BatchProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Create.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenDialog.Designer.cs">
+      <DependentUpon>OpenDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search.cs">
@@ -81,6 +93,9 @@
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="BatchProcess.resx">
+      <DependentUpon>BatchProcess.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Create.resx">
       <DependentUpon>Create.cs</DependentUpon>
     </EmbeddedResource>
@@ -89,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenDialog.resx">
+      <DependentUpon>OpenDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

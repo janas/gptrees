@@ -52,7 +52,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripBtnLoadedModules = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnAbout = new System.Windows.Forms.ToolStripButton();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -93,6 +93,7 @@
             this.exportToFileToolStripMenuItem.Name = "exportToFileToolStripMenuItem";
             this.exportToFileToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.exportToFileToolStripMenuItem.Text = "&Export to File";
+            this.exportToFileToolStripMenuItem.Click += new System.EventHandler(this.BtnExportClick);
             // 
             // toolStripSeparator1
             // 
@@ -119,23 +120,27 @@
             // 
             // createToolStripMenuItem
             // 
+            this.createToolStripMenuItem.CheckOnClick = true;
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.createToolStripMenuItem.Text = "&Create";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.BtnCreateClick);
             // 
             // searchToolStripMenuItem
             // 
+            this.searchToolStripMenuItem.CheckOnClick = true;
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.searchToolStripMenuItem.Text = "&Search";
             this.searchToolStripMenuItem.Click += new System.EventHandler(this.BtnSearchClick);
             // 
             // batchProcessToolStripMenuItem
             // 
+            this.batchProcessToolStripMenuItem.CheckOnClick = true;
             this.batchProcessToolStripMenuItem.Name = "batchProcessToolStripMenuItem";
-            this.batchProcessToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.batchProcessToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.batchProcessToolStripMenuItem.Text = "&Batch Process";
+            this.batchProcessToolStripMenuItem.Click += new System.EventHandler(this.BtnBatchProcessClick);
             // 
             // helpToolStripMenuItem
             // 
@@ -204,6 +209,7 @@
             this.toolStripBtnExport.Size = new System.Drawing.Size(51, 51);
             this.toolStripBtnExport.Text = "Export to File";
             this.toolStripBtnExport.ToolTipText = "Export to File";
+            this.toolStripBtnExport.Click += new System.EventHandler(this.BtnExportClick);
             // 
             // toolStripSeparator2
             // 
@@ -244,6 +250,7 @@
             this.toolStripBtnBatchProcess.Name = "toolStripBtnBatchProcess";
             this.toolStripBtnBatchProcess.Size = new System.Drawing.Size(51, 51);
             this.toolStripBtnBatchProcess.Text = "Batch Process";
+            this.toolStripBtnBatchProcess.Click += new System.EventHandler(this.BtnBatchProcessClick);
             // 
             // toolStripSeparator3
             // 
@@ -274,10 +281,9 @@
             this.toolStripBtnAbout.Text = "About";
             this.toolStripBtnAbout.Click += new System.EventHandler(this.BtnAboutClick);
             // 
-            // openFileDialog
+            // saveFileDialog
             // 
-            this.openFileDialog.FileName = "openFileDialog";
-            this.openFileDialog.Title = "Open CSV File";
+            this.saveFileDialog.Title = "Export to CSV File";
             // 
             // MainForm
             // 
@@ -326,6 +332,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripBtnLoadedModules;
         private System.Windows.Forms.ToolStripButton toolStripBtnAbout;
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
