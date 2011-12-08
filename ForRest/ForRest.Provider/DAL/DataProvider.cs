@@ -4,9 +4,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using ForRest.Provider.BLL;
 
 namespace ForRest.Provider.DAL
 {
@@ -69,6 +72,34 @@ namespace ForRest.Provider.DAL
             }
             strReader.Close();
             return readedText;
+        }
+
+        public List<double> ParseNumericFile(string filePath, char separator)
+        {
+            var numericData = new List<double>();
+            List<string> rawData = ParseFile(filePath, separator);
+            foreach (var node in rawData)
+            {
+                numericData.Add(double.Parse(node, NumberStyles.Any, CultureInfo.InvariantCulture));
+            }
+            return numericData;
+        }
+
+        public void WriteResults(List<PerformanceSet> perfSet, string filePath)
+        {
+            List<string> resultsSet = PrepareResults(perfSet);
+            var fs = new FileStream(filePath, FileMode.Create);
+            var streamWriter = new StreamWriter(fs);
+            foreach (var result in resultsSet)
+            {
+                streamWriter.WriteLine(result);
+            }
+            streamWriter.Close();
+        }
+   
+        private List<string> PrepareResults(List<PerformanceSet> perfSet)
+        {
+            return perfSet.Select(performanceSet => performanceSet.TypeOfTree + "," + performanceSet.NoOfNodes + "," + performanceSet.TypeOfNodes + "," + performanceSet.SearchTime.ToString()).ToList();
         }
     }
 }
