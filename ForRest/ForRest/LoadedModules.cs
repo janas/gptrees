@@ -1,39 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ForRest
 {
     public partial class LoadedModules : Form
     {
-        private List<string> pluginsList;
+        private List<string[]> _pluginsList;
         public LoadedModules()
         {
             InitializeComponent();
         }
 
-        public void GetData(List<string> itemsList)
+        public void GetData(List<string[]> itemsList)
         {
-            pluginsList = itemsList;
+            _pluginsList = itemsList;
         }
 
         private void LoadPluginListBox()
         {
             listBoxPluginName.Items.Clear();
-            for (int i = 0; i < pluginsList.Count; i++)
+            for (int i = 0; i < _pluginsList.Count; i++)
             {
-                listBoxPluginName.Items.Add(pluginsList[i]);
+                listBoxPluginName.Items.Add(_pluginsList[i][0]);
             } 
         }
 
         private void LoadedModulesLoad(object sender, EventArgs e)
         {
-            LoadPluginListBox();
+                LoadPluginListBox();
+        }
+
+        private void ListBoxPluginNameSelectedIndexChanged(object sender, EventArgs e)
+        {
+                textBoxPluginDescription.Clear();
+                textBoxPluginDescription.AppendText(_pluginsList[listBoxPluginName.SelectedIndex][1]);
+                textBoxPluginDescription.AppendText("\r\n\r\nAdvanced Information\r\n");
+                textBoxPluginDescription.AppendText(_pluginsList[listBoxPluginName.SelectedIndex][2]);
         }
     }
 }
