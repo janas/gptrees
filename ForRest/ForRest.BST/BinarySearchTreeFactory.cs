@@ -25,10 +25,10 @@ namespace ForRest.BST
             return "Plugin that implements Binary Search Tree Algorithms";
         }
 
-        public ITree GetTree(Type type)
+        public ITree<T> GetTree<T>()
         {
-            object obj = (ITree)Activator.CreateInstance(typeof(BinarySearchTree<>).MakeGenericType(type));
-            var t = (ITree) obj;
+            object obj = Activator.CreateInstance(typeof(BinarySearchTree<>).MakeGenericType(typeof(T)));
+            var t = (ITree<T>) obj;
             return t;
         }
     }

@@ -7,9 +7,9 @@ namespace ForRest
     public partial class MainForm : Form
     {
         Provider.Provider provider = new Provider.Provider();
-        private int _createState = 0;
-        private int _searchState = 0;
-        private int _batchProcessState = 0;
+        private int _createState;
+        private int _searchState;
+        private int _batchProcessState;
         private Create create = new Create();
         private Search search = new Search();
         private BatchProcess batchProcess = new BatchProcess();
@@ -32,7 +32,9 @@ namespace ForRest
             if (_createState == 0)
             {
                 search.Hide();
+                _searchState = 0;
                 batchProcess.Hide();
+                _batchProcessState = 0;
                 searchToolStripMenuItem.Checked = false;
                 batchProcessToolStripMenuItem.Checked = false;
                 create.WindowState = FormWindowState.Maximized;
@@ -53,7 +55,9 @@ namespace ForRest
             if (_searchState == 0)
             {
                 create.Hide();
+                _createState = 0;
                 batchProcess.Hide();
+                _batchProcessState = 0;
                 createToolStripMenuItem.Checked = false;
                 batchProcessToolStripMenuItem.Checked = false;
                 search.WindowState = FormWindowState.Maximized;
@@ -74,7 +78,9 @@ namespace ForRest
             if (_batchProcessState == 0)
             {
                 search.Hide();
+                _searchState = 0;
                 create.Hide();
+                _createState = 0;
                 searchToolStripMenuItem.Checked = false;
                 createToolStripMenuItem.Checked = false;
                 batchProcess.WindowState = FormWindowState.Maximized;
@@ -109,8 +115,9 @@ namespace ForRest
 
         private void BtnLoadedModulesClick(object sender, EventArgs e)
         {
-            string applicationPatch = Application.ExecutablePath;
-            List<string[]> pluginList = provider.CreateItemsList<string>(applicationPatch);
+            string applicationPath = Application.ExecutablePath;
+            List<string[]> pluginList = provider.GetPluginDescription(applicationPath);
+            //List<string[]> pluginList = provider.GetPluginDescription(applicationPath);
             var loadedModules = new LoadedModules();
             loadedModules.GetData(pluginList);
             loadedModules.ShowDialog();

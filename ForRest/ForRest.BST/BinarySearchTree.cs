@@ -3,7 +3,7 @@ using ForRest.Provider.BLL;
 
 namespace ForRest.BST
 {
-    public class BinarySearchTree<T> : Tree<T>, ITree
+    public class BinarySearchTree<T> : Tree<T>
     {
         private BinarySearchTreeNode<T> _root;
         private int _count;

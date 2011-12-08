@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using ForRest.Provider.BLL;
 
 namespace ForRest
 {
     public partial class Create : Form
     {
+        private Provider.Provider _provider;
+
         public Create()
         {
             InitializeComponent();
@@ -19,12 +16,17 @@ namespace ForRest
 
         private void FillTrees()
         {
-            comboBoxSelectTree.Items.Add("asdasd");
+            _provider = new Provider.Provider();
+            string applicationPatch = Application.ExecutablePath;
+            _provider.CreatePluginList(applicationPatch);
+            comboBoxSelectTree.DataSource = _provider.PluginList;
+            comboBoxSelectTree.DisplayMember = "PluginName";
         }
 
         private void BtnAddTreeClick(object sender, EventArgs e)
         {
-
+            var f = (ITreeFactory)comboBoxSelectTree.SelectedItem;
+            ITree<double> tree = f.GetTree<double>();
         }
 
         private void BtnAddNodeClick(object sender, EventArgs e)
@@ -40,7 +42,7 @@ namespace ForRest
         private void CreateFormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            this.Hide();
+            Hide();
         }
     }
 }

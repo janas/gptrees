@@ -17,9 +17,4 @@ namespace ForRest.Provider.BLL
         void Add(T data);
         bool Remove(T data);
     }
-
-    public interface ITree
-    {
-        
-    }
 }

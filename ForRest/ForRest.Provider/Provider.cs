@@ -22,8 +22,7 @@ namespace ForRest.Provider
     public class Provider
     {
         public List<PerformanceSet> PerformanceSets = new List<PerformanceSet>();
-        public List<ITree> TextTrees = new List<ITree>();
-        public List<ITree> NumericTrees = new List<ITree>();
+        public List<ITreeFactory> PluginList { get; set; }
         public List<string> TextData = new List<string>();
         public List<double> NumericData = new List<double>(); 
 
@@ -76,52 +75,6 @@ namespace ForRest.Provider
             writeDataThread.Join();
         }
 
-        /*public List<ITree<TNode>> GetPlugins<TNode>(string pluginsFolder)
-        {
-            string[] files = Directory.GetFiles(pluginsFolder, "*.dll");
-            var genericList = new List<ITree<TNode>>();
-            Debug.Assert(typeof(ITree<TNode>).IsInterface);
-            foreach (string file in files)
-            {
-                try
-                {
-                    var assembly = Assembly.LoadFile(file);
-                    foreach (Type type in assembly.GetTypes())
-                    {
-                        if(!type.IsClass || type.IsNotPublic) continue;
-                        Type[] interfaces = type.GetInterfaces();
-                        var openGeneric = typeof(ITree<TNode>).GetGenericTypeDefinition();
-                        if (interfaces.Any(i => typeof(ITree<TNode>).GetGenericTypeDefinition().IsAssignableFrom(i.GetGenericTypeDefinition())))
-                        {
-                            object obj = (ITree<TNode>)Activator.CreateInstance(type.MakeGenericType(typeof(TNode)));
-                            var t = (ITree<TNode>) obj;
-                            genericList.Add(t);
-                        }
-                    }
-                }
-                catch(Exception e)
-                {
-                    e.ToString();
-                }
-            }
-            return genericList;
-        }
-        
-        public List<string> CreateItemsList<T>(string applicationPatch)
-        {
-            string folder = Path.Combine(Path.GetDirectoryName(applicationPatch), "Plugins");
-            List<ITree<T>> pluginList = GetPlugins<T>(folder);
-            List<string> itemsList = new List<string>();
-            foreach (ITree<T> tree in pluginList)
-            {
-                string name = tree.GetPluginName();
-                string description = tree.GetPluginDescription();
-                string item = string.Format("{0}, {1}, {2}", tree.GetType().FullName, name, description);
-                itemsList.Add(item);
-            }
-            return itemsList;
-        }*/
-
         public List<T> GetPlugins<T>(string pluginsFolder)
         {
             string[] files = Directory.GetFiles(pluginsFolder, "*.dll");
@@ -152,13 +105,14 @@ namespace ForRest.Provider
             return genericList;
         }
 
-        public List<string[]> CreateItemsList<T>(string applicationPatch)
+        public List<string[]> GetPluginDescription(string applicationPath)
         {
-            string folder = Path.Combine(Path.GetDirectoryName(applicationPatch), "Plugins");
-            var pluginList = GetPlugins<ITreeFactory>(folder);
+            //string folder = Path.Combine(Path.GetDirectoryName(applicationPath), "Plugins");
+            //List<ITreeFactory> pluginList = GetPlugins<ITreeFactory>(folder);
+            CreatePluginList(applicationPath);
             var itemsList = new List<string[]>();
             var entry = new string[3];
-            foreach (ITreeFactory tree in pluginList)
+            foreach (ITreeFactory tree in PluginList)
             {
                 string name = tree.GetPluginName();
                 string description = tree.GetPluginDescription();
@@ -170,5 +124,11 @@ namespace ForRest.Provider
             }
             return itemsList;
         }
-     }
+
+        public void CreatePluginList(string applicationPath)
+        {
+            string folder = Path.Combine(Path.GetDirectoryName(applicationPath), "Plugins");
+            PluginList = GetPlugins<ITreeFactory>(folder);
+        }
+    }
 }

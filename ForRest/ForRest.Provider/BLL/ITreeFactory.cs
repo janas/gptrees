@@ -14,10 +14,10 @@ namespace ForRest.Provider.BLL
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public interface ITreeFactory : ITree
+    public interface ITreeFactory
     {
         string GetPluginName();
         string GetPluginDescription();
-        ITree GetTree(Type type);
+        ITree<T> GetTree<T>();
     }
 }
