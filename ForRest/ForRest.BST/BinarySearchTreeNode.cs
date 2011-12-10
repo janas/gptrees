@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using ForRest.Provider.BLL;
+using System.Collections.Generic;
 
 namespace ForRest.BST
 {
@@ -17,13 +18,13 @@ namespace ForRest.BST
         {
         }
 
-        public BinarySearchTreeNode(T data) : base(data, null)
+        public BinarySearchTreeNode(List<T> data) : base(data, null)
         {
         }
 
-        public BinarySearchTreeNode(T data, BinarySearchTreeNode<T> left, BinarySearchTreeNode<T> right)
+        public BinarySearchTreeNode(List<T> data, BinarySearchTreeNode<T> left, BinarySearchTreeNode<T> right)
         {
-            Value = data;
+            Values = data;
             NodeList<T> children = new NodeList<T>(2);
             children[0] = left;
             children[1] = right;

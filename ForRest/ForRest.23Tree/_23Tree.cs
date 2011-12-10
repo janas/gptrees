@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using ForRest.Provider.BLL;
 
 namespace ForRest._23Tree
@@ -7,22 +7,22 @@ namespace ForRest._23Tree
     {
         public override void Clear()
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
-        public override bool Contains(T data)
+        public override List<int> Contains(T data)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
         public override void Add(T data)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
         public override bool Remove(T data)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
     }
 }

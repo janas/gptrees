@@ -3,6 +3,7 @@
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
+using System.Collections.Generic;
 
 namespace ForRest.Provider.BLL
 {
@@ -11,24 +12,37 @@ namespace ForRest.Provider.BLL
     /// </summary>
     public class Node<T>
     {
-        public T Value { get; set; }
+        public List<T> Values { get; set; }
         protected NodeList<T> Neighbors { get; set; }
         
         public Node()
         {
+            Values = null;
             Neighbors = null;
         }
 
-        public Node(T data)
+        public Node(List<T> data)
         {
-            Value = data;
+            Values = data;
             Neighbors = null;
         }
 
-        public Node(T data, NodeList<T> neighbors)
+        public Node(List<T> data, NodeList<T> neighbors)
         {
-            Value = data;
+            Values = data;
             Neighbors = neighbors;
+        }
+
+        public Node<T>[] GetNeighborsArray()
+        {
+            Node<T>[] result = new Node<T>[Neighbors.Count];
+            Neighbors.CopyTo(result, 0);
+            return result;
+        }
+
+        public NodeList<T> GetNeighborsList()
+        {
+            return Neighbors;
         }
     }
 }

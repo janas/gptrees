@@ -143,5 +143,10 @@ namespace ForRest
             }
         }
 
+        private void BtnTestTreeClick(object sender, EventArgs e)
+        {
+            Tester tester = new Tester();
+            tester.Show();
+        }
     }
 }

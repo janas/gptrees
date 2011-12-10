@@ -14,5 +14,6 @@ namespace ForRest.BTree
     /// </summary>
     public class BTreeNode<T> : Node<T>
     {
+
     }
 }

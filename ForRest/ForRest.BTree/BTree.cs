@@ -1,4 +1,5 @@
 ﻿using ForRest.Provider.BLL;
+using System.Collections.Generic;
 
 namespace ForRest.BTree
 {
@@ -9,7 +10,7 @@ namespace ForRest.BTree
             throw new System.NotImplementedException();
         }
 
-        public override bool Contains(T data)
+        public override List<int> Contains(T data)
         {
             throw new System.NotImplementedException();
         }

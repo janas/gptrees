@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ForRest.Provider.BLL;
+﻿using ForRest.Provider.BLL;
+using System.Collections.Generic;
 
 namespace ForRest.BST
 {
@@ -15,6 +15,11 @@ namespace ForRest.BST
             _count = 0;
         }
 
+        public BinarySearchTreeNode<T> Root
+        {
+            get { return _root; }
+        }
+
         public int Count
         {
             get { return _count; }
@@ -26,30 +31,39 @@ namespace ForRest.BST
             _count = 0;
         }
 
-        public override bool Contains(T data)
+        public override List<int> Contains(T data)
         {
+            List<int> path = new List<int>();
             BinarySearchTreeNode<T> current = _root;
             while (current != null)
             {
-                int result = _comparer.Compare(current.Value, data);
+                int result = _comparer.Compare(current.Values[0], data);
                 if (result == 0)
-                    return true;
-                if (result > 0)
+                    return path;
+                else if (result > 0)
+                {
                     current = current.Left;
-                else if (result < 0)
+                    path.Add(0);
+                }
+                else
+                {
                     current = current.Right;
+                    path.Add(1);
+                }
             }
-            return false;
+            return null;
         }
 
         public override void Add(T data)
         {
-            BinarySearchTreeNode<T> node = new BinarySearchTreeNode<T>(data);
+            List<T> dataList = new List<T>(1);
+            dataList.Add(data);
+            BinarySearchTreeNode<T> node = new BinarySearchTreeNode<T>(dataList);
             BinarySearchTreeNode<T> current = _root, parent = null;
             int result;
             while (current != null)
             {
-                result = _comparer.Compare(current.Value, data);
+                result = _comparer.Compare(current.Values[0], data);
                 if (result == 0)
                     return;
                 else if (result > 0)
@@ -68,7 +82,7 @@ namespace ForRest.BST
                 _root = node;
             else
             {
-                result = _comparer.Compare(parent.Value, data);
+                result = _comparer.Compare(parent.Values[0], data);
                 if (result > 0)
                     parent.Left = node;
                 else
@@ -81,7 +95,7 @@ namespace ForRest.BST
             if (_root == null)
                 return false;
             BinarySearchTreeNode<T> current = _root, parent = null;
-            int result = _comparer.Compare(current.Value, data);
+            int result = _comparer.Compare(current.Values[0], data);
             while (result !=0 )
             {
                 if (result > 0)
@@ -96,7 +110,7 @@ namespace ForRest.BST
                 }
                 if (current == null)
                     return false;
-                result = _comparer.Compare(current.Value, data);
+                result = _comparer.Compare(current.Values[0], data);
             }
             _count--;
 
@@ -106,7 +120,7 @@ namespace ForRest.BST
                     _root = parent.Left;
                 else
                 {
-                    result = _comparer.Compare(parent.Value, current.Value);
+                    result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
                         parent.Left = current.Left;
                     else if (result < 0)
@@ -120,7 +134,7 @@ namespace ForRest.BST
                     _root = current.Right;
                 else
                 {
-                    result = _comparer.Compare(parent.Value, current.Value);
+                    result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
                         parent.Left = current.Right;
                     else if (result < 0)
@@ -142,7 +156,7 @@ namespace ForRest.BST
                     _root = leftmost;
                 else
                 {
-                    result = _comparer.Compare(parent.Value, current.Value);
+                    result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
                         parent.Left = leftmost;
                     else if(result < 0)

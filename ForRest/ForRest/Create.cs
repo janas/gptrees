@@ -17,8 +17,8 @@ namespace ForRest
         private void FillTrees()
         {
             _provider = new Provider.Provider();
-            string applicationPatch = Application.ExecutablePath;
-            _provider.CreatePluginList(applicationPatch);
+            string applicationPath = Application.ExecutablePath;
+            _provider.CreatePluginList(applicationPath);
             comboBoxSelectTree.DataSource = _provider.PluginList;
             comboBoxSelectTree.DisplayMember = "PluginName";
         }
