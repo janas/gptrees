@@ -9,7 +9,7 @@ namespace ForRest._234Tree
             throw new System.NotImplementedException();
         }
 
-        public override bool Contains(T data)
+        public override System.Collections.Generic.List<int> Contains(T data)
         {
             throw new System.NotImplementedException();
         }

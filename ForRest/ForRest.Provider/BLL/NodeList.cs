@@ -25,7 +25,7 @@ namespace ForRest.Provider.BLL
         {
             foreach (Node<T> node in Items)
             {
-                if (node.Value.Equals(value))
+                if (node.Values.Contains(value))
                     return node;
             }
             return null;

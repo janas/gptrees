@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace ForRest.Provider.BLL
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace ForRest.Provider.BLL
     public abstract class Tree<T> : ITree<T>
     {
         public abstract void Clear();
-        public abstract bool Contains(T data);
+        public abstract List<int> Contains(T data);
         public abstract void Add(T data);
         public abstract bool Remove(T data);
     }
