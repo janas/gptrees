@@ -42,6 +42,8 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadedModulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.treeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripBtnOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnExport = new System.Windows.Forms.ToolStripButton();
@@ -53,8 +55,6 @@
             this.toolStripBtnLoadedModules = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnAbout = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -87,26 +87,26 @@
             // openFileToolStripMenuItem
             // 
             this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
-            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.openFileToolStripMenuItem.Text = "&Open File";
             this.openFileToolStripMenuItem.Click += new System.EventHandler(this.BtnOpenClick);
             // 
             // exportToFileToolStripMenuItem
             // 
             this.exportToFileToolStripMenuItem.Name = "exportToFileToolStripMenuItem";
-            this.exportToFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportToFileToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.exportToFileToolStripMenuItem.Text = "&Export to File";
             this.exportToFileToolStripMenuItem.Click += new System.EventHandler(this.BtnExportClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(139, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
@@ -125,7 +125,7 @@
             // 
             this.createToolStripMenuItem.CheckOnClick = true;
             this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.createToolStripMenuItem.Text = "&Create";
             this.createToolStripMenuItem.Click += new System.EventHandler(this.BtnCreateClick);
             // 
@@ -133,7 +133,7 @@
             // 
             this.searchToolStripMenuItem.CheckOnClick = true;
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.searchToolStripMenuItem.Text = "&Search";
             this.searchToolStripMenuItem.Click += new System.EventHandler(this.BtnSearchClick);
             // 
@@ -141,7 +141,7 @@
             // 
             this.batchProcessToolStripMenuItem.CheckOnClick = true;
             this.batchProcessToolStripMenuItem.Name = "batchProcessToolStripMenuItem";
-            this.batchProcessToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.batchProcessToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.batchProcessToolStripMenuItem.Text = "&Batch Process";
             this.batchProcessToolStripMenuItem.Click += new System.EventHandler(this.BtnBatchProcessClick);
             // 
@@ -168,6 +168,21 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.BtnAboutClick);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.treeToolStripMenuItem});
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.testToolStripMenuItem.Text = "&Test";
+            // 
+            // treeToolStripMenuItem
+            // 
+            this.treeToolStripMenuItem.Name = "treeToolStripMenuItem";
+            this.treeToolStripMenuItem.Size = new System.Drawing.Size(97, 22);
+            this.treeToolStripMenuItem.Text = "&Tree";
+            this.treeToolStripMenuItem.Click += new System.EventHandler(this.BtnTestTreeClick);
             // 
             // toolStrip
             // 
@@ -287,21 +302,6 @@
             // saveFileDialog
             // 
             this.saveFileDialog.Title = "Export to CSV File";
-            // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.treeToolStripMenuItem});
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
-            this.testToolStripMenuItem.Text = "&Test";
-            // 
-            // treeToolStripMenuItem
-            // 
-            this.treeToolStripMenuItem.Name = "treeToolStripMenuItem";
-            this.treeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.treeToolStripMenuItem.Text = "&Tree";
-            this.treeToolStripMenuItem.Click += new System.EventHandler(this.BtnTestTreeClick);
             // 
             // MainForm
             // 

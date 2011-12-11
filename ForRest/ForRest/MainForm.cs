@@ -6,70 +6,74 @@ namespace ForRest
 {
     public partial class MainForm : Form
     {
-        Provider.Provider provider = new Provider.Provider();
+        readonly Provider.Provider _provider = new Provider.Provider();
         private int _createState;
         private int _searchState;
         private int _batchProcessState;
-        private Create create = new Create();
-        private Search search = new Search();
-        private BatchProcess batchProcess = new BatchProcess();
+        private Create _create;
+        private Search _search;
+        private BatchProcess _batchProcess;
+
+        public int Mode;
 
         public MainForm()
         {
             InitializeComponent();
-            PrepareDialogs();
-        }
-
-        private void PrepareDialogs()
-        {
-            create.MdiParent = this;
-            search.MdiParent = this;
-            batchProcess.MdiParent = this;
+            _provider.CheckDirectoryExists(Application.ExecutablePath);
         }
 
         private void BtnCreateClick(object sender, EventArgs e)
         {
             if (_createState == 0)
             {
-                search.Hide();
-                _searchState = 0;
-                batchProcess.Hide();
-                _batchProcessState = 0;
-                searchToolStripMenuItem.Checked = false;
-                batchProcessToolStripMenuItem.Checked = false;
-                create.WindowState = FormWindowState.Maximized;
-                createToolStripMenuItem.Checked = true;
-                create.Show();
+                if (_create != null && !_create.IsDisposed) return;
+                _create = new Create(_provider, Mode) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _create.Show();
+                _create.BringToFront();
                 _createState = 1;
+                createToolStripMenuItem.Checked = true;
+                if (_search != null && (_search != null || !_search.IsDisposed))
+                { _search.Close(); }
+                _searchState = 0;
+                searchToolStripMenuItem.Checked = false;
+                if (_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
+                { _batchProcess.Close(); }
+                _batchProcessState = 0;
+                batchProcessToolStripMenuItem.Checked = false;
             }
             else
             {
-                create.Hide();
-                createToolStripMenuItem.Checked = false;
+                _create.Close();
                 _createState = 0;
+                createToolStripMenuItem.Checked = false;
             }
+            
         }
 
         private void BtnSearchClick(object sender, EventArgs e)
         {
             if (_searchState == 0)
             {
-                create.Hide();
-                _createState = 0;
-                batchProcess.Hide();
-                _batchProcessState = 0;
-                createToolStripMenuItem.Checked = false;
-                batchProcessToolStripMenuItem.Checked = false;
-                search.WindowState = FormWindowState.Maximized;
-                searchToolStripMenuItem.Checked = true;
-                search.Show();
+                if (_search != null && !_search.IsDisposed) return;
+                _search = new Search(_provider) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _search.Show();
+                _search.BringToFront();
                 _searchState = 1;
+                searchToolStripMenuItem.Checked = true;
+                if(_create != null && (_create != null || !_create.IsDisposed))
+                { _create.Close(); }
+                _createState = 0;
+                createToolStripMenuItem.Checked = false;
+                if(_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
+                { _batchProcess.Close(); }
+                _batchProcessState = 0;
+                batchProcessToolStripMenuItem.Checked = false;
             }
             else
             {
-                search.Hide();
-                searchToolStripMenuItem.Checked = false;
+                _search.Close();
                 _searchState = 0;
+                searchToolStripMenuItem.Checked = false;
             }
         }
 
@@ -77,22 +81,26 @@ namespace ForRest
         {
             if (_batchProcessState == 0)
             {
-                search.Hide();
-                _searchState = 0;
-                create.Hide();
-                _createState = 0;
-                searchToolStripMenuItem.Checked = false;
-                createToolStripMenuItem.Checked = false;
-                batchProcess.WindowState = FormWindowState.Maximized;
-                batchProcessToolStripMenuItem.Checked = true;
-                batchProcess.Show();
+                if (_batchProcess != null && !_batchProcess.IsDisposed) return;
+                _batchProcess = new BatchProcess { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _batchProcess.Show();
+                _batchProcess.BringToFront();
                 _batchProcessState = 1;
+                batchProcessToolStripMenuItem.Checked = true;
+                if (_create != null && (_create != null || !_create.IsDisposed))
+                { _create.Close(); }
+                _createState = 0;
+                createToolStripMenuItem.Checked = false;
+                if (_search != null && (_search != null || !_search.IsDisposed))
+                { _search.Close(); }
+                _searchState = 0;
+                searchToolStripMenuItem.Checked = false;
             }
             else
             {
-                batchProcess.Hide();
-                batchProcessToolStripMenuItem.Checked = false;
+                _batchProcess.Close();
                 _batchProcessState = 0;
+                batchProcessToolStripMenuItem.Checked = false;
             }
         }
         
@@ -104,7 +112,7 @@ namespace ForRest
 
         private void BtnOpenClick(object sender, EventArgs e)
         {
-            var openDialog = new OpenDialog(provider);
+            var openDialog = new OpenDialog(_provider) {Owner = this};
             openDialog.ShowDialog();
         }
 
@@ -116,8 +124,7 @@ namespace ForRest
         private void BtnLoadedModulesClick(object sender, EventArgs e)
         {
             string applicationPath = Application.ExecutablePath;
-            List<string[]> pluginList = provider.GetPluginDescription(applicationPath);
-            //List<string[]> pluginList = provider.GetPluginDescription(applicationPath);
+            List<string[]> pluginList = _provider.GetPluginDescription(applicationPath);
             var loadedModules = new LoadedModules();
             loadedModules.GetData(pluginList);
             loadedModules.ShowDialog();
@@ -125,7 +132,7 @@ namespace ForRest
 
         private void BtnExportClick(object sender, EventArgs e)
         {
-            if (provider.PerformanceSets.Count > 0)
+            if (_provider.PerformanceSets.Count > 0)
             {
                 saveFileDialog.Filter = "CSV Files (*.csv)|*.csv";
                 saveFileDialog.FilterIndex = 1;
@@ -134,7 +141,7 @@ namespace ForRest
                 DialogResult result = saveFileDialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    provider.WriteResults(provider.PerformanceSets, saveFileDialog.FileName);
+                    _provider.WriteResults(_provider.PerformanceSets, saveFileDialog.FileName);
                 }
             }
             else
@@ -145,7 +152,7 @@ namespace ForRest
 
         private void BtnTestTreeClick(object sender, EventArgs e)
         {
-            Tester tester = new Tester();
+            var tester = new Tester();
             tester.Show();
         }
     }
