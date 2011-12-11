@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Tree.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +54,12 @@
     </Compile>
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddTree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTree.Designer.cs">
+      <DependentUpon>AddTree.cs</DependentUpon>
     </Compile>
     <Compile Include="BatchProcess.cs">
       <SubType>Form</SubType>
@@ -98,6 +107,9 @@
     </Compile>
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddTree.resx">
+      <DependentUpon>AddTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BatchProcess.resx">
       <DependentUpon>BatchProcess.cs</DependentUpon>
@@ -167,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icons\Actions-info-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tree.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
