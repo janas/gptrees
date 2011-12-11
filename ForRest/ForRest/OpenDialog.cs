@@ -74,10 +74,14 @@ namespace ForRest
             {
                 if (_dtType.Equals("Text"))
                 {
+                    var owner = (MainForm) Owner;
+                    owner.Mode = 0;
                     _provider.TextData = _provider.LoadTextData(_filePath, _sep);
                 }
                 else if (_dtType.Equals("Numeric"))
                 {
+                    var owner = (MainForm) Owner;
+                    owner.Mode = 1;
                     _provider.NumericData = _provider.LoadNumericData(_filePath, _sep);
                 }
                 if (_provider.TextData.Count > 0 || _provider.NumericData.Count > 0)
@@ -86,7 +90,7 @@ namespace ForRest
                     labelError.ResetText();
                     labelError.Text = "File processed successfully!";
                     Application.DoEvents();
-                    Thread.Sleep(1500);
+                    Thread.Sleep(1000);
                     Close();
                 }
             }
