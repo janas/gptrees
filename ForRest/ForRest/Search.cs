@@ -4,20 +4,36 @@ namespace ForRest
 {
     public partial class Search : Form
     {
-        public Search()
+        private readonly Provider.Provider _provider;
+        
+        public Search(Provider.Provider provider)
         {
             InitializeComponent();
+            _provider = provider;
+            FillSelectedTreeComboBox();
         }
 
-        private void SearchFormClosing(object sender, FormClosingEventArgs e)
+        public void FillSelectedTreeComboBox()
         {
-            e.Cancel = true;
-            Hide();
+            comboBoxSelectTree.Items.Clear();
+            foreach (var tree in _provider.TextTrees)
+            {
+                comboBoxSelectTree.Items.Add(tree);
+            }
+            foreach (var tree in _provider.NumericTrees)
+            {
+                comboBoxSelectTree.Items.Add(tree);
+            }
         }
 
         private void BtnSearchClick(object sender, System.EventArgs e)
         {
-            
+            if (comboBoxSelectTree.SelectedItem != null)
+            {
+                
+            }
+            else
+                MessageBox.Show("No tree is selected. Please select tree from list first.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
