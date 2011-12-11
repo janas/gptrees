@@ -8,11 +8,5 @@ namespace ForRest
         {
             InitializeComponent();
         }
-
-        private void BatchProcessFormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            Hide();
-        }
     }
 }

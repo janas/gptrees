@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BatchProcess));
             this.groupBoxControlsBatchProcess = new System.Windows.Forms.GroupBox();
-            this.btnOpenFiles = new System.Windows.Forms.Button();
-            this.btnCreateTrees = new System.Windows.Forms.Button();
             this.btnBatchSearch = new System.Windows.Forms.Button();
+            this.btnCreateTrees = new System.Windows.Forms.Button();
+            this.btnOpenFiles = new System.Windows.Forms.Button();
             this.groupBoxControlsBatchProcess.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,14 +48,14 @@
             this.groupBoxControlsBatchProcess.TabStop = false;
             this.groupBoxControlsBatchProcess.Text = "Controls";
             // 
-            // btnOpenFiles
+            // btnBatchSearch
             // 
-            this.btnOpenFiles.Location = new System.Drawing.Point(23, 32);
-            this.btnOpenFiles.Name = "btnOpenFiles";
-            this.btnOpenFiles.Size = new System.Drawing.Size(138, 36);
-            this.btnOpenFiles.TabIndex = 0;
-            this.btnOpenFiles.Text = "Open CSV files";
-            this.btnOpenFiles.UseVisualStyleBackColor = true;
+            this.btnBatchSearch.Location = new System.Drawing.Point(186, 91);
+            this.btnBatchSearch.Name = "btnBatchSearch";
+            this.btnBatchSearch.Size = new System.Drawing.Size(138, 36);
+            this.btnBatchSearch.TabIndex = 2;
+            this.btnBatchSearch.Text = "Batch Search";
+            this.btnBatchSearch.UseVisualStyleBackColor = true;
             // 
             // btnCreateTrees
             // 
@@ -66,14 +66,14 @@
             this.btnCreateTrees.Text = "Create Trees";
             this.btnCreateTrees.UseVisualStyleBackColor = true;
             // 
-            // btnBatchSearch
+            // btnOpenFiles
             // 
-            this.btnBatchSearch.Location = new System.Drawing.Point(186, 91);
-            this.btnBatchSearch.Name = "btnBatchSearch";
-            this.btnBatchSearch.Size = new System.Drawing.Size(138, 36);
-            this.btnBatchSearch.TabIndex = 2;
-            this.btnBatchSearch.Text = "Batch Search";
-            this.btnBatchSearch.UseVisualStyleBackColor = true;
+            this.btnOpenFiles.Location = new System.Drawing.Point(23, 32);
+            this.btnOpenFiles.Name = "btnOpenFiles";
+            this.btnOpenFiles.Size = new System.Drawing.Size(138, 36);
+            this.btnOpenFiles.TabIndex = 0;
+            this.btnOpenFiles.Text = "Open CSV files";
+            this.btnOpenFiles.UseVisualStyleBackColor = true;
             // 
             // BatchProcess
             // 
@@ -86,7 +86,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Batch Process";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchProcessFormClosing);
             this.groupBoxControlsBatchProcess.ResumeLayout(false);
             this.ResumeLayout(false);
 
