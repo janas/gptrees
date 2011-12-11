@@ -21,11 +21,14 @@ namespace ForRest.Provider
     /// </summary>
     public class Provider
     {
-        public List<PerformanceSet> PerformanceSets = new List<PerformanceSet>();
         public List<ITreeFactory> PluginList { get; set; }
+        public List<ITree<string>> TextTrees = new List<ITree<string>>();
+        public List<ITree<double>> NumericTrees = new List<ITree<double>>();
+        public List<PerformanceSet> PerformanceSets = new List<PerformanceSet>();
+        
         public List<string> TextData = new List<string>();
-        public List<double> NumericData = new List<double>(); 
-
+        public List<double> NumericData = new List<double>();
+        
         /// <summary>
         /// Method for reading a CSV file containg text data. Returns list of strings.
         /// </summary>
@@ -74,7 +77,13 @@ namespace ForRest.Provider
             writeDataThread.Start();
             writeDataThread.Join();
         }
-
+        
+        /// <summary>
+        /// Method for getting generic puglins list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="pluginsFolder">Path to the folder containg libraries (*.dll).</param>
+        /// <returns>List of type T.</returns>
         public List<T> GetPlugins<T>(string pluginsFolder)
         {
             string[] files = Directory.GetFiles(pluginsFolder, "*.dll");
@@ -129,6 +138,14 @@ namespace ForRest.Provider
         {
             string folder = Path.Combine(Path.GetDirectoryName(applicationPath), "Plugins");
             PluginList = GetPlugins<ITreeFactory>(folder);
+        }
+
+        public void CheckDirectoryExists(string applicationPath)
+        {
+            if (!Directory.Exists(Path.Combine(Path.GetDirectoryName(applicationPath), "Plugins")))
+            {
+                Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(applicationPath), "Plugins"));
+            }
         }
     }
 }
