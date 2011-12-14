@@ -15,5 +15,6 @@ namespace ForRest.Provider.BLL
         string GetPluginName();
         string GetPluginDescription();
         ITree<T> GetTree<T>();
+        ITree<T> GetTree<T>(int degree);
     }
 }

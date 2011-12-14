@@ -32,7 +32,12 @@ namespace ForRest.BTree
 
         public ITree<T> GetTree<T>()
         {
-            object obj = Activator.CreateInstance(typeof(BTree<>).MakeGenericType(typeof(T)));
+            throw new NotImplementedException();
+        }
+
+        public ITree<T> GetTree<T>(int degree)
+        {
+            object obj = Activator.CreateInstance(typeof(BTree<>).MakeGenericType(typeof(T)), degree);
             var t = (ITree<T>)obj;
             return t;
         }

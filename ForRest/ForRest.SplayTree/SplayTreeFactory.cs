@@ -36,5 +36,10 @@ namespace ForRest.SplayTree
             var t = (ITree<T>)obj;
             return t;
         }
+
+        public ITree<T> GetTree<T>(int degree)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

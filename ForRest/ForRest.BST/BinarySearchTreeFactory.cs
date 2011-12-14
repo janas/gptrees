@@ -36,5 +36,10 @@ namespace ForRest.BST
             var t = (ITree<T>) obj;
             return t;
         }
+
+        public ITree<T> GetTree<T>(int degree)
+        {
+            return GetTree<T>();
+        }
     }
 }

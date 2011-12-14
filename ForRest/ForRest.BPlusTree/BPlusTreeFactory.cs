@@ -36,5 +36,12 @@ namespace ForRest.BPlusTree
             var t = (ITree<T>)obj;
             return t;
         }
+
+        public ITree<T> GetTree<T>(int degree)
+        {
+            object obj = Activator.CreateInstance(typeof(BPlusTree<>).MakeGenericType(typeof(T)), degree);
+            var t = (ITree<T>)obj;
+            return t;
+        }
     }
 }
