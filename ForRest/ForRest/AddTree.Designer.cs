@@ -34,6 +34,8 @@
             this.labelTreeType = new System.Windows.Forms.Label();
             this.comboBoxDataType = new System.Windows.Forms.ComboBox();
             this.labelDataType = new System.Windows.Forms.Label();
+            this.textBoxName = new System.Windows.Forms.TextBox();
+            this.labelName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBoxAvailableTrees
@@ -42,12 +44,13 @@
             this.comboBoxAvailableTrees.FormattingEnabled = true;
             this.comboBoxAvailableTrees.Location = new System.Drawing.Point(12, 36);
             this.comboBoxAvailableTrees.Name = "comboBoxAvailableTrees";
-            this.comboBoxAvailableTrees.Size = new System.Drawing.Size(140, 21);
+            this.comboBoxAvailableTrees.Size = new System.Drawing.Size(138, 21);
             this.comboBoxAvailableTrees.TabIndex = 0;
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(14, 73);
+            this.btnAdd.Enabled = false;
+            this.btnAdd.Location = new System.Drawing.Point(12, 124);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(138, 36);
             this.btnAdd.TabIndex = 1;
@@ -87,11 +90,30 @@
             this.labelDataType.Text = "Select data type:";
             this.labelDataType.Visible = false;
             // 
+            // textBoxName
+            // 
+            this.textBoxName.Location = new System.Drawing.Point(12, 89);
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(138, 20);
+            this.textBoxName.TabIndex = 7;
+            this.textBoxName.TextChanged += new System.EventHandler(this.TextBoxNameTextChanged);
+            // 
+            // labelName
+            // 
+            this.labelName.AutoSize = true;
+            this.labelName.Location = new System.Drawing.Point(43, 73);
+            this.labelName.Name = "labelName";
+            this.labelName.Size = new System.Drawing.Size(85, 13);
+            this.labelName.TabIndex = 8;
+            this.labelName.Text = "Enter tree name:";
+            // 
             // AddTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(165, 133);
+            this.ClientSize = new System.Drawing.Size(165, 178);
+            this.Controls.Add(this.labelName);
+            this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.labelDataType);
             this.Controls.Add(this.comboBoxDataType);
             this.Controls.Add(this.labelTreeType);
@@ -117,5 +139,7 @@
         private System.Windows.Forms.Label labelTreeType;
         private System.Windows.Forms.ComboBox comboBoxDataType;
         private System.Windows.Forms.Label labelDataType;
+        private System.Windows.Forms.TextBox textBoxName;
+        private System.Windows.Forms.Label labelName;
     }
 }
