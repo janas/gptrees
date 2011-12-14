@@ -17,5 +17,6 @@ namespace ForRest.Provider.BLL
         public abstract List<int> Contains(T data);
         public abstract void Add(T data);
         public abstract bool Remove(T data);
+        public abstract Node<T> Root { get; set; }
     }
 }
