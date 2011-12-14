@@ -6,16 +6,12 @@
 
 namespace ForRest.Provider.BLL
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public interface ITreeFactory
     {
+        string Name { get; }
         string GetPluginName();
         string GetPluginDescription();
         ITree<T> GetTree<T>();
