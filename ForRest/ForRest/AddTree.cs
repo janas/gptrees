@@ -190,7 +190,7 @@ namespace ForRest
         private void MaskedTextBoxDegreeMaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
             toolTipHelper.ToolTipTitle = "Invalid input";
-            toolTipHelper.Show("We're sorry, but only digits (0-9) are allowed.", maskedTextBoxDegree, maskedTextBoxDegree.Location, 3000);
+            toolTipHelper.Show("We're sorry, but only digits (0-9) are allowed.", maskedTextBoxDegree, 3000);
         }
     }
 }
