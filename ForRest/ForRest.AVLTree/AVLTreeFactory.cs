@@ -14,6 +14,11 @@ namespace ForRest.AVLTree
     /// </summary>
     public class AVLTreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "AVL Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "AVL Tree Plugin";

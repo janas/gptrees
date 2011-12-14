@@ -14,6 +14,11 @@ namespace ForRest._23Tree
     /// </summary>
     public class _23TreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "2-3 Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "2-3 Tree Plugin";

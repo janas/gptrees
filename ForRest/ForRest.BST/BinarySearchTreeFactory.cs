@@ -15,6 +15,11 @@ namespace ForRest.BST
     /// </summary>
     public class BinarySearchTreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "Binary Search Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "Binary Search Tree Plugin";

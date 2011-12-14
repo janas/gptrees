@@ -15,6 +15,11 @@ namespace ForRest.BPlusTree
     /// </summary>
     public class BPlusTreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "B+ Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "B+ Tree Plugin";

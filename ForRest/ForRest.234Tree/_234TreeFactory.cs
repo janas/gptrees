@@ -15,6 +15,11 @@ namespace ForRest._234Tree
     /// </summary>
     public class _234TreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "2-3-4 Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "2-3-4 Tree Plugin";

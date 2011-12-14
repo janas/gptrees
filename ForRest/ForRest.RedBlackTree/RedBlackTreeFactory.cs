@@ -14,6 +14,11 @@ namespace ForRest.RedBlackTree
     /// </summary>
     public class RedBlackTreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "Red-Black Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "Red-Black Tree Plugin";
