@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace ForRest
@@ -15,6 +16,7 @@ namespace ForRest
         private BatchProcess _batchProcess;
 
         public int Mode;
+        public int GraphMode { get; set; }
 
         public MainForm()
         {
@@ -22,13 +24,23 @@ namespace ForRest
             _provider.CheckDirectoryExists(Application.ExecutablePath);
         }
 
+        private void CheckProviderExists()
+        {
+            string dllPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ForRest.Provider.dll");
+            if (File.Exists(dllPath) != false) return;
+            MessageBox.Show("ForResr.Provider.dll not found! Application will exit now", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Application.Exit();
+        }
+
         private void BtnCreateClick(object sender, EventArgs e)
         {
             if (_createState == 0)
             {
                 if (_create != null && !_create.IsDisposed) return;
-                _create = new Create(_provider, Mode) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _create = new Create(_provider, Mode, GraphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
                 _create.Show();
+                ActivateMdiChild(null);
+                ActivateMdiChild(_create);
                 _create.BringToFront();
                 _createState = 1;
                 createToolStripMenuItem.Checked = true;
@@ -55,8 +67,10 @@ namespace ForRest
             if (_searchState == 0)
             {
                 if (_search != null && !_search.IsDisposed) return;
-                _search = new Search(_provider) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _search = new Search(_provider, GraphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
                 _search.Show();
+                ActivateMdiChild(null);
+                ActivateMdiChild(_search);
                 _search.BringToFront();
                 _searchState = 1;
                 searchToolStripMenuItem.Checked = true;
@@ -82,8 +96,10 @@ namespace ForRest
             if (_batchProcessState == 0)
             {
                 if (_batchProcess != null && !_batchProcess.IsDisposed) return;
-                _batchProcess = new BatchProcess { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _batchProcess = new BatchProcess(_provider) { MdiParent = this, WindowState = FormWindowState.Maximized };
                 _batchProcess.Show();
+                ActivateMdiChild(null);
+                ActivateMdiChild(_batchProcess);
                 _batchProcess.BringToFront();
                 _batchProcessState = 1;
                 batchProcessToolStripMenuItem.Checked = true;
@@ -114,6 +130,9 @@ namespace ForRest
         {
             var openDialog = new OpenDialog(_provider) {Owner = this};
             openDialog.ShowDialog();
+            if (ActiveMdiChild == null || ActiveMdiChild.IsDisposed || ActiveMdiChild.Name != "Create") return;
+            var create = (Create) ActiveMdiChild;
+            create.Mode = Mode;
         }
 
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
@@ -150,10 +169,34 @@ namespace ForRest
             }
         }
 
-        private void BtnTestTreeClick(object sender, EventArgs e)
+        private void TreeViewToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var tester = new Tester();
-            tester.Show();
+            if (treeViewToolStripMenuItem.Checked)
+            {
+                GraphMode = 0;
+                graphToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                treeViewToolStripMenuItem.Checked = true;
+                graphToolStripMenuItem.Checked = false;
+                GraphMode = 0;
+            }
+        }
+
+        private void GraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (graphToolStripMenuItem.Checked)
+            {
+                GraphMode = 1;
+                treeViewToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                graphToolStripMenuItem.Checked = true;
+                treeViewToolStripMenuItem.Checked = false;
+                GraphMode = 1;
+            }
         }
     }
 }
