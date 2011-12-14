@@ -15,6 +15,11 @@ namespace ForRest.SplayTree
     /// </summary>
     public class SplayTreeFactory : ITreeFactory
     {
+        public string Name
+        {
+            get { return "Splay Tree"; }
+        }
+
         public string GetPluginName()
         {
             return "Splay Tree Plugin";
