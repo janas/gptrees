@@ -116,13 +116,20 @@ namespace ForRest
             }
             else
             {
-                if (comboBoxDataType.SelectedItem != null && textBoxName.Text != null)
+                if (comboBoxDataType.SelectedItem != null && !string.IsNullOrEmpty(textBoxName.Text))
                 {
                     var factory = (ITreeFactory)comboBoxAvailableTrees.SelectedItem;
                     int mode = comboBoxDataType.SelectedIndex;
                     switch (mode)
                     {
                         case 0:
+                            if (factory.Name.Equals("B Tree") || factory.Name.Equals("B+ Tree"))
+                            {
+                                ITree<string> degTextTree = factory.GetTree<string>(int.Parse(maskedTextBoxDegree.Text));
+                                var degTreeObjectText = new TreeObject(textBoxName.Text, "text", degTextTree);
+                                _provider.TreeObjects.Add(degTreeObjectText);
+                                break;
+                            }
                             ITree<string> textTree = factory.GetTree<string>();
                             var treeObjectText = new TreeObject(textBoxName.Text, "text", textTree);
                             _provider.TreeObjects.Add(treeObjectText);
@@ -178,6 +185,12 @@ namespace ForRest
             {
                 btnAdd.Enabled = false;
             }
+        }
+
+        private void MaskedTextBoxDegreeMaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+            toolTipHelper.ToolTipTitle = "Invalid input";
+            toolTipHelper.Show("We're sorry, but only digits (0-9) are allowed.", maskedTextBoxDegree, maskedTextBoxDegree.Location, 3000);
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddTree));
             this.comboBoxAvailableTrees = new System.Windows.Forms.ComboBox();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -36,6 +37,9 @@
             this.labelDataType = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
+            this.labelTreeDegree = new System.Windows.Forms.Label();
+            this.maskedTextBoxDegree = new System.Windows.Forms.MaskedTextBox();
+            this.toolTipHelper = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // comboBoxAvailableTrees
@@ -107,11 +111,32 @@
             this.labelName.TabIndex = 8;
             this.labelName.Text = "Enter tree name:";
             // 
+            // labelTreeDegree
+            // 
+            this.labelTreeDegree.AutoSize = true;
+            this.labelTreeDegree.Location = new System.Drawing.Point(195, 73);
+            this.labelTreeDegree.Name = "labelTreeDegree";
+            this.labelTreeDegree.Size = new System.Drawing.Size(92, 13);
+            this.labelTreeDegree.TabIndex = 10;
+            this.labelTreeDegree.Text = "Enter tree degree:";
+            // 
+            // maskedTextBoxDegree
+            // 
+            this.maskedTextBoxDegree.Location = new System.Drawing.Point(192, 89);
+            this.maskedTextBoxDegree.Mask = "000";
+            this.maskedTextBoxDegree.Name = "maskedTextBoxDegree";
+            this.maskedTextBoxDegree.Size = new System.Drawing.Size(102, 20);
+            this.maskedTextBoxDegree.TabIndex = 11;
+            this.maskedTextBoxDegree.ValidatingType = typeof(int);
+            this.maskedTextBoxDegree.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.MaskedTextBoxDegreeMaskInputRejected);
+            // 
             // AddTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(165, 178);
+            this.Controls.Add(this.maskedTextBoxDegree);
+            this.Controls.Add(this.labelTreeDegree);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.labelDataType);
@@ -141,5 +166,8 @@
         private System.Windows.Forms.Label labelDataType;
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Label labelName;
+        private System.Windows.Forms.Label labelTreeDegree;
+        private System.Windows.Forms.MaskedTextBox maskedTextBoxDegree;
+        private System.Windows.Forms.ToolTip toolTipHelper;
     }
 }
