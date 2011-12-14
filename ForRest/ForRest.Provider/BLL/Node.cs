@@ -13,7 +13,7 @@ namespace ForRest.Provider.BLL
     public class Node<T>
     {
         public List<T> Values { get; set; }
-        protected NodeList<T> Neighbors { get; set; }
+        public NodeList<T> Neighbors { get; set; }
         
         public Node()
         {
