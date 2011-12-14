@@ -23,5 +23,11 @@ namespace ForRest._234Tree
         {
             throw new System.NotImplementedException();
         }
+
+        public override Node<T> Root
+        {
+            get { throw new System.NotImplementedException(); }
+            set { throw new System.NotImplementedException(); }
+        }
     }
 }

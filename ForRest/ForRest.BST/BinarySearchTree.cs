@@ -7,7 +7,7 @@ namespace ForRest.BST
     {
         private BinarySearchTreeNode<T> _root;
         private int _count;
-        private IComparer<T> _comparer = Comparer<T>.Default; 
+        private readonly IComparer<T> _comparer = Comparer<T>.Default; 
 
         public BinarySearchTree()
         {
@@ -15,9 +15,10 @@ namespace ForRest.BST
             _count = 0;
         }
 
-        public BinarySearchTreeNode<T> Root
+        public override Node<T> Root
         {
             get { return _root; }
+            set { _root = (BinarySearchTreeNode<T>) value; }
         }
 
         public int Count
