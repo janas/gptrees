@@ -22,12 +22,14 @@ namespace ForRest.Provider
     public class Provider
     {
         public List<ITreeFactory> PluginList { get; set; }
-        public List<ITree<string>> TextTrees = new List<ITree<string>>();
-        public List<ITree<double>> NumericTrees = new List<ITree<double>>();
+        public List<TreeObject> TreeObjects = new List<TreeObject>();
+        public List<TreeObject> BatchTreeObject = new List<TreeObject>();
         public List<PerformanceSet> PerformanceSets = new List<PerformanceSet>();
-        
+        public List<PerformanceSet> BatchPerformanceSet = new List<PerformanceSet>();
         public List<string> TextData = new List<string>();
+        public List<List<string>> BatchTextData = new List<List<string>>();
         public List<double> NumericData = new List<double>();
+        public List<List<double>> BatchNumericData = new List<List<double>>();
         
         /// <summary>
         /// Method for reading a CSV file containg text data. Returns list of strings.
@@ -116,13 +118,11 @@ namespace ForRest.Provider
 
         public List<string[]> GetPluginDescription(string applicationPath)
         {
-            //string folder = Path.Combine(Path.GetDirectoryName(applicationPath), "Plugins");
-            //List<ITreeFactory> pluginList = GetPlugins<ITreeFactory>(folder);
             CreatePluginList(applicationPath);
             var itemsList = new List<string[]>();
-            var entry = new string[3];
             foreach (ITreeFactory tree in PluginList)
             {
+                var entry = new string[3];
                 string name = tree.GetPluginName();
                 string description = tree.GetPluginDescription();
                 string advancedInfo = tree.GetType().FullName;
