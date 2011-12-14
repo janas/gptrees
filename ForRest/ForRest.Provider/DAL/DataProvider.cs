@@ -99,7 +99,7 @@ namespace ForRest.Provider.DAL
    
         private List<string> PrepareResults(List<PerformanceSet> perfSet)
         {
-            return perfSet.Select(performanceSet => performanceSet.TypeOfTree + "," + performanceSet.NoOfNodes + "," + performanceSet.TypeOfNodes + "," + performanceSet.SearchTime.ToString()).ToList();
+            return perfSet.Select(performanceSet => performanceSet.TreeName + "," + performanceSet.TypeOfTree + "," + performanceSet.NoOfNodes + "," + performanceSet.TypeOfNodes + "," + performanceSet.SearchTime.ToString()).ToList();
         }
     }
 }
