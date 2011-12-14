@@ -99,12 +99,6 @@
     <Compile Include="Search.Designer.cs">
       <DependentUpon>Search.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tester.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tester.Designer.cs">
-      <DependentUpon>Tester.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -139,9 +133,6 @@
     <EmbeddedResource Include="Search.resx">
       <DependentUpon>Search.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tester.resx">
-      <DependentUpon>Tester.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -153,10 +144,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ForRest.BST\ForRest.BST.csproj">
-      <Project>{4DB94E67-56D1-438B-A2D9-02E0F6508E83}</Project>
-      <Name>ForRest.BST</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ForRest.Provider\ForRest.Provider.csproj">
       <Project>{173BF095-2D5F-40BA-A4D3-0E8FEF091B74}</Project>
       <Name>ForRest.Provider</Name>
