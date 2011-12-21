@@ -37,8 +37,7 @@ namespace ForRest.BST
             {
                 if (Neighbors == null)
                     return null;
-                else
-                    return (BinarySearchTreeNode<T>) Neighbors[0];
+                return (BinarySearchTreeNode<T>) Neighbors[0];
             }
             set
             {
@@ -53,8 +52,7 @@ namespace ForRest.BST
             {
                 if (Neighbors == null)
                     return null;
-                else
-                    return (BinarySearchTreeNode<T>) Neighbors[1];
+                return (BinarySearchTreeNode<T>) Neighbors[1];
             }
             set
             {
