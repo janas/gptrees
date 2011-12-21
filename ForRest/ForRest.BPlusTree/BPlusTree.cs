@@ -24,7 +24,7 @@ namespace ForRest.BPlusTree
         {
             throw new System.NotImplementedException();
         }
-
+        
         public override Node<T> Root
         {
             get { throw new System.NotImplementedException(); }

@@ -13,10 +13,10 @@ namespace ForRest.Provider.BLL
     /// </summary>
     public abstract class Tree<T> : ITree<T>
     {
+        public abstract Node<T> Root { get; set; }
         public abstract void Clear();
         public abstract List<int> Contains(T data);
         public abstract void Add(T data);
         public abstract bool Remove(T data);
-        public abstract Node<T> Root { get; set; }
     }
 }

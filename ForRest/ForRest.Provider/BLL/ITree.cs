@@ -14,10 +14,11 @@ namespace ForRest.Provider.BLL
     /// </summary>
     public interface ITree<T>
     {
+        Node<T> Root { get; set; }
         void Clear();
         List<int> Contains(T data);
         void Add(T data);
         bool Remove(T data);
-        Node<T> Root { get; set; }
     }
 }
+
