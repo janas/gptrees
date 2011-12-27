@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace ForRest.Provider.BLL
 {
     /// <summary>
@@ -12,6 +14,7 @@ namespace ForRest.Provider.BLL
     public interface ITreeFactory
     {
         string Name { get; }
+        bool NeedDegree { get; }
         string GetPluginName();
         string GetPluginDescription();
         ITree<T> GetTree<T>();
