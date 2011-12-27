@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Create));
             this.btnAddTreeFromFile = new System.Windows.Forms.Button();
             this.btnAddNode = new System.Windows.Forms.Button();
@@ -40,7 +41,7 @@
             this.btnRemoveTree = new System.Windows.Forms.Button();
             this.textBoxValue = new System.Windows.Forms.TextBox();
             this.btnAddTree = new System.Windows.Forms.Button();
-            this.treeViewCreate = new System.Windows.Forms.TreeView();
+            this.toolTipHelperCreate = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxSelectTree.SuspendLayout();
             this.groupBoxControlsCreate.SuspendLayout();
             this.SuspendLayout();
@@ -159,25 +160,14 @@
             this.btnAddTree.UseVisualStyleBackColor = true;
             this.btnAddTree.Click += new System.EventHandler(this.BtnAddTreeClick);
             // 
-            // treeViewCreate
-            // 
-            this.treeViewCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeViewCreate.Location = new System.Drawing.Point(195, 16);
-            this.treeViewCreate.Name = "treeViewCreate";
-            this.treeViewCreate.Size = new System.Drawing.Size(377, 384);
-            this.treeViewCreate.TabIndex = 5;
-            // 
             // Create
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 412);
-            this.Controls.Add(this.treeViewCreate);
+            this.ClientSize = new System.Drawing.Size(584, 462);
             this.Controls.Add(this.groupBoxControlsCreate);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(600, 450);
+            this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "Create";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
@@ -202,6 +192,6 @@
         private System.Windows.Forms.Label labelTextBoxValue;
         private System.Windows.Forms.Label labelResult;
         private System.Windows.Forms.Button btnRemoveTree;
-        private System.Windows.Forms.TreeView treeViewCreate;
+        private System.Windows.Forms.ToolTip toolTipHelperCreate;
     }
 }

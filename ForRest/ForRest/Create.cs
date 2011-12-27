@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
+using Microsoft.Glee.Drawing;
+using Microsoft.Glee.GraphViewerGdi;
 using ForRest.Provider.BLL;
 
 namespace ForRest
@@ -9,6 +11,8 @@ namespace ForRest
     public partial class Create : Form
     {
         private readonly Provider.Provider _provider;
+        private TreeView _treeViewCreate;
+        private GViewer _graphViewer;
 
         public int Mode { get; set; }
         public int GraphMode { get; set; }
@@ -20,6 +24,14 @@ namespace ForRest
             Mode = mode;
             GraphMode = graphMode;
             FillSelectedTreeComboBox();
+            if (GraphMode == 0)
+            {
+                InitializeTreeView();
+            }
+            else
+            {
+                InitializeGraph();
+            }
         }
 
         public void FillSelectedTreeComboBox()
@@ -29,6 +41,27 @@ namespace ForRest
             {
                 comboBoxSelectTree.Items.Add(treeObject);
                 comboBoxSelectTree.DisplayMember = "Name";
+            }
+        }
+
+        public void ChangeGraphMode()
+        {
+            switch (GraphMode)
+            {
+                case 0:
+                    if (_graphViewer != null)
+                    {
+                        Controls.Remove(_graphViewer);
+                    }
+                    InitializeTreeView();
+                    break;
+                case 1:
+                    if (_treeViewCreate != null)
+                    {
+                        Controls.Remove(_treeViewCreate);
+                    }
+                    InitializeGraph();
+                    break;
             }
         }
 
@@ -48,17 +81,32 @@ namespace ForRest
                 }
                 else if (treeObject.Type.Equals("numeric") && textBoxValue.Text != null)
                 {
-                    double numericValue = double.Parse(textBoxValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture);
-                    treeObject.NumericTree.Add(numericValue);
-                    labelResult.ResetText();
-                    labelResult.ForeColor = System.Drawing.Color.Green;
-                    labelResult.Text = "Action performed successfully.";
-                    ShowTree();
+                    double numericValue;
+                    if (double.TryParse(textBoxValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture,
+                                        out numericValue))
+                    {
+                        treeObject.NumericTree.Add(numericValue);
+                        labelResult.ResetText();
+                        labelResult.ForeColor = System.Drawing.Color.Green;
+                        labelResult.Text = "Action performed successfully.";
+                        ShowTree();
+                    }
+                    else
+                    {
+                        labelResult.ForeColor = System.Drawing.Color.Red;
+                        labelResult.Text = "Incorrect input format!";
+                        toolTipHelperCreate.ToolTipTitle = "Incorrect input format";
+                        toolTipHelperCreate.Show("Please provide apropriate input for selected tree.", textBoxValue,
+                                                 3000);
+                    }
                 }
             }
             else
-                MessageBox.Show("No tree is selected. Please select tree from list first.", "Error!",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                toolTipHelperCreate.ToolTipTitle = "No tree is selected";
+                toolTipHelperCreate.Show("No tree is selected. Please select tree from list first.", comboBoxSelectTree,
+                                         3000);
+            }
         }
 
         private void BtnRemoveNodeClick(object sender, EventArgs e)
@@ -85,25 +133,40 @@ namespace ForRest
                 }
                 else if (treeObject.Type.Equals("numeric") && textBoxValue.Text != null)
                 {
-                    double numericValue = double.Parse(textBoxValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture);
-                    bool result = treeObject.NumericTree.Remove(numericValue);
-                    labelResult.ResetText();
-                    if (result)
+                    double numericValue;
+                    if (double.TryParse(textBoxValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture,
+                                        out numericValue))
                     {
-                        labelResult.ForeColor = System.Drawing.Color.Green;
-                        labelResult.Text = "Action performed successfully.";
+                        bool result = treeObject.NumericTree.Remove(numericValue);
+                        labelResult.ResetText();
+                        if (result)
+                        {
+                            labelResult.ForeColor = System.Drawing.Color.Green;
+                            labelResult.Text = "Action performed successfully.";
+                        }
+                        else
+                        {
+                            labelResult.ForeColor = System.Drawing.Color.Red;
+                            labelResult.Text = "Item not found!";
+                        }
+                        ShowTree();
                     }
                     else
                     {
                         labelResult.ForeColor = System.Drawing.Color.Red;
-                        labelResult.Text = "Item not found!";
+                        labelResult.Text = "Incorrect input format!";
+                        toolTipHelperCreate.ToolTipTitle = "Incorrect input format";
+                        toolTipHelperCreate.Show("Please provide apropriate input for selected tree.", textBoxValue,
+                                                 3000);
                     }
-                    ShowTree();
                 }
             }
             else
-                MessageBox.Show("No tree is selected. Please select tree from list first.", "Error!",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                toolTipHelperCreate.ToolTipTitle = "No tree is selected";
+                toolTipHelperCreate.Show("No tree is selected. Please select tree from list first.", comboBoxSelectTree,
+                                         3000);
+            }
         }
 
         private void BtnAddTreeFromFileClick(object sender, EventArgs e)
@@ -136,13 +199,24 @@ namespace ForRest
                 labelResult.Text = "Action performed successfully.";
             }
             else
-                MessageBox.Show("No tree is selected. Please select tree from list first.", "Error!",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                toolTipHelperCreate.ToolTipTitle = "No tree is selected";
+                toolTipHelperCreate.Show("No tree is selected. Please select tree from list first.", comboBoxSelectTree,
+                                         3000);
+            }
         }
 
         private void ComboBoxSelectTreeSelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowTree();
+            switch (GraphMode)
+            {
+                case 0:
+                    ShowTree();
+                    break;
+                case 1:
+                    DrawGraph();
+                    break;
+            }
         }
 
         private static TreeNode[] NextLevel(Node<string> node)
@@ -199,34 +273,106 @@ namespace ForRest
             return result;
         }
 
+        private void InitializeTreeView()
+        {
+            _treeViewCreate = new TreeView
+                                  {
+                                      Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                                                | AnchorStyles.Left)
+                                               | AnchorStyles.Right,
+                                      Location = new System.Drawing.Point(195, 16),
+                                      Name = "treeViewCreate",
+                                      Size = new System.Drawing.Size(377, 434),
+                                      TabIndex = 5
+                                  };
+            Controls.Add(_treeViewCreate);
+            //ResumeLayout();
+        }
+
+        private void InitializeGraph()
+        {
+            _graphViewer = new GViewer
+                               {
+                                   Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                                             | AnchorStyles.Left)
+                                            | AnchorStyles.Right,
+                                   Location = new System.Drawing.Point(195, 16),
+                                   Name = "graphViewer",
+                                   Size = new System.Drawing.Size(377, 434),
+                                   TabIndex = 5
+                               };
+            /*var graph = new Graph("Test graph");
+            string strNode1 = "Circle";
+            string strNode2 = "Home";
+            string strNode3 = "Diamond";
+            string strNode4 = "Standard";
+
+            graph.AddEdge(strNode1, strNode2);
+            graph.AddEdge(strNode2, strNode1);
+            /*graph.AddEdge(strNode2, strNode2);
+            graph.AddEdge(strNode1, strNode3);
+            graph.AddEdge(strNode1, strNode4);
+            graph.AddEdge(strNode4, strNode1);
+
+            graph.AddEdge(strNode2, "Node 0");
+            for (int i = 0; i < 3; i++) graph.AddEdge("Node " + i.ToString(), "Node " + (i + 1).ToString());
+            for (int i = 0; i < 3; i++) graph.AddEdge("Node " + (i + 1).ToString(), "Node " + i.ToString());*/
+            //_graphViewer.Graph = graph;
+            Controls.Add(_graphViewer);
+            //ResumeLayout();
+        }
+
         private void ShowTree()
         {
-            treeViewCreate.Nodes.Clear();
+            _treeViewCreate.Nodes.Clear();
             if (comboBoxSelectTree.SelectedItem == null) return;
             var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
-            if (treeObject.Type.Equals("text"))
+            if (treeObject.Type.Equals("text") && treeObject.TextTree.Root != null)
             {
                 ITree<string> iTree = treeObject.TextTree;
                 TreeNode tn = NextLevel(iTree.Root) == null
                                   ? new TreeNode(iTree.Root.Values[0])
                                   : new TreeNode(iTree.Root.Values[0], NextLevel(iTree.Root));
-                treeViewCreate.Nodes.Add(tn);
-                treeViewCreate.ExpandAll();
+                _treeViewCreate.Nodes.Add(tn);
+                _treeViewCreate.ExpandAll();
             }
-            else if (treeObject.Type.Equals("numeric"))
+            if (treeObject.Type.Equals("numeric") && treeObject.NumericTree.Root != null)
             {
                 ITree<double> iTree = treeObject.NumericTree;
                 TreeNode tn = NextLevel(iTree.Root) == null
                                   ? new TreeNode(iTree.Root.Values[0].ToString())
                                   : new TreeNode(iTree.Root.Values[0].ToString(), NextLevel(iTree.Root));
-                treeViewCreate.Nodes.Add(tn);
-                treeViewCreate.ExpandAll();
+                _treeViewCreate.Nodes.Add(tn);
+                _treeViewCreate.ExpandAll();
             }
         }
 
         private void DrawGraph()
         {
-            //todo
+            var graph = new Graph("Tree graph");
+            var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
+            if (treeObject.Type.Equals("text"))
+            {
+
+                //graph.AddNode(Convert(treeObject.TextTree.Root.Values));
+
+            }
+            else if (treeObject.Type.Equals("numeric"))
+            {
+                //
+            }
+            _graphViewer.Graph = graph;
+            _graphViewer.Update();
+        }
+
+        private string Convert(List<string> values)
+        {
+            string node = null;
+            foreach (var value in values)
+            {
+                node += value + " ";
+            }
+            return node;
         }
     }
 }
