@@ -127,7 +127,7 @@
             this.treeViewToolStripMenuItem.CheckOnClick = true;
             this.treeViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.treeViewToolStripMenuItem.Name = "treeViewToolStripMenuItem";
-            this.treeViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.treeViewToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
             this.treeViewToolStripMenuItem.Text = "&Tree View";
             this.treeViewToolStripMenuItem.Click += new System.EventHandler(this.TreeViewToolStripMenuItemClick);
             // 
@@ -135,7 +135,7 @@
             // 
             this.graphToolStripMenuItem.CheckOnClick = true;
             this.graphToolStripMenuItem.Name = "graphToolStripMenuItem";
-            this.graphToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.graphToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
             this.graphToolStripMenuItem.Text = "&Graph";
             this.graphToolStripMenuItem.Click += new System.EventHandler(this.GraphToolStripMenuItemClick);
             // 
@@ -321,13 +321,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 562);
+            this.ClientSize = new System.Drawing.Size(824, 602);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip;
-            this.MinimumSize = new System.Drawing.Size(840, 600);
+            this.MinimumSize = new System.Drawing.Size(840, 640);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ForRest";

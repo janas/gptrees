@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 
 namespace ForRest
@@ -14,9 +13,9 @@ namespace ForRest
         private Create _create;
         private Search _search;
         private BatchProcess _batchProcess;
+        private int _graphMode;
 
         public int Mode;
-        public int GraphMode { get; set; }
 
         public MainForm()
         {
@@ -24,20 +23,12 @@ namespace ForRest
             _provider.CheckDirectoryExists(Application.ExecutablePath);
         }
 
-        private void CheckProviderExists()
-        {
-            string dllPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ForRest.Provider.dll");
-            if (File.Exists(dllPath) != false) return;
-            MessageBox.Show("ForResr.Provider.dll not found! Application will exit now", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Application.Exit();
-        }
-
         private void BtnCreateClick(object sender, EventArgs e)
         {
             if (_createState == 0)
             {
                 if (_create != null && !_create.IsDisposed) return;
-                _create = new Create(_provider, Mode, GraphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _create = new Create(_provider, Mode, _graphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
                 _create.Show();
                 ActivateMdiChild(null);
                 ActivateMdiChild(_create);
@@ -67,7 +58,7 @@ namespace ForRest
             if (_searchState == 0)
             {
                 if (_search != null && !_search.IsDisposed) return;
-                _search = new Search(_provider, GraphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _search = new Search(_provider, _graphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
                 _search.Show();
                 ActivateMdiChild(null);
                 ActivateMdiChild(_search);
@@ -165,7 +156,8 @@ namespace ForRest
             }
             else
             {
-                MessageBox.Show("None tree has been processed. Can not save the results. Proceed with tree first!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("None tree has been processed. Can not save the results. Proceed with tree first!",
+                                "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -173,14 +165,25 @@ namespace ForRest
         {
             if (treeViewToolStripMenuItem.Checked)
             {
-                GraphMode = 0;
+                _graphMode = 0;
                 graphToolStripMenuItem.Checked = false;
             }
             else
             {
                 treeViewToolStripMenuItem.Checked = true;
                 graphToolStripMenuItem.Checked = false;
-                GraphMode = 0;
+                _graphMode = 0;
+            }
+            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
+            {
+                var create = (Create)ActiveMdiChild;
+                create.GraphMode = _graphMode;
+                create.ChangeGraphMode();
+            }
+            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
+            {
+                var search = (Search)ActiveMdiChild;
+                search.GraphMode = _graphMode;
             }
         }
 
@@ -188,14 +191,25 @@ namespace ForRest
         {
             if (graphToolStripMenuItem.Checked)
             {
-                GraphMode = 1;
+                _graphMode = 1;
                 treeViewToolStripMenuItem.Checked = false;
             }
             else
             {
                 graphToolStripMenuItem.Checked = true;
                 treeViewToolStripMenuItem.Checked = false;
-                GraphMode = 1;
+                _graphMode = 1;
+            }
+            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
+            {
+                var create = (Create) ActiveMdiChild;
+                create.GraphMode = _graphMode;
+                create.ChangeGraphMode();
+            }
+            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
+            {
+                var search = (Search) ActiveMdiChild;
+                search.GraphMode = _graphMode;
             }
         }
     }
