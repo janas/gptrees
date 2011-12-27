@@ -20,6 +20,11 @@ namespace ForRest.BST
             get { return "Binary Search Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return false; }
+        }
+
         public string GetPluginName()
         {
             return "Binary Search Tree Plugin";

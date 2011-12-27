@@ -20,6 +20,11 @@ namespace ForRest.BTree
             get { return "B Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return true; }
+        }
+
         public string GetPluginName()
         {
             return "B-Tree Plugin";
@@ -29,7 +34,7 @@ namespace ForRest.BTree
         {
             return "Plugin that implements B-Tree Algorithms";
         }
-
+        
         public ITree<T> GetTree<T>()
         {
             throw new NotImplementedException();

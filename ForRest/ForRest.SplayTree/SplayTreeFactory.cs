@@ -20,6 +20,11 @@ namespace ForRest.SplayTree
             get { return "Splay Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return false; }
+        }
+
         public string GetPluginName()
         {
             return "Splay Tree Plugin";

@@ -19,6 +19,11 @@ namespace ForRest.AVLTree
             get { return "AVL Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return false; }
+        }
+
         public string GetPluginName()
         {
             return "AVL Tree Plugin";

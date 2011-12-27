@@ -19,6 +19,11 @@ namespace ForRest.RedBlackTree
             get { return "Red-Black Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return false; }
+        }
+
         public string GetPluginName()
         {
             return "Red-Black Tree Plugin";

@@ -20,6 +20,11 @@ namespace ForRest._234Tree
             get { return "2-3-4 Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return false; }
+        }
+
         public string GetPluginName()
         {
             return "2-3-4 Tree Plugin";

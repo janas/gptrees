@@ -20,6 +20,11 @@ namespace ForRest.BPlusTree
             get { return "B+ Tree"; }
         }
 
+        public bool NeedDegree
+        {
+            get { return true; }
+        }
+
         public string GetPluginName()
         {
             return "B+ Tree Plugin";
