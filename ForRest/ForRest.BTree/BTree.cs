@@ -46,7 +46,7 @@ namespace ForRest.BTree
                     {
                         if (current.Neighbors == null)
                             return null;
-                        current = (BTreeNode<T>)current.Neighbors[i];
+                        current = (BTreeNode<T>) current.Neighbors[i];
                         path.Add(i);
                     }
                     else
@@ -55,7 +55,7 @@ namespace ForRest.BTree
                         {
                             if (current.Neighbors == null)
                                 return null;
-                            current = (BTreeNode<T>)current.Neighbors[i + 1];
+                            current = (BTreeNode<T>) current.Neighbors[i + 1];
                             path.Add(i + 1);
                         }
                     }
@@ -122,14 +122,14 @@ namespace ForRest.BTree
                     {
                         if (node.Neighbors == null)
                             return false;
-                        node = (BTreeNode<T>)node.Neighbors[i];
+                        node = (BTreeNode<T>) node.Neighbors[i];
                         return Delete(node, data);
                     }
                     if (i + 1 == node.Values.Count)
                     {
                         if (node.Neighbors == null)
                             return false;
-                        node = (BTreeNode<T>)node.Neighbors[i + 1];
+                        node = (BTreeNode<T>) node.Neighbors[i + 1];
                         return Delete(node, data);
                     }
                 }
@@ -144,5 +144,6 @@ namespace ForRest.BTree
                 return false;
             return Delete(_root, data);
         }
+
     }
 }

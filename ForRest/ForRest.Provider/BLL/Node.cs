@@ -35,7 +35,7 @@ namespace ForRest.Provider.BLL
 
         public Node<T>[] GetNeighborsArray()
         {
-            Node<T>[] result = new Node<T>[Neighbors.Count];
+            var result = new Node<T>[Neighbors.Count];
             Neighbors.CopyTo(result, 0);
             return result;
         }

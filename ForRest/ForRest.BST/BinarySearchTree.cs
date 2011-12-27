@@ -7,7 +7,7 @@ namespace ForRest.BST
     {
         private BinarySearchTreeNode<T> _root;
         private int _count;
-        private readonly IComparer<T> _comparer = Comparer<T>.Default; 
+        private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
         public BinarySearchTree()
         {
@@ -41,7 +41,7 @@ namespace ForRest.BST
                 int result = _comparer.Compare(current.Values[0], data);
                 if (result == 0)
                     return path;
-                else if (result > 0)
+                if (result > 0)
                 {
                     current = current.Left;
                     path.Add(0);
@@ -57,9 +57,8 @@ namespace ForRest.BST
 
         public override void Add(T data)
         {
-            List<T> dataList = new List<T>(1);
-            dataList.Add(data);
-            BinarySearchTreeNode<T> node = new BinarySearchTreeNode<T>(dataList);
+            var dataList = new List<T>(1) {data};
+            var node = new BinarySearchTreeNode<T>(dataList);
             BinarySearchTreeNode<T> current = _root, parent = null;
             int result;
             while (current != null)
@@ -67,7 +66,7 @@ namespace ForRest.BST
                 result = _comparer.Compare(current.Values[0], data);
                 if (result == 0)
                     return;
-                else if (result > 0)
+                if (result > 0)
                 {
                     parent = current;
                     current = current.Left;
@@ -97,7 +96,7 @@ namespace ForRest.BST
                 return false;
             BinarySearchTreeNode<T> current = _root, parent = null;
             int result = _comparer.Compare(current.Values[0], data);
-            while (result !=0 )
+            while (result != 0)
             {
                 if (result > 0)
                 {
@@ -160,7 +159,7 @@ namespace ForRest.BST
                     result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
                         parent.Left = leftmost;
-                    else if(result < 0)
+                    else if (result < 0)
                         parent.Right = leftmost;
                 }
             }
