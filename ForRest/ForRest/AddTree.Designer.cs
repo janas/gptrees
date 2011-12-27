@@ -50,6 +50,7 @@
             this.comboBoxAvailableTrees.Name = "comboBoxAvailableTrees";
             this.comboBoxAvailableTrees.Size = new System.Drawing.Size(138, 21);
             this.comboBoxAvailableTrees.TabIndex = 0;
+            this.comboBoxAvailableTrees.SelectedIndexChanged += new System.EventHandler(this.ComboBoxAvailableTreesSelectedIndexChanged);
             // 
             // btnAdd
             // 
@@ -119,6 +120,7 @@
             this.labelTreeDegree.Size = new System.Drawing.Size(92, 13);
             this.labelTreeDegree.TabIndex = 10;
             this.labelTreeDegree.Text = "Enter tree degree:";
+            this.labelTreeDegree.Visible = false;
             // 
             // maskedTextBoxDegree
             // 
@@ -128,6 +130,7 @@
             this.maskedTextBoxDegree.Size = new System.Drawing.Size(102, 20);
             this.maskedTextBoxDegree.TabIndex = 11;
             this.maskedTextBoxDegree.ValidatingType = typeof(int);
+            this.maskedTextBoxDegree.Visible = false;
             this.maskedTextBoxDegree.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.MaskedTextBoxDegreeMaskInputRejected);
             // 
             // AddTree
