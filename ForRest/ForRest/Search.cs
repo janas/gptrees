@@ -11,7 +11,7 @@ namespace ForRest
         private readonly Provider.Provider _provider;
 
         public int GraphMode { get; set; }
-        
+
         public Search(Provider.Provider provider, int graphMode)
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace ForRest
         {
             if (comboBoxSelectTree.SelectedItem != null)
             {
-                var treeObject = (TreeObject)comboBoxSelectTree.SelectedItem;
+                var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
                 if (treeObject.Type.Equals("text") && textBoxSearchFor.Text != null)
                 {
                     var watch = new Stopwatch();
@@ -42,11 +42,11 @@ namespace ForRest
                     watch.Start();
                     List<int> result = treeObject.TextTree.Contains(textValue);
                     watch.Stop();
-                    if(result != null)
+                    if (result != null)
                     {
                         var peroformanceSet = new PerformanceSet();
                         labelTime.ResetText();
-                        labelTime.Text = watch.ElapsedMilliseconds.ToString() + " ms";
+                        labelTime.Text = watch.ElapsedMilliseconds + " ms";
                         peroformanceSet.TreeName = treeObject.Name;
                         peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString();
                         peroformanceSet.TypeOfNodes = "String";
@@ -58,9 +58,9 @@ namespace ForRest
                     {
                         var peroformanceSet = new PerformanceSet();
                         labelTime.ResetText();
-                        labelTime.Text = "0 ms/error";
+                        labelTime.Text = watch.ElapsedMilliseconds + " ms/Error";
                         peroformanceSet.TreeName = treeObject.Name;
-                        peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString();
+                        peroformanceSet.SearchTime = watch.ElapsedMilliseconds + "/Not Found";
                         peroformanceSet.TypeOfNodes = "String";
                         peroformanceSet.TypeOfTree = treeObject.TextTree.GetType().ToString();
                         peroformanceSet.NoOfNodes = "notImplemented";
@@ -70,43 +70,63 @@ namespace ForRest
                 else if (treeObject.Type.Equals("numeric") && textBoxSearchFor.Text != null)
                 {
                     var watch = new Stopwatch();
-                    double numericValue = double.Parse(textBoxSearchFor.Text, NumberStyles.Any, CultureInfo.InvariantCulture);
-                    watch.Start();
-                    List<int> result = treeObject.NumericTree.Contains(numericValue);
-                    watch.Stop();
-                    if (result != null)
+                    double numericValue;
+                    if (double.TryParse(textBoxSearchFor.Text, NumberStyles.Any, CultureInfo.InvariantCulture,
+                                        out numericValue))
                     {
-                        var peroformanceSet = new PerformanceSet();
-                        labelTime.ResetText();
-                        labelTime.Text = watch.ElapsedMilliseconds.ToString() + " ms";
-                        peroformanceSet.TreeName = treeObject.Name;
-                        peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString();
-                        peroformanceSet.TypeOfNodes = "Double";
-                        peroformanceSet.TypeOfTree = treeObject.NumericTree.GetType().ToString();
-                        peroformanceSet.NoOfNodes = "notImplemented";
-                        _provider.PerformanceSets.Add(peroformanceSet);
+                        watch.Start();
+                        List<int> result = treeObject.NumericTree.Contains(numericValue);
+                        watch.Stop();
+                        if (result != null)
+                        {
+                            var peroformanceSet = new PerformanceSet();
+                            labelTime.ResetText();
+                            labelTime.Text = watch.ElapsedMilliseconds + " ms";
+                            peroformanceSet.TreeName = treeObject.Name;
+                            peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString();
+                            peroformanceSet.TypeOfNodes = "Double";
+                            peroformanceSet.TypeOfTree = treeObject.NumericTree.GetType().ToString();
+                            peroformanceSet.NoOfNodes = "notImplemented";
+                            _provider.PerformanceSets.Add(peroformanceSet);
+                        }
+                        else
+                        {
+                            var peroformanceSet = new PerformanceSet();
+                            labelTime.ResetText();
+                            labelTime.Text = watch.ElapsedMilliseconds + " ms/Error";
+                            peroformanceSet.TreeName = treeObject.Name;
+                            peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString() + "/Not Found";
+                            peroformanceSet.TypeOfNodes = "Double";
+                            peroformanceSet.TypeOfTree = treeObject.NumericTree.GetType().ToString();
+                            peroformanceSet.NoOfNodes = "notImplemented";
+                            _provider.PerformanceSets.Add(peroformanceSet);
+                        }
                     }
                     else
                     {
-                        var peroformanceSet = new PerformanceSet();
-                        labelTime.ResetText();
-                        labelTime.Text = "0 ms/error";
-                        peroformanceSet.TreeName = treeObject.Name;
-                        peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString();
-                        peroformanceSet.TypeOfNodes = "Double";
-                        peroformanceSet.TypeOfTree = treeObject.NumericTree.GetType().ToString();
-                        peroformanceSet.NoOfNodes = "notImplemented";
-                        _provider.PerformanceSets.Add(peroformanceSet);
+                        toolTipHelperSearch.ToolTipTitle = "Incorrect input format";
+                        toolTipHelperSearch.Show("Please provide apropriate input for selected tree.", textBoxSearchFor,
+                                                 3000);
                     }
                 }
             }
             else
-                MessageBox.Show("No tree is selected. Please select tree from list first.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                toolTipHelperSearch.ToolTipTitle = "No tree is selected";
+                toolTipHelperSearch.Show("No tree is selected. Please select tree from list first.", comboBoxSelectTree,
+                                         3000);
+            }
         }
 
         private void BtnResetResultsSetClick(object sender, System.EventArgs e)
         {
             _provider.PerformanceSets.Clear();
+        }
+
+        private void BtnShowResultsSetClick(object sender, System.EventArgs e)
+        {
+            var resultsSet = new ResultsSet(_provider);
+            resultsSet.ShowDialog();
         }
     }
 }

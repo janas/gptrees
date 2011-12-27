@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Search));
             this.comboBoxSelectTree = new System.Windows.Forms.ComboBox();
             this.groupBoxResults = new System.Windows.Forms.GroupBox();
@@ -39,8 +40,10 @@
             this.groupBoxSearchFor = new System.Windows.Forms.GroupBox();
             this.textBoxSearchFor = new System.Windows.Forms.TextBox();
             this.groupBoxControlsSearch = new System.Windows.Forms.GroupBox();
-            this.btnSearch = new System.Windows.Forms.Button();
+            this.btnShowResultsSet = new System.Windows.Forms.Button();
             this.btnResetResultsSet = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.toolTipHelperSearch = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxResults.SuspendLayout();
             this.groupBoxSelectTree.SuspendLayout();
             this.groupBoxSearchFor.SuspendLayout();
@@ -62,7 +65,7 @@
             this.groupBoxResults.Controls.Add(this.labelTime);
             this.groupBoxResults.Controls.Add(this.labelNodesVisited);
             this.groupBoxResults.Controls.Add(this.labelTimeElapsed);
-            this.groupBoxResults.Location = new System.Drawing.Point(5, 238);
+            this.groupBoxResults.Location = new System.Drawing.Point(5, 277);
             this.groupBoxResults.Name = "groupBoxResults";
             this.groupBoxResults.Size = new System.Drawing.Size(149, 77);
             this.groupBoxResults.TabIndex = 1;
@@ -134,6 +137,7 @@
             // 
             // groupBoxControlsSearch
             // 
+            this.groupBoxControlsSearch.Controls.Add(this.btnShowResultsSet);
             this.groupBoxControlsSearch.Controls.Add(this.btnResetResultsSet);
             this.groupBoxControlsSearch.Controls.Add(this.btnSearch);
             this.groupBoxControlsSearch.Controls.Add(this.groupBoxSelectTree);
@@ -141,10 +145,30 @@
             this.groupBoxControlsSearch.Controls.Add(this.groupBoxSearchFor);
             this.groupBoxControlsSearch.Location = new System.Drawing.Point(12, 12);
             this.groupBoxControlsSearch.Name = "groupBoxControlsSearch";
-            this.groupBoxControlsSearch.Size = new System.Drawing.Size(160, 325);
+            this.groupBoxControlsSearch.Size = new System.Drawing.Size(160, 361);
             this.groupBoxControlsSearch.TabIndex = 4;
             this.groupBoxControlsSearch.TabStop = false;
             this.groupBoxControlsSearch.Text = "Controls";
+            // 
+            // btnShowResultsSet
+            // 
+            this.btnShowResultsSet.Location = new System.Drawing.Point(5, 183);
+            this.btnShowResultsSet.Name = "btnShowResultsSet";
+            this.btnShowResultsSet.Size = new System.Drawing.Size(149, 36);
+            this.btnShowResultsSet.TabIndex = 5;
+            this.btnShowResultsSet.Text = "Show Results Set";
+            this.btnShowResultsSet.UseVisualStyleBackColor = true;
+            this.btnShowResultsSet.Click += new System.EventHandler(this.BtnShowResultsSetClick);
+            // 
+            // btnResetResultsSet
+            // 
+            this.btnResetResultsSet.Location = new System.Drawing.Point(6, 225);
+            this.btnResetResultsSet.Name = "btnResetResultsSet";
+            this.btnResetResultsSet.Size = new System.Drawing.Size(149, 36);
+            this.btnResetResultsSet.TabIndex = 5;
+            this.btnResetResultsSet.Text = "Reset Results Set";
+            this.btnResetResultsSet.UseVisualStyleBackColor = true;
+            this.btnResetResultsSet.Click += new System.EventHandler(this.BtnResetResultsSetClick);
             // 
             // btnSearch
             // 
@@ -156,24 +180,14 @@
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.BtnSearchClick);
             // 
-            // btnResetResultsSet
-            // 
-            this.btnResetResultsSet.Location = new System.Drawing.Point(5, 183);
-            this.btnResetResultsSet.Name = "btnResetResultsSet";
-            this.btnResetResultsSet.Size = new System.Drawing.Size(149, 36);
-            this.btnResetResultsSet.TabIndex = 5;
-            this.btnResetResultsSet.Text = "Reset Results Set";
-            this.btnResetResultsSet.UseVisualStyleBackColor = true;
-            this.btnResetResultsSet.Click += new System.EventHandler(this.BtnResetResultsSetClick);
-            // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 412);
+            this.ClientSize = new System.Drawing.Size(584, 462);
             this.Controls.Add(this.groupBoxControlsSearch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(600, 450);
+            this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "Search";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
@@ -202,5 +216,7 @@
         private System.Windows.Forms.GroupBox groupBoxControlsSearch;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnResetResultsSet;
+        private System.Windows.Forms.Button btnShowResultsSet;
+        private System.Windows.Forms.ToolTip toolTipHelperSearch;
     }
 }
