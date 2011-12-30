@@ -33,10 +33,11 @@ namespace ForRest
 
         private void ListBoxPluginNameSelectedIndexChanged(object sender, EventArgs e)
         {
-                textBoxPluginDescription.Clear();
-                textBoxPluginDescription.AppendText(_pluginsList[listBoxPluginName.SelectedIndex][1]);
-                textBoxPluginDescription.AppendText("\r\n\r\nAdvanced Information\r\n");
-                textBoxPluginDescription.AppendText(_pluginsList[listBoxPluginName.SelectedIndex][2]);
+            textBoxPluginDescription.Clear();
+            if (listBoxPluginName.SelectedIndex == -1) return;
+            textBoxPluginDescription.AppendText(_pluginsList[listBoxPluginName.SelectedIndex][1]);
+            textBoxPluginDescription.AppendText("\r\n\r\nAdvanced Information\r\n");
+            textBoxPluginDescription.AppendText(_pluginsList[listBoxPluginName.SelectedIndex][2]);
         }
     }
 }
