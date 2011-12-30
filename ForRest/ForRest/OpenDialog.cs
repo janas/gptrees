@@ -7,17 +7,27 @@ namespace ForRest
 {
     public partial class OpenDialog : Form
     {
-        private enum Separator {Comma=0, Semicolon, Colon}
-        private enum DataType {Text = 0, Numeric}
-        
+        private enum Separator
+        {
+            Comma = 0,
+            Semicolon,
+            Colon
+        }
+
+        private enum DataType
+        {
+            Text = 0,
+            Numeric
+        }
+
         private char _sep;
         private string _dtType;
         private string _filePath;
         private string[] _filePaths;
-        
+
         private readonly bool _multiselect;
-        readonly Provider.Provider _provider = new Provider.Provider();
-        
+        private readonly Provider.Provider _provider = new Provider.Provider();
+
         public OpenDialog(Provider.Provider provider)
         {
             InitializeComponent();
@@ -131,13 +141,13 @@ namespace ForRest
                 {
                     if (_dtType.Equals("Text"))
                     {
-                        var owner = (MainForm)Owner;
+                        var owner = (MainForm) Owner;
                         owner.Mode = 0;
                         _provider.TextData = _provider.LoadTextData(_filePath, _sep);
                     }
                     else if (_dtType.Equals("Numeric"))
                     {
-                        var owner = (MainForm)Owner;
+                        var owner = (MainForm) Owner;
                         owner.Mode = 1;
                         _provider.NumericData = _provider.LoadNumericData(_filePath, _sep);
                     }
@@ -154,7 +164,7 @@ namespace ForRest
                 else
                 {
                     labelError.Text = "File is not processed!";
-                } 
+                }
             }
             else
             {
@@ -162,7 +172,7 @@ namespace ForRest
                 {
                     if (_dtType.Equals("Text"))
                     {
-                        var owner = (BatchProcess)Owner;
+                        var owner = (BatchProcess) Owner;
                         owner.Mode = 0;
                         foreach (var filePath in _filePaths)
                         {
@@ -171,7 +181,7 @@ namespace ForRest
                     }
                     else if (_dtType.Equals("Numeric"))
                     {
-                        var owner = (BatchProcess)Owner;
+                        var owner = (BatchProcess) Owner;
                         owner.Mode = 1;
                         foreach (var filePath in _filePaths)
                         {
