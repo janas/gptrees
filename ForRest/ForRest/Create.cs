@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
-using Microsoft.Glee.Drawing;
-using Microsoft.Glee.GraphViewerGdi;
 using ForRest.Provider.BLL;
 
 namespace ForRest
@@ -12,7 +10,6 @@ namespace ForRest
     {
         private readonly Provider.Provider _provider;
         private TreeView _treeViewCreate;
-        private GViewer _graphViewer;
 
         public int Mode { get; set; }
         public int GraphMode { get; set; }
@@ -49,9 +46,9 @@ namespace ForRest
             switch (GraphMode)
             {
                 case 0:
-                    if (_graphViewer != null)
+                    if (true)
                     {
-                        Controls.Remove(_graphViewer);
+                        //Controls.Remove(_graphViewer);
                     }
                     InitializeTreeView();
                     break;
@@ -291,35 +288,7 @@ namespace ForRest
 
         private void InitializeGraph()
         {
-            _graphViewer = new GViewer
-                               {
-                                   Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
-                                             | AnchorStyles.Left)
-                                            | AnchorStyles.Right,
-                                   Location = new System.Drawing.Point(195, 16),
-                                   Name = "graphViewer",
-                                   Size = new System.Drawing.Size(377, 434),
-                                   TabIndex = 5
-                               };
-            /*var graph = new Graph("Test graph");
-            string strNode1 = "Circle";
-            string strNode2 = "Home";
-            string strNode3 = "Diamond";
-            string strNode4 = "Standard";
-
-            graph.AddEdge(strNode1, strNode2);
-            graph.AddEdge(strNode2, strNode1);
-            /*graph.AddEdge(strNode2, strNode2);
-            graph.AddEdge(strNode1, strNode3);
-            graph.AddEdge(strNode1, strNode4);
-            graph.AddEdge(strNode4, strNode1);
-
-            graph.AddEdge(strNode2, "Node 0");
-            for (int i = 0; i < 3; i++) graph.AddEdge("Node " + i.ToString(), "Node " + (i + 1).ToString());
-            for (int i = 0; i < 3; i++) graph.AddEdge("Node " + (i + 1).ToString(), "Node " + i.ToString());*/
-            //_graphViewer.Graph = graph;
-            Controls.Add(_graphViewer);
-            //ResumeLayout();
+            //todo
         }
 
         private void ShowTree()
@@ -349,30 +318,7 @@ namespace ForRest
 
         private void DrawGraph()
         {
-            var graph = new Graph("Tree graph");
-            var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
-            if (treeObject.Type.Equals("text"))
-            {
-
-                //graph.AddNode(Convert(treeObject.TextTree.Root.Values));
-
-            }
-            else if (treeObject.Type.Equals("numeric"))
-            {
-                //
-            }
-            _graphViewer.Graph = graph;
-            _graphViewer.Update();
-        }
-
-        private string Convert(List<string> values)
-        {
-            string node = null;
-            foreach (var value in values)
-            {
-                node += value + " ";
-            }
-            return node;
+            //todo   
         }
     }
 }
