@@ -30,7 +30,7 @@ namespace ForRest.Provider
         public List<List<string>> BatchTextData = new List<List<string>>();
         public List<double> NumericData = new List<double>();
         public List<List<double>> BatchNumericData = new List<List<double>>();
-        
+
         /// <summary>
         /// Method for reading a CSV file containg text data. Returns list of strings.
         /// </summary>
@@ -46,7 +46,7 @@ namespace ForRest.Provider
             loadTextDataThread.Join();
             return textData;
         }
-        
+
         /// <summary>
         /// Method for reading a CSV file containg numeric data (all types). Returns list of doubles.
         /// </summary>
@@ -58,10 +58,10 @@ namespace ForRest.Provider
             var numericData = new List<double>();
             var dataProvider = new DataProvider();
             var loadNumDataThread = new Thread(delegate()
-                                                      {
-                                                          numericData = dataProvider.ParseNumericFile(filePath,
-                                                                                                      separator);
-                                                      });
+                                                   {
+                                                       numericData = dataProvider.ParseNumericFile(filePath,
+                                                                                                   separator);
+                                                   });
             loadNumDataThread.Start();
             loadNumDataThread.Join();
             return numericData;
@@ -79,7 +79,7 @@ namespace ForRest.Provider
             writeDataThread.Start();
             writeDataThread.Join();
         }
-        
+
         /// <summary>
         /// Method for getting generic puglins list.
         /// </summary>
@@ -90,7 +90,7 @@ namespace ForRest.Provider
         {
             string[] files = Directory.GetFiles(pluginsFolder, "*.dll");
             var genericList = new List<T>();
-            Debug.Assert(typeof(T).IsInterface);
+            Debug.Assert(typeof (T).IsInterface);
             foreach (string file in files)
             {
                 try
@@ -100,10 +100,10 @@ namespace ForRest.Provider
                     {
                         if (!type.IsClass || type.IsNotPublic) continue;
                         Type[] interfaces = type.GetInterfaces();
-                        if (((IList)interfaces).Contains(typeof(ITreeFactory)))
+                        if (((IList) interfaces).Contains(typeof (ITreeFactory)))
                         {
-                            object obj = (T)Activator.CreateInstance(type);
-                            var t = (T)obj;
+                            object obj = (T) Activator.CreateInstance(type);
+                            var t = (T) obj;
                             genericList.Add(t);
                         }
                     }
