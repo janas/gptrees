@@ -80,7 +80,11 @@ namespace ForRest.Provider.DAL
             List<string> rawData = ParseFile(filePath, separator);
             foreach (var node in rawData)
             {
-                numericData.Add(double.Parse(node, NumberStyles.Any, CultureInfo.InvariantCulture));
+                double numericValue;
+                if (double.TryParse(node, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
+                {
+                    numericData.Add(numericValue);
+                }
             }
             return numericData;
         }
