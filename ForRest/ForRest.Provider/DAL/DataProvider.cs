@@ -24,68 +24,104 @@ namespace ForRest.Provider.DAL
             var cellBuilder = new StringBuilder();
             var readedText = new List<string>();
             int cellCount = 0;
-            int row = 1;
-            int[] rowCellCount = new int[] {};
+            var rowCellCount = new List<int>();
             bool specialCharacters = false;
             int i = 0;
             string line = strReader.ReadToEnd();
-                while (i < line.Length)
+            while (i < line.Length)
+            {
+                if (!line[i].Equals(separator) && !line[i].Equals('\n') && !line[i].Equals('\r') && !line[i].Equals('"'))
                 {
-                    if (!line[i].Equals(separator) && !line[i].Equals('\n') && !line[i].Equals('\r') && !line[i].Equals('"'))
-                    {
-                        cellBuilder.Append(line[i].ToString());
-                    }
-                    if (line[i].Equals('\n'))
-                    {
-                        readedText.Add(cellBuilder.ToString());
-                        cellBuilder = new StringBuilder();
-                        specialCharacters = false;
-                        cellCount++;
-                        row++;
-                        i++;
-                        continue;
-                    }
-                    if (line[i].Equals('\r'))
-                    {
-                        i++;
-                        continue;
-                    }
-                    if (line[i].Equals(separator) && specialCharacters == false)
-                    {
-                        readedText.Add(cellBuilder.ToString());
-                        cellBuilder = new StringBuilder();
-                        cellCount++;
-                    }
-                    if (line[i].Equals('"') && specialCharacters == false)
-                    {
-                        specialCharacters = true;
-                        i++;
-                        continue;
-                    }
-                    if (line[i].Equals('"') && specialCharacters == true)
-                    {
-                        specialCharacters = false;
-                        i++;
-                        continue;
-                    }
+                    cellBuilder.Append(line[i].ToString());
+                }
+                if (line[i].Equals('\n'))
+                {
+                    readedText.Add(cellBuilder.ToString());
+                    cellBuilder = new StringBuilder();
+                    specialCharacters = false;
+                    cellCount++;
+                    rowCellCount.Add(cellCount);
+                    cellCount = 0;
                     i++;
+                    continue;
+                }
+                if (line[i].Equals('\r'))
+                {
+                    i++;
+                    continue;
+                }
+                if (line[i].Equals(separator) && specialCharacters == false)
+                {
+                    readedText.Add(cellBuilder.ToString());
+                    cellBuilder = new StringBuilder();
+                    cellCount++;
+                }
+                if (line[i].Equals('"') && specialCharacters == false)
+                {
+                    specialCharacters = true;
+                    i++;
+                    continue;
+                }
+                if (line[i].Equals('"') && specialCharacters)
+                {
+                    specialCharacters = false;
+                    i++;
+                    continue;
+                }
+                if (i == line.Length - 1)
+                {
+                    readedText.Add(cellBuilder.ToString());
+                    cellBuilder = new StringBuilder();
+                    specialCharacters = false;
+                    cellCount++;
+                    rowCellCount.Add(cellCount);
+                    cellCount = 0;
+                }
+                i++;
             }
             strReader.Close();
+            if (CheckCorrectness(rowCellCount))
+            {
+                return readedText;
+            }
+            readedText.Clear();
             return readedText;
+        }
+
+        private bool CheckCorrectness(List<int> rowCellCount)
+        {
+            int temp = rowCellCount[0];
+            if (rowCellCount.Count == 1)
+            {
+                return true;
+            }
+            foreach (var i in rowCellCount)
+            {
+                if (i != temp)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public List<double> ParseNumericFile(string filePath, char separator)
         {
             var numericData = new List<double>();
             List<string> rawData = ParseFile(filePath, separator);
-            foreach (var node in rawData)
+            if (rawData != null && rawData.Count > 0)
             {
-                double numericValue;
-                if (double.TryParse(node, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
+                foreach (var node in rawData)
                 {
-                    numericData.Add(numericValue);
+                    double numericValue;
+                    if (double.TryParse(node, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
+                    {
+                        numericData.Add(numericValue);
+                    }
                 }
+                return numericData;
             }
+            numericData.Clear();
             return numericData;
         }
 
@@ -100,10 +136,14 @@ namespace ForRest.Provider.DAL
             }
             streamWriter.Close();
         }
-   
+
         private List<string> PrepareResults(List<PerformanceSet> perfSet)
         {
-            return perfSet.Select(performanceSet => performanceSet.TreeName + "," + performanceSet.TypeOfTree + "," + performanceSet.NoOfNodes + "," + performanceSet.TypeOfNodes + "," + performanceSet.SearchTime.ToString()).ToList();
+            return
+                perfSet.Select(
+                    performanceSet =>
+                    performanceSet.TreeName + "," + performanceSet.TypeOfTree + "," + performanceSet.NoOfNodes + "," +
+                    performanceSet.TypeOfNodes + "," + performanceSet.SearchTime.ToString()).ToList();
         }
     }
 }
