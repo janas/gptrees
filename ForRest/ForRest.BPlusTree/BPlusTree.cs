@@ -100,7 +100,7 @@ namespace ForRest.BPlusTree
                 return _root;
             }
             node.Parent = node.Split(data);
-            return node.Parent;
+            return (BPlusTreeNode<T>)node.Parent;
         }
 
         public override void Add(T data)
@@ -116,7 +116,7 @@ namespace ForRest.BPlusTree
             {
                 BPlusTreeNode<T> node = Insert(_root, data);
                 while (node.Parent != null)
-                    node = node.Parent;
+                    node = (BPlusTreeNode<T>)node.Parent;
                 _root = node;
             }
             UpdateNodesInfo();
@@ -159,7 +159,7 @@ namespace ForRest.BPlusTree
             else
             {
                 while (node.Parent != null)
-                    node = node.Parent;
+                    node = (BPlusTreeNode<T>)node.Parent;
                 if (node.Values.Count > 0)
                     _root = node;
                 else
