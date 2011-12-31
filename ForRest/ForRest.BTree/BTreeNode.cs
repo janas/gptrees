@@ -9,7 +9,6 @@ using ForRest.Provider.BLL;
 
 namespace ForRest.BTree
 {
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -75,7 +74,7 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has at least minimal nuber of values
+        /// Indicates whether BTreeNode has at most minimal nuber of values
         /// </summary>
         public bool IsHalf
         {
@@ -308,6 +307,7 @@ namespace ForRest.BTree
             for (j = ++i; j < Values.Count; j++)
                 rightData.Add(Values[j]);
             if (centerResult > 0)
+            {
                 for (int k = 0; k < leftData.Count; k++)
                 {
                     leftResult = _comparer.Compare(leftData[k], data);
@@ -325,7 +325,11 @@ namespace ForRest.BTree
                         }
                     }
                 }
+                if (leftData.Count == 0)
+                    leftData.Add(data);
+            }
             else
+            {
                 for (int l = 0; l < rightData.Count; l++)
                 {
                     rightResult = _comparer.Compare(rightData[l], data);
@@ -343,6 +347,9 @@ namespace ForRest.BTree
                         }
                     }
                 }
+                if (rightData.Count == 0)
+                    rightData.Add(data);
+            }
             Values.Clear();
             BTreeNode<T> leftNode = new BTreeNode<T>(_M, this.Parent, leftData);
             BTreeNode<T> rightNode = new BTreeNode<T>(_M, this.Parent, rightData);
