@@ -394,7 +394,8 @@ namespace ForRest
                                     ITree<string> textTree = factory.GetTree<string>(int.Parse(maskedTextBoxDegreeText));
                                     var treeObjectText = new TreeObject(textBoxNameText.Trim(), "text", textTree);
                                     _provider.TreeObjects.Add(treeObjectText);
-                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    progressBarAddTree.Invoke((MethodInvoker)(() => 
+                                        progressBarAddTree.Value = progressBarAddTree.Maximum));
                                     Application.DoEvents();
                                     Thread.Sleep(500);
                                     break;
@@ -404,7 +405,8 @@ namespace ForRest
                                     var treeObjectNumeric = new TreeObject(textBoxNameText.Trim(), "numeric",
                                                                            numericTree);
                                     _provider.TreeObjects.Add(treeObjectNumeric);
-                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    progressBarAddTree.Invoke((MethodInvoker)(() => 
+                                        progressBarAddTree.Value = progressBarAddTree.Maximum));
                                     Application.DoEvents();
                                     Thread.Sleep(500);
                                     break;
@@ -519,7 +521,8 @@ namespace ForRest
                                     ITree<string> textTree = factory.GetTree<string>();
                                     var treeObjectText = new TreeObject(textBoxNameText.Trim(), "text", textTree);
                                     _provider.TreeObjects.Add(treeObjectText);
-                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    progressBarAddTree.Invoke((MethodInvoker)(() =>
+                                        progressBarAddTree.Value = progressBarAddTree.Maximum));
                                     Application.DoEvents();
                                     Thread.Sleep(500);
                                     break;
@@ -528,7 +531,8 @@ namespace ForRest
                                     var treeObjectNumeric = new TreeObject(textBoxNameText.Trim(), "numeric",
                                                                            numericTree);
                                     _provider.TreeObjects.Add(treeObjectNumeric);
-                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    progressBarAddTree.Invoke((MethodInvoker)(() =>
+                                        progressBarAddTree.Value = progressBarAddTree.Maximum));
                                     Application.DoEvents();
                                     Thread.Sleep(500);
                                     break;

@@ -173,7 +173,6 @@ namespace ForRest.BTree
                         Neighbors.RemoveAt(m);
                         Neighbors.Insert(m, rightNode);
                         Neighbors.Insert(m, leftNode);
-                         
                         return Split();
                     }
                     else
@@ -207,7 +206,6 @@ namespace ForRest.BTree
                         }
                     }
             }
-             
             return this;
         }
 
@@ -223,18 +221,15 @@ namespace ForRest.BTree
                 if (result > 0)
                 {
                     Values.Insert(i, data);
-                     
                     return this;
                 }
                 else
                     if (i + 1 == Values.Count)
                     {
                         Values.Add(data);
-                         
                         return this;
                     }
             }
-             
             return this;
         }
 
