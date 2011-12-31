@@ -93,7 +93,6 @@ namespace ForRest.BTree
             {
                 return node.Add(data);
             }
-            //return node.Split(data);
             if (node == _root)
             {
                 _root = node.Split(data);
