@@ -114,16 +114,6 @@ namespace ForRest
 
         private void DrawGraph(ref List<int> result)
         {
-            if (result != null)
-            {
-                string show = "";
-                for (int i = 0; i < result.Count; i++)
-                    show += result[i].ToString() + " ";
-                MessageBox.Show(show);
-            }
-            else
-                MessageBox.Show("null");
-
             _graphPanel.Invoke((MethodInvoker) (() => _graphPanel.Controls.Clear()));
             object comboBoxSelectTreeSelectedItem = null;
             if (comboBoxSelectTree.InvokeRequired)
@@ -240,7 +230,7 @@ namespace ForRest
                         uce = new UserControlEdge(ltr, false);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
-                    _graphPanel.Invoke((MethodInvoker) (() => _graphPanel.Controls.Add(uce)));
+                    _graphPanel.Controls.Add(uce);
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -254,7 +244,7 @@ namespace ForRest
                     }
                 }
             }
-            _graphPanel.Invoke((MethodInvoker) (() => _graphPanel.Controls.Add(ucn)));
+            _graphPanel.Controls.Add(ucn);
         }
 
         private void NextControls(Rectangle rectangle, Node<string> node,
@@ -375,7 +365,6 @@ namespace ForRest
                                       TabIndex = 5
                                   };
             Controls.Add(_treeViewCreate);
-            //ResumeLayout();
         }
 
         private void InitializeGraph()
@@ -518,7 +507,7 @@ namespace ForRest
                     peroformanceSet.NoOfNodes = "notImplemented";
                     _provider.PerformanceSets.Add(peroformanceSet);
                 }
-                ShowTree(ref result);
+                e.Result = result;
             }
             else if (treeObject != null && (treeObject.Type.Equals("numeric") && textBoxSearchFor.Text != null))
             {
@@ -556,7 +545,7 @@ namespace ForRest
                         peroformanceSet.NoOfNodes = "notImplemented";
                         _provider.PerformanceSets.Add(peroformanceSet);
                     }
-                    ShowTree(ref result);
+                    e.Result = result;
                 }
             }
         }
@@ -564,6 +553,8 @@ namespace ForRest
         private void BackgroundWorkerSearchRunWorkerCompleted(object sender,
                                                               System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            List<int> result = e.Result as List<int>;
+            ShowTree(ref result);
             btnSearch.Enabled = true;
         }
 
