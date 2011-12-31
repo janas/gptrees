@@ -228,6 +228,11 @@ namespace ForRest
                     {
                         CreateEditBox(sender);
                     }
+                    if (e.KeyChar == 27)
+                    {
+                        editBox.Hide();
+                        listBoxSearchItems.SelectedItem = null;
+                    }
                     break;
             }
         }
@@ -243,6 +248,11 @@ namespace ForRest
                 listBoxSearchItems.Items.RemoveAt(listBoxSearchItems.SelectedIndex);
                 listBoxSearchItems.SelectedItem = null;
             }
+            if (e.KeyData == Keys.Escape)
+            {
+                editBox.Hide();
+                listBoxSearchItems.SelectedItem = null;
+            }
         }
 
         private void ListBoxSearchItemsFocusOver(object sender, EventArgs e)
@@ -250,6 +260,7 @@ namespace ForRest
             switch (IsAdd)
             {
                 case true:
+                    if (listBoxSearchItems.Items.Contains(editBox.Text)) return;
                     listBoxSearchItems.Items.Add(editBox.Text);
                     editBox.Hide();
                     break;
@@ -264,19 +275,27 @@ namespace ForRest
 
         private void ListBoxSearchItemsEditOver(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar != 13) return;
-            switch (IsAdd)
+            if (e.KeyChar == 13)
             {
-                case true:
-                    listBoxSearchItems.Items.Add(editBox.Text);
-                    editBox.Hide();
-                    break;
-                case false:
-                    var itemSelected = listBoxSearchItems.SelectedIndex;
-                    listBoxSearchItems.Items[itemSelected] = editBox.Text;
-                    editBox.Hide();
-                    listBoxSearchItems.SelectedItem = null;
-                    break;
+                switch (IsAdd)
+                {
+                    case true:
+                        if (listBoxSearchItems.Items.Contains(editBox.Text)) return;
+                        listBoxSearchItems.Items.Add(editBox.Text);
+                        editBox.Hide();
+                        break;
+                    case false:
+                        var itemSelected = listBoxSearchItems.SelectedIndex;
+                        listBoxSearchItems.Items[itemSelected] = editBox.Text;
+                        editBox.Hide();
+                        listBoxSearchItems.SelectedItem = null;
+                        break;
+                }
+            }
+            if (e.KeyChar == 27)
+            {
+                editBox.Hide();
+                listBoxSearchItems.SelectedItem = null;
             }
         }
 
