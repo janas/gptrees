@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Windows.Forms;
 using ForRest.Provider.BLL;
 using ForRest.Provider.DAL;
 
@@ -110,7 +111,7 @@ namespace ForRest.Provider
                 }
                 catch (Exception exception)
                 {
-                    throw;
+                    MessageBox.Show(exception.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             return genericList;
