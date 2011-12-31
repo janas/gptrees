@@ -15,6 +15,7 @@ namespace ForRest.Provider.BLL
         public List<T> Values { get; set; }
         public NodeList<T> Neighbors { get; set; }
         public string NodeInfo { get; set; }
+        public Node<T> Parent { get; set; }
 
         public Node()
         {

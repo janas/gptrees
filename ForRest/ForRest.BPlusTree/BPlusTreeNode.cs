@@ -15,15 +15,15 @@ namespace ForRest.BPlusTree
     /// </summary>
     public class BPlusTreeNode<T> : Node<T>
     {
-        private BPlusTreeNode<T> _parent;
+        BPlusTreeNode<T> _parent;
         private bool _isLeaf;
         private readonly int _M;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
-        public BPlusTreeNode<T> Parent
+        public new Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = value; }
+            set { _parent = (BPlusTreeNode<T>)value; }
         }
 
         private void UpdateNodeInfo()
@@ -262,24 +262,33 @@ namespace ForRest.BPlusTree
             rightNeighbors.Add(Neighbors[j]);
 
             Values.Clear();
-            BPlusTreeNode<T> leftNode = new BPlusTreeNode<T>(_M, this.Parent, leftData, leftNeighbors);
-            leftNode.isLeaf = false;
-            BPlusTreeNode<T> rightNode = new BPlusTreeNode<T>(_M, this.Parent, rightData, rightNeighbors);
+            BPlusTreeNode<T> rightNode = new BPlusTreeNode<T>(_M, (BPlusTreeNode<T>)this.Parent, rightData, rightNeighbors);
             rightNode.isLeaf = false;
+            BPlusTreeNode<T> leftNode = new BPlusTreeNode<T>(_M, (BPlusTreeNode<T>)this.Parent, leftData, leftNeighbors);
+            leftNode.isLeaf = false;
+
+            BPlusTreeNode<T> thisParent = (BPlusTreeNode<T>)this.Parent;
+
+            this.Values = leftNode.Values;
+            this.Neighbors = leftNode.Neighbors;
+            this.NodeInfo = leftNode.NodeInfo;
+            this.Parent = leftNode.Parent;
+            this.isLeaf = leftNode.isLeaf;
+            this.Neighbors.Add(rightNode);
 
             List<T> centerDataList = new List<T>();
             centerDataList.Add(centerData);
             NodeList<T> children = new NodeList<T>(0);
-            children.Add(leftNode);
+            children.Add(this);
             children.Add(rightNode);
             BPlusTreeNode<T> centerNode = new BPlusTreeNode<T>(_M, null, centerDataList, children);
             centerNode.isLeaf = false;
 
-            if (_parent != null)
+            if (thisParent != null)
             {
-                _parent.isLeaf = false;
-                _parent = _parent.Add(centerNode);
-                return _parent;
+                thisParent.isLeaf = false;
+                thisParent = thisParent.Add(centerNode);
+                return thisParent;
             }
             else
             {
@@ -341,8 +350,8 @@ namespace ForRest.BPlusTree
                     }
                 }
             Values.Clear();
-            BPlusTreeNode<T> leftNode = new BPlusTreeNode<T>(_M, this.Parent, leftData);
-            BPlusTreeNode<T> rightNode = new BPlusTreeNode<T>(_M, this.Parent, rightData);
+            BPlusTreeNode<T> leftNode = new BPlusTreeNode<T>(_M, (BPlusTreeNode<T>)this.Parent, leftData);
+            BPlusTreeNode<T> rightNode = new BPlusTreeNode<T>(_M, (BPlusTreeNode<T>)this.Parent, rightData);
 
             List<T> centerDataList = new List<T>();
             centerDataList.Add(centerData);
