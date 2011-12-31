@@ -37,8 +37,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "UserControlNode";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.UserControlNode_Paint);
-            this.MouseHover += new System.EventHandler(this.UserControlNode_MouseHover);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.UserControlNodePaint);
+            this.MouseHover += new System.EventHandler(this.UserControlNodeMouseHover);
             this.ResumeLayout(false);
 
         }

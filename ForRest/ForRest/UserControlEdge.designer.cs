@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Name = "UserControlEdge";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.UserControlEdge_Paint);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.UserControlEdgePaint);
             this.ResumeLayout(false);
 
         }
