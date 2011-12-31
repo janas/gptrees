@@ -9,10 +9,17 @@ namespace ForRest.BTree
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
         private readonly int _m;
 
+        private void UpdateNodesInfo()
+        {
+            if (_root != null)
+                _root.UpdateNodesInfo();
+        }
+
         public BTree(int degree)
         {
             _root = null;
             _m = degree;
+            UpdateNodesInfo();
         }
 
         public int M
@@ -29,6 +36,7 @@ namespace ForRest.BTree
         public override void Clear()
         {
             _root = null;
+            UpdateNodesInfo();
         }
 
         public override List<int> Contains(T data)
@@ -48,6 +56,7 @@ namespace ForRest.BTree
                             return null;
                         current = (BTreeNode<T>) current.Neighbors[i];
                         path.Add(i);
+                        break;
                     }
                     else
                     {
@@ -57,6 +66,7 @@ namespace ForRest.BTree
                                 return null;
                             current = (BTreeNode<T>) current.Neighbors[i + 1];
                             path.Add(i + 1);
+                            break;
                         }
                     }
                 }
@@ -80,7 +90,9 @@ namespace ForRest.BTree
                 return null;
             }
             if (!node.IsFull)
+            {
                 return node.Add(data);
+            }
             //return node.Split(data);
             if (node == _root)
             {
@@ -107,9 +119,10 @@ namespace ForRest.BTree
                     node = node.Parent;
                 _root = node;
             }
+            UpdateNodesInfo();
         }
 
-        private bool Delete(BTreeNode<T> node, T data)
+        private BTreeNode<T> Delete(BTreeNode<T> node, T data)
         {
             while (node != null)
             {
@@ -121,29 +134,39 @@ namespace ForRest.BTree
                     if (result > 0)
                     {
                         if (node.Neighbors == null)
-                            return false;
-                        node = (BTreeNode<T>) node.Neighbors[i];
-                        return Delete(node, data);
+                            return null;
+                        return Delete((BTreeNode<T>)node.Neighbors[i], data);
                     }
-                    if (i + 1 == node.Values.Count)
+                    else
                     {
-                        if (node.Neighbors == null)
-                            return false;
-                        node = (BTreeNode<T>) node.Neighbors[i + 1];
-                        return Delete(node, data);
+                        if (i + 1 == node.Values.Count)
+                        {
+                            if (node.Neighbors == null)
+                                return null;
+                            return Delete((BTreeNode<T>)node.Neighbors[i + 1], data);
+                        }
                     }
                 }
             }
-            return false;
+            return null;
         }
 
         public override bool Remove(T data)
         {
-            List<int> path = new List<int>();
-            if (_root == null)
+            BTreeNode<T> node = Delete(_root, data);
+            if (node == null)
                 return false;
-            return Delete(_root, data);
+            else
+            {
+                while (node.Parent != null)
+                    node = node.Parent;
+                if (node.Values.Count > 0)
+                    _root = node;
+                else
+                    _root = null;
+                UpdateNodesInfo();
+                return true;
+            }
         }
-
     }
 }

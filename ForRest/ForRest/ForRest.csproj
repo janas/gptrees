@@ -111,6 +111,18 @@
     <Compile Include="Search.Designer.cs">
       <DependentUpon>Search.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControlEdge.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlEdge.designer.cs">
+      <DependentUpon>UserControlEdge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlNode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlNode.designer.cs">
+      <DependentUpon>UserControlNode.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -150,6 +162,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Search.resx">
       <DependentUpon>Search.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlEdge.resx">
+      <DependentUpon>UserControlEdge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlNode.resx">
+      <DependentUpon>UserControlNode.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

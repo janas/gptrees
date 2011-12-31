@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BatchProcess));
             this.groupBoxControlsBatchProcess = new System.Windows.Forms.GroupBox();
+            this.btnExport = new System.Windows.Forms.Button();
             this.listBoxSearchItems = new System.Windows.Forms.ListBox();
             this.groupBoxDataType = new System.Windows.Forms.GroupBox();
             this.comboBoxDataType = new System.Windows.Forms.ComboBox();
@@ -40,8 +41,8 @@
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.editBox = new System.Windows.Forms.TextBox();
             this.groupBoxLog = new System.Windows.Forms.GroupBox();
-            this.btnExport = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.backgroundWorkerBatchProcess = new System.ComponentModel.BackgroundWorker();
             this.groupBoxControlsBatchProcess.SuspendLayout();
             this.groupBoxDataType.SuspendLayout();
             this.groupBoxLog.SuspendLayout();
@@ -62,6 +63,16 @@
             this.groupBoxControlsBatchProcess.TabIndex = 0;
             this.groupBoxControlsBatchProcess.TabStop = false;
             this.groupBoxControlsBatchProcess.Text = "Controls";
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(6, 61);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(149, 36);
+            this.btnExport.TabIndex = 8;
+            this.btnExport.Text = "Export results to CSV file";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.BtnExportClick);
             // 
             // listBoxSearchItems
             // 
@@ -168,15 +179,10 @@
             this.groupBoxLog.TabStop = false;
             this.groupBoxLog.Text = "Actions Log";
             // 
-            // btnExport
+            // backgroundWorkerBatchProcess
             // 
-            this.btnExport.Location = new System.Drawing.Point(6, 61);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(149, 36);
-            this.btnExport.TabIndex = 8;
-            this.btnExport.Text = "Export results to CSV file";
-            this.btnExport.UseVisualStyleBackColor = true;
-            this.btnExport.Click += new System.EventHandler(this.BtnExportClick);
+            this.backgroundWorkerBatchProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerBatchProcessDoWork);
+            this.backgroundWorkerBatchProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerBatchProcessRunWorkerCompleted);
             // 
             // BatchProcess
             // 
@@ -214,5 +220,6 @@
         private System.Windows.Forms.TextBox editBox;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerBatchProcess;
     }
 }

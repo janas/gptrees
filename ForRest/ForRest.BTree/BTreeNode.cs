@@ -26,6 +26,31 @@ namespace ForRest.BTree
             set { _parent = value; }
         }
 
+        private void UpdateNodeInfo()
+        {
+            string result = "<";
+            if (_parent == null)
+                result += "R";
+            if (isLeaf)
+                result += "L";
+            if (IsDeficient)
+                result += "D";
+            if (IsHalf)
+                result += "H";
+            if (IsFull)
+                result += "F";
+            result += "> ";
+            NodeInfo = result;
+        }
+
+        public void UpdateNodesInfo()
+        {
+            UpdateNodeInfo();
+            if (Neighbors != null)
+                foreach (Node<T> n in Neighbors)
+                    ((BTreeNode<T>)n).UpdateNodesInfo();
+        }
+
         /// <summary>
         /// Indicates whether BTreeNode is a leaf
         /// </summary>
@@ -50,7 +75,7 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has minimal nuber of values
+        /// Indicates whether BTreeNode has at least minimal nuber of values
         /// </summary>
         public bool IsHalf
         {
@@ -60,6 +85,20 @@ namespace ForRest.BTree
                     return false;
                 else
                     return true;
+            }
+        }
+
+        /// <summary>
+        /// Indicates whether BTreeNode has less than minimal nuber of values
+        /// </summary>
+        public bool IsDeficient
+        {
+            get
+            {
+                if (Values.Count < _M)
+                    return true;
+                else
+                    return false;
             }
         }
 
@@ -77,6 +116,7 @@ namespace ForRest.BTree
             Neighbors = null;
             _isLeaf = true;
             _M = degree;
+             
         }
 
         /// <summary>
@@ -97,6 +137,7 @@ namespace ForRest.BTree
             {
                 ((BTreeNode<T>)Neighbors[i]).Parent = this;
             }
+             
         }
 
         /// <summary>
@@ -133,6 +174,7 @@ namespace ForRest.BTree
                         Neighbors.RemoveAt(m);
                         Neighbors.Insert(m, rightNode);
                         Neighbors.Insert(m, leftNode);
+                         
                         return Split();
                     }
                     else
@@ -153,6 +195,7 @@ namespace ForRest.BTree
                             Neighbors.RemoveAt(m + 1);
                             Neighbors.Add(leftNode);
                             Neighbors.Add(rightNode);
+                             
                             return Split();
                         }
                         else
@@ -165,6 +208,7 @@ namespace ForRest.BTree
                         }
                     }
             }
+             
             return this;
         }
 
@@ -180,15 +224,18 @@ namespace ForRest.BTree
                 if (result > 0)
                 {
                     Values.Insert(i, data);
+                     
                     return this;
                 }
                 else
                     if (i + 1 == Values.Count)
                     {
                         Values.Add(data);
+                         
                         return this;
                     }
             }
+             
             return this;
         }
 
@@ -233,17 +280,12 @@ namespace ForRest.BTree
 
             if (_parent != null)
             {
-                leftNode.Parent = _parent;
-                rightNode.Parent = _parent;
                 _parent.isLeaf = false;
-                //centerNode.Parent = _parent.Parent;
                 _parent = _parent.Add(centerNode);
                 return _parent;
             }
             else
             {
-                leftNode.Parent = centerNode;
-                rightNode.Parent = centerNode;
                 return centerNode;
             }
         }
@@ -319,24 +361,162 @@ namespace ForRest.BTree
                 rightNode.Parent = _parent;
                 _parent.isLeaf = false;
                 _parent = _parent.Add(centerNode);
+                 
                 return _parent;
             }
             else
             {
                 leftNode.Parent = centerNode;
                 rightNode.Parent = centerNode;
+                 
                 return centerNode;
             }
         }
 
-        public bool Delete(T data, int index)
+        public BTreeNode<T> Merge()
         {
-            if (isLeaf && !IsHalf)
+            BTreeNode<T> left = null;
+            BTreeNode<T> right = null;
+            int myIndex = -1;
+            // Get right and left sibling.
+            for (int i = 0; i < _parent.Neighbors.Count; i++)
             {
-                Values.RemoveAt(index);
-                return true;
+                if (_parent.Neighbors[i] == this)
+                {
+                    myIndex = i;
+                    try
+                    {
+                        left = (BTreeNode<T>)_parent.Neighbors[i - 1];
+                    }
+                    catch { }
+                    try
+                    {
+                        right = (BTreeNode<T>)_parent.Neighbors[i + 1];
+                    }
+                    catch { }
+                }
             }
-            return false;
+            // If it is the only child.
+            if (myIndex == -1 || (left == null && right == null))
+            {
+                return this;
+            }
+            // If it has right sibling.
+            if (right != null)
+            {
+                if (!right.IsHalf)
+                {
+                    // Borrow from right.
+                    Values.Add(_parent.Values[myIndex]);
+                    T borrowed = right.Values[0];
+                    _parent.Values[myIndex] = borrowed;
+                    right.Values.Remove(borrowed);
+                    if (right.Neighbors != null)
+                    {
+                        Neighbors.Add(right.Neighbors[0]);
+                        ((BTreeNode<T>)right.Neighbors[0]).Parent = this;
+                        right.Neighbors.RemoveAt(0);
+                    }
+                }
+                else
+                {
+                    // Merge with right
+                    T fromParent = _parent.Values[myIndex];
+                    Values.Add(fromParent);
+                    for (int i = 0; i < right.Values.Count; i++)
+                        Values.Add(right.Values[i]);
+                    if (right.Neighbors != null)
+                        for (int j = 0; j < right.Neighbors.Count; j++)
+                        {
+                            Neighbors.Add(right.Neighbors[j]);
+                            ((BTreeNode<T>)right.Neighbors[j]).Parent = this;
+                        }
+                    _parent.Neighbors.Remove(right);
+                    _parent.Values.Remove(fromParent);
+                }
+            }
+            else
+            {
+                if (!left.IsHalf)
+                {
+                    // Borrow from left.
+                    Values.Insert(0, _parent.Values[myIndex - 1]);
+                    T borrowed = left.Values[left.Values.Count - 1];
+                    _parent.Values[myIndex - 1] = borrowed;
+                    left.Values.Remove(borrowed);
+                    if (left.Neighbors != null)
+                    {
+                        Neighbors.Add(left.Neighbors[left.Neighbors.Count - 1]);
+                        ((BTreeNode<T>)left.Neighbors[left.Neighbors.Count - 1]).Parent = this;
+                        left.Neighbors.RemoveAt(left.Neighbors.Count - 1);
+                    }
+                }
+                else
+                {
+                    // Merge with left
+                    T fromParent = _parent.Values[myIndex - 1];
+                    left.Values.Add(fromParent);
+                    for (int i = 0; i < this.Values.Count; i++)
+                        left.Values.Add(this.Values[i]);
+                    if (this.Neighbors != null)
+                        for (int j = 0; j < this.Neighbors.Count; j++)
+                        {
+                            left.Neighbors.Add(this.Neighbors[j]);
+                            ((BTreeNode<T>)this.Neighbors[j]).Parent = this;
+                        }
+                    _parent.Neighbors.Remove(this);
+                    _parent.Values.Remove(fromParent);
+                }
+            }
+            if (_parent.IsDeficient && _parent.Parent != null)
+            {
+                return _parent.Merge();
+            }
+            if (_parent.Parent == null && (_parent.Values == null || _parent.Values.Count == 0))
+            {
+                this.Parent = null;
+            }
+            return this;
+        }
+
+        public BTreeNode<T> Delete(T data, int index)
+        {
+            if (isLeaf)
+            {
+                if (!IsHalf)
+                {
+                    Values.RemoveAt(index);
+                    return this;
+                }
+                else
+                {
+                    if (_parent == null)
+                    {
+                        Values.RemoveAt(index);
+                        return this;
+                    }
+                    else
+                    {
+                        Values.Remove(data);
+                        return Merge();
+                    }
+                }
+            }
+            else
+            {
+                // Find successor.
+                BTreeNode<T> successorNode = null;
+                for (int i = 0; i < Values.Count; i++)
+                {
+                    int result = _comparer.Compare(Values[i], data);
+                    if (result <= 0)
+                        successorNode = (BTreeNode<T>)Neighbors[i + 1];
+                }
+                while (successorNode.Neighbors != null)
+                    successorNode = (BTreeNode<T>)successorNode.Neighbors[0];
+                Values[index] = successorNode.Values[0];
+                return successorNode.Delete(Values[index], 0);
+            }
         }
     }
 }

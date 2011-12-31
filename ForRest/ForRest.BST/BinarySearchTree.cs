@@ -64,14 +64,12 @@ namespace ForRest.BST
             while (current != null)
             {
                 result = _comparer.Compare(current.Values[0], data);
-                if (result == 0)
-                    return;
                 if (result > 0)
                 {
                     parent = current;
                     current = current.Left;
                 }
-                else if (result < 0)
+                else
                 {
                     parent = current;
                     current = current.Right;
@@ -117,7 +115,7 @@ namespace ForRest.BST
             if (current.Right == null)
             {
                 if (parent == null)
-                    _root = parent.Left;
+                    _root = current.Left;
                 else
                 {
                     result = _comparer.Compare(parent.Values[0], current.Values[0]);

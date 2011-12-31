@@ -6,7 +6,7 @@ namespace ForRest
 {
     public partial class MainForm : Form
     {
-        readonly Provider.Provider _provider = new Provider.Provider();
+        private readonly Provider.Provider _provider = new Provider.Provider();
         private int _createState;
         private int _searchState;
         private int _batchProcessState;
@@ -28,7 +28,8 @@ namespace ForRest
             if (_createState == 0)
             {
                 if (_create != null && !_create.IsDisposed) return;
-                _create = new Create(_provider, Mode, _graphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _create = new Create(_provider, Mode, _graphMode)
+                              {MdiParent = this, WindowState = FormWindowState.Maximized};
                 _create.Show();
                 ActivateMdiChild(null);
                 ActivateMdiChild(_create);
@@ -36,11 +37,15 @@ namespace ForRest
                 _createState = 1;
                 createToolStripMenuItem.Checked = true;
                 if (_search != null && (_search != null || !_search.IsDisposed))
-                { _search.Close(); }
+                {
+                    _search.Close();
+                }
                 _searchState = 0;
                 searchToolStripMenuItem.Checked = false;
                 if (_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
-                { _batchProcess.Close(); }
+                {
+                    _batchProcess.Close();
+                }
                 _batchProcessState = 0;
                 batchProcessToolStripMenuItem.Checked = false;
             }
@@ -50,7 +55,6 @@ namespace ForRest
                 _createState = 0;
                 createToolStripMenuItem.Checked = false;
             }
-            
         }
 
         private void BtnSearchClick(object sender, EventArgs e)
@@ -58,19 +62,23 @@ namespace ForRest
             if (_searchState == 0)
             {
                 if (_search != null && !_search.IsDisposed) return;
-                _search = new Search(_provider, _graphMode) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _search = new Search(_provider, _graphMode) {MdiParent = this, WindowState = FormWindowState.Maximized};
                 _search.Show();
                 ActivateMdiChild(null);
                 ActivateMdiChild(_search);
                 _search.BringToFront();
                 _searchState = 1;
                 searchToolStripMenuItem.Checked = true;
-                if(_create != null && (_create != null || !_create.IsDisposed))
-                { _create.Close(); }
+                if (_create != null && (_create != null || !_create.IsDisposed))
+                {
+                    _create.Close();
+                }
                 _createState = 0;
                 createToolStripMenuItem.Checked = false;
-                if(_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
-                { _batchProcess.Close(); }
+                if (_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
+                {
+                    _batchProcess.Close();
+                }
                 _batchProcessState = 0;
                 batchProcessToolStripMenuItem.Checked = false;
             }
@@ -87,7 +95,7 @@ namespace ForRest
             if (_batchProcessState == 0)
             {
                 if (_batchProcess != null && !_batchProcess.IsDisposed) return;
-                _batchProcess = new BatchProcess(_provider) { MdiParent = this, WindowState = FormWindowState.Maximized };
+                _batchProcess = new BatchProcess(_provider) {MdiParent = this, WindowState = FormWindowState.Maximized};
                 _batchProcess.Show();
                 ActivateMdiChild(null);
                 ActivateMdiChild(_batchProcess);
@@ -95,11 +103,15 @@ namespace ForRest
                 _batchProcessState = 1;
                 batchProcessToolStripMenuItem.Checked = true;
                 if (_create != null && (_create != null || !_create.IsDisposed))
-                { _create.Close(); }
+                {
+                    _create.Close();
+                }
                 _createState = 0;
                 createToolStripMenuItem.Checked = false;
                 if (_search != null && (_search != null || !_search.IsDisposed))
-                { _search.Close(); }
+                {
+                    _search.Close();
+                }
                 _searchState = 0;
                 searchToolStripMenuItem.Checked = false;
             }
@@ -110,7 +122,7 @@ namespace ForRest
                 batchProcessToolStripMenuItem.Checked = false;
             }
         }
-        
+
         private void BtnAboutClick(object sender, EventArgs e)
         {
             var aboutBox = new AboutBox();
@@ -163,6 +175,11 @@ namespace ForRest
 
         private void TreeViewToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (_graphMode == 0)
+            {
+                treeViewToolStripMenuItem.Checked = true;
+                return;
+            }
             if (treeViewToolStripMenuItem.Checked)
             {
                 _graphMode = 0;
@@ -176,19 +193,25 @@ namespace ForRest
             }
             if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
             {
-                var create = (Create)ActiveMdiChild;
+                var create = (Create) ActiveMdiChild;
                 create.GraphMode = _graphMode;
                 create.ChangeGraphMode();
             }
             if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
             {
-                var search = (Search)ActiveMdiChild;
+                var search = (Search) ActiveMdiChild;
                 search.GraphMode = _graphMode;
+                search.ChangeGraphMode();
             }
         }
 
         private void GraphToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (_graphMode == 1)
+            {
+                graphToolStripMenuItem.Checked = true;
+                return;
+            }
             if (graphToolStripMenuItem.Checked)
             {
                 _graphMode = 1;
@@ -210,6 +233,7 @@ namespace ForRest
             {
                 var search = (Search) ActiveMdiChild;
                 search.GraphMode = _graphMode;
+                search.ChangeGraphMode();
             }
         }
     }
