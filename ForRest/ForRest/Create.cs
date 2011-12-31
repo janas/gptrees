@@ -274,8 +274,7 @@ namespace ForRest
                                                | AnchorStyles.Right,
                                       Location = new Point(195, 16),
                                       Name = "treeViewCreate",
-                                      Size = new Size(377, 434),
-                                      TabIndex = 5
+                                      Size = new Size(Width-220, Height-65),
                                   };
             Controls.Add(_treeViewCreate);
         }
@@ -289,8 +288,7 @@ namespace ForRest
                                            | AnchorStyles.Right,
                                   Location = new Point(195, 16),
                                   Name = "graphPanel",
-                                  Size = new Size(377, 434),
-                                  TabIndex = 5,
+                                  Size = new Size(Width - 220, Height - 65),
                                   AutoScroll = true
                               };
             Controls.Add(_graphPanel);

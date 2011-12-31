@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using ForRest.Provider.BLL;
 
@@ -393,6 +394,9 @@ namespace ForRest
                                     ITree<string> textTree = factory.GetTree<string>(int.Parse(maskedTextBoxDegreeText));
                                     var treeObjectText = new TreeObject(textBoxNameText.Trim(), "text", textTree);
                                     _provider.TreeObjects.Add(treeObjectText);
+                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    Application.DoEvents();
+                                    Thread.Sleep(500);
                                     break;
                                 case 1:
                                     ITree<double> numericTree =
@@ -400,6 +404,9 @@ namespace ForRest
                                     var treeObjectNumeric = new TreeObject(textBoxNameText.Trim(), "numeric",
                                                                            numericTree);
                                     _provider.TreeObjects.Add(treeObjectNumeric);
+                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    Application.DoEvents();
+                                    Thread.Sleep(500);
                                     break;
                             }
                             e.Result = true;
@@ -512,12 +519,18 @@ namespace ForRest
                                     ITree<string> textTree = factory.GetTree<string>();
                                     var treeObjectText = new TreeObject(textBoxNameText.Trim(), "text", textTree);
                                     _provider.TreeObjects.Add(treeObjectText);
+                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    Application.DoEvents();
+                                    Thread.Sleep(500);
                                     break;
                                 case 1:
                                     ITree<double> numericTree = factory.GetTree<double>();
                                     var treeObjectNumeric = new TreeObject(textBoxNameText.Trim(), "numeric",
                                                                            numericTree);
                                     _provider.TreeObjects.Add(treeObjectNumeric);
+                                    progressBarAddTree.Value = progressBarAddTree.Maximum;
+                                    Application.DoEvents();
+                                    Thread.Sleep(500);
                                     break;
                             }
                             e.Result = true;
