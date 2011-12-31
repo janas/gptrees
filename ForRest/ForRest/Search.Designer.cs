@@ -44,6 +44,7 @@
             this.btnResetResultsSet = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.toolTipHelperSearch = new System.Windows.Forms.ToolTip(this.components);
+            this.backgroundWorkerSearch = new System.ComponentModel.BackgroundWorker();
             this.groupBoxResults.SuspendLayout();
             this.groupBoxSelectTree.SuspendLayout();
             this.groupBoxSearchFor.SuspendLayout();
@@ -58,6 +59,7 @@
             this.comboBoxSelectTree.Name = "comboBoxSelectTree";
             this.comboBoxSelectTree.Size = new System.Drawing.Size(136, 21);
             this.comboBoxSelectTree.TabIndex = 0;
+            this.comboBoxSelectTree.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSelectTreeSelectedIndexChanged);
             // 
             // groupBoxResults
             // 
@@ -180,6 +182,11 @@
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.BtnSearchClick);
             // 
+            // backgroundWorkerSearch
+            // 
+            this.backgroundWorkerSearch.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerSearchDoWork);
+            this.backgroundWorkerSearch.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerSearchRunWorkerCompleted);
+            // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,5 +225,6 @@
         private System.Windows.Forms.Button btnResetResultsSet;
         private System.Windows.Forms.Button btnShowResultsSet;
         private System.Windows.Forms.ToolTip toolTipHelperSearch;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerSearch;
     }
 }
