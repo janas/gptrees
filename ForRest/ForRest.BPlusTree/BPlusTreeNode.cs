@@ -224,18 +224,15 @@ namespace ForRest.BPlusTree
                 if (result > 0)
                 {
                     Values.Insert(i, data);
-                     
                     return this;
                 }
                 else
                     if (i + 1 == Values.Count)
                     {
                         Values.Add(data);
-                         
                         return this;
                     }
             }
-             
             return this;
         }
 
@@ -256,8 +253,8 @@ namespace ForRest.BPlusTree
                 leftNeighbors.Add(Neighbors[i]);
             }
             centerData = Values[i];
-            leftNeighbors.Add(Neighbors[i]);
-            for (j = ++i; j < Values.Count; j++)
+            //leftNeighbors.Add(Neighbors[i]);
+            for (j = i; j < Values.Count; j++)
             {
                 rightData.Add(Values[j]);
                 rightNeighbors.Add(Neighbors[j]);
@@ -305,7 +302,7 @@ namespace ForRest.BPlusTree
                 leftData.Add(Values[i]);
             centerData = Values[i];
             centerResult = _comparer.Compare(Values[i], data);
-            for (j = ++i; j < Values.Count; j++)
+            for (j = i; j < Values.Count; j++)
                 rightData.Add(Values[j]);
             if (centerResult > 0)
                 for (int k = 0; k < leftData.Count; k++)
