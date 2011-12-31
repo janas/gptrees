@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -23,6 +24,7 @@ namespace ForRest
             _provider = provider;
             _fromFile = fromFile;
             FillTrees();
+            SetTitleLabel();
         }
 
         public AddTree(Provider.Provider provider, bool fromFile, int mode)
@@ -32,6 +34,7 @@ namespace ForRest
             _fromFile = fromFile;
             _mode = mode;
             FillTrees();
+            SetTitleLabel();
         }
 
         public AddTree(Provider.Provider provider, bool fromFile, int mode, bool group)
@@ -42,6 +45,7 @@ namespace ForRest
             _mode = mode;
             _group = @group;
             FillTrees();
+            SetTitleLabel();
         }
 
         private void InitializeAdd()
@@ -49,7 +53,40 @@ namespace ForRest
             Width = 315;
             labelDataType.Visible = true;
             comboBoxDataType.Visible = true;
-            btnAdd.Location = new Point(86, 124);
+            btnAdd.Location = new Point(86, 140);
+        }
+
+        private void SetTitleLabel()
+        {
+            labelMode.ResetText();
+            if (!_fromFile && !_group)
+            {
+                labelMode.Text = "Adding tree manually";
+            }
+            if (_fromFile && !_group)
+            {
+                switch (_mode)
+                {
+                    case 0:
+                        labelMode.Text = "Adding text tree from file";
+                        break;
+                    case 1:
+                        labelMode.Text = "Adding numeric tree from file";
+                        break;
+                }
+            }
+            if (_fromFile && _group)
+            {
+                switch (_mode)
+                {
+                    case 0:
+                        labelMode.Text = "Adding text trees in batch";
+                        break;
+                    case 1:
+                        labelMode.Text = "Adding numeric trees in batch";
+                        break;
+                }
+            }
         }
 
         private void FillTrees()
@@ -89,20 +126,20 @@ namespace ForRest
                     //from file, group
                     if (_fromFile && _group)
                     {
-                        if (string.IsNullOrEmpty(maskedTextBoxDegree.Text))
+                        if (string.IsNullOrEmpty(maskedTextBoxDegree.Text) || int.Parse(maskedTextBoxDegree.Text) < 2)
                         {
-                            toolTipHelper.ToolTipTitle = "No degree is entered";
-                            toolTipHelper.Show("Please key in tree degree first.", maskedTextBoxDegree, 3000);
+                            toolTipHelper.ToolTipTitle = "Wrong degree is entered";
+                            toolTipHelper.Show("Please key in correct tree degree first.", maskedTextBoxDegree, 3000);
                             return;
                         }
                     }
                     //from file, not group
                     if (_fromFile && !_group)
                     {
-                        if (string.IsNullOrEmpty(maskedTextBoxDegree.Text))
+                        if (string.IsNullOrEmpty(maskedTextBoxDegree.Text) || int.Parse(maskedTextBoxDegree.Text) < 2)
                         {
-                            toolTipHelper.ToolTipTitle = "No degree is entered";
-                            toolTipHelper.Show("Please key in tree degree first.", maskedTextBoxDegree, 3000);
+                            toolTipHelper.ToolTipTitle = "Wrong degree is entered";
+                            toolTipHelper.Show("Please key in correct tree degree first.", maskedTextBoxDegree, 3000);
                             return;
                         }
                     }
@@ -115,10 +152,10 @@ namespace ForRest
                             toolTipHelper.Show("Please select data type from the list first.", comboBoxDataType, 3000);
                             return;
                         }
-                        if (string.IsNullOrEmpty(maskedTextBoxDegree.Text))
+                        if (string.IsNullOrEmpty(maskedTextBoxDegree.Text) || int.Parse(maskedTextBoxDegree.Text) < 2)
                         {
-                            toolTipHelper.ToolTipTitle = "No degree is entered";
-                            toolTipHelper.Show("Please key in tree degree first.", maskedTextBoxDegree, 3000);
+                            toolTipHelper.ToolTipTitle = "Wrong degree is entered";
+                            toolTipHelper.Show("Please key in correct tree degree first.", maskedTextBoxDegree, 3000);
                             return;
                         }
                     }
@@ -127,9 +164,12 @@ namespace ForRest
                     //not from file, not group
                     if (!_fromFile && !_group)
                     {
-                        toolTipHelper.ToolTipTitle = "No data type is selected";
-                        toolTipHelper.Show("Please select data type from the list first.", comboBoxDataType, 3000);
-                        return;
+                        if (comboBoxDataType.SelectedItem == null)
+                        {
+                            toolTipHelper.ToolTipTitle = "No data type is selected";
+                            toolTipHelper.Show("Please select data type from the list first.", comboBoxDataType, 3000);
+                            return;
+                        }
                     }
                     break;
             }
@@ -167,7 +207,7 @@ namespace ForRest
                         Width = 315;
                         labelTreeDegree.Visible = true;
                         maskedTextBoxDegree.Visible = true;
-                        btnAdd.Location = new Point(86, 124);
+                        btnAdd.Location = new Point(86, 140);
                         ShowToolTip();
                     }
                     if (factory.NeedDegree == false)
@@ -175,7 +215,7 @@ namespace ForRest
                         Width = 175;
                         labelTreeDegree.Visible = false;
                         maskedTextBoxDegree.Visible = false;
-                        btnAdd.Location = new Point(12, 124);
+                        btnAdd.Location = new Point(12, 140);
                     }
                     break;
                 case false:
@@ -184,7 +224,7 @@ namespace ForRest
                         Width = 315;
                         labelTreeDegree.Visible = true;
                         maskedTextBoxDegree.Visible = true;
-                        btnAdd.Location = new Point(86, 124);
+                        btnAdd.Location = new Point(86, 140);
                         ShowToolTip();
                     }
                     if (factory.NeedDegree == false)
@@ -192,7 +232,7 @@ namespace ForRest
                         Width = 315;
                         labelTreeDegree.Visible = false;
                         maskedTextBoxDegree.Visible = false;
-                        btnAdd.Location = new Point(86, 124);
+                        btnAdd.Location = new Point(86, 140);
                     }
                     break;
             }
@@ -211,7 +251,7 @@ namespace ForRest
             {
                 comboBoxDataTypeSelectedIndex = comboBoxDataType.SelectedIndex;
             }
-            string maskedTextBoxDegreeText = "";
+            string maskedTextBoxDegreeText = string.Empty;
             if (maskedTextBoxDegree.InvokeRequired)
             {
                 maskedTextBoxDegree.Invoke(new MethodInvoker
@@ -221,7 +261,7 @@ namespace ForRest
             {
                 maskedTextBoxDegreeText = maskedTextBoxDegree.Text;
             }
-            string textBoxNameText = "";
+            string textBoxNameText = string.Empty;
             if (textBoxName.InvokeRequired)
             {
                 textBoxName.Invoke(new MethodInvoker
@@ -255,10 +295,13 @@ namespace ForRest
                             _noOfTrees = 0;
                             foreach (var batchTree in _provider.BatchTextData)
                             {
+                                int count = batchTree.Count;
                                 ITree<string> tree = factory.GetTree<string>(int.Parse(maskedTextBoxDegreeText));
-                                foreach (var node in batchTree)
+                                for (int i = 0; i < batchTree.Count; i++)
                                 {
-                                    tree.Add(node);
+                                    tree.Add(batchTree[i]);
+                                    int progress = (i*100)/count;
+                                    backgroundWorkerAddTree.ReportProgress(progress);
                                 }
                                 var treeObject = new TreeObject(textBoxNameText.Trim(), "text", tree);
                                 _provider.BatchTreeObject.Add(treeObject);
@@ -275,10 +318,13 @@ namespace ForRest
                             _noOfTrees = 0;
                             foreach (var batchTree in _provider.BatchNumericData)
                             {
+                                int count = batchTree.Count;
                                 ITree<double> tree = factory.GetTree<double>(int.Parse(maskedTextBoxDegreeText));
-                                foreach (var node in batchTree)
+                                for (int i = 0; i < batchTree.Count; i++)
                                 {
-                                    tree.Add(node);
+                                    tree.Add(batchTree[i]);
+                                    int progress = (i*100)/count;
+                                    backgroundWorkerAddTree.ReportProgress(progress);
                                 }
                                 var treeObject = new TreeObject(textBoxNameText.Trim(), "numeric", tree);
                                 _provider.BatchTreeObject.Add(treeObject);
@@ -291,8 +337,6 @@ namespace ForRest
                         }
                         if (string.IsNullOrEmpty(maskedTextBoxDegreeText))
                         {
-                            /*toolTipHelper.ToolTipTitle = "No degree is entered";
-                            toolTipHelper.Show("Please key in tree degree first.", maskedTextBoxDegree, 3000);*/
                             e.Result = false;
                             return;
                         }
@@ -303,10 +347,11 @@ namespace ForRest
                         if (_mode == 0 && _provider.TextData != null && !string.IsNullOrEmpty(maskedTextBoxDegreeText))
                         {
                             ITree<string> tree = factory.GetTree<string>(int.Parse(maskedTextBoxDegreeText));
-                            for (int i = 0; i < _provider.TextData.Count; i++)
+                            int count = _provider.TextData.Count;
+                            for (int i = 0; i < count; i++)
                             {
                                 tree.Add(_provider.TextData[i]);
-                                int progress = i/_provider.TextData.Count;
+                                int progress = (i*100)/count;
                                 backgroundWorkerAddTree.ReportProgress(progress);
                             }
                             var treeObject = new TreeObject(textBoxNameText.Trim(), "text", tree);
@@ -318,9 +363,12 @@ namespace ForRest
                             !string.IsNullOrEmpty(maskedTextBoxDegreeText))
                         {
                             ITree<double> tree = factory.GetTree<double>(int.Parse(maskedTextBoxDegreeText));
-                            foreach (var node in _provider.NumericData)
+                            int count = _provider.NumericData.Count;
+                            for (int i = 0; i < count; i++)
                             {
-                                tree.Add(node);
+                                tree.Add(_provider.NumericData[i]);
+                                int progress = (i*100)/count;
+                                backgroundWorkerAddTree.ReportProgress(progress);
                             }
                             var treeObject = new TreeObject(textBoxNameText.Trim(), "numeric", tree);
                             _provider.TreeObjects.Add(treeObject);
@@ -329,8 +377,6 @@ namespace ForRest
                         }
                         if (string.IsNullOrEmpty(maskedTextBoxDegreeText))
                         {
-                            /*toolTipHelper.ToolTipTitle = "No degree is entered";
-                            toolTipHelper.Show("Please key in tree degree first.", maskedTextBoxDegree, 3000);*/
                             e.Result = false;
                             return;
                         }
@@ -362,15 +408,11 @@ namespace ForRest
                         }
                         if (comboBoxDataTypeSelectedItem == null)
                         {
-                            /*toolTipHelper.ToolTipTitle = "No data type is selected";
-                            toolTipHelper.Show("Please select data type from the list first.", comboBoxDataType, 3000);*/
                             e.Result = false;
                             return;
                         }
                         if (string.IsNullOrEmpty(maskedTextBoxDegreeText))
                         {
-                            /*toolTipHelper.ToolTipTitle = "No degree is entered";
-                            toolTipHelper.Show("Please key in tree degree first.", maskedTextBoxDegree, 3000);*/
                             e.Result = false;
                             return;
                         }
@@ -385,10 +427,13 @@ namespace ForRest
                             _noOfTrees = 0;
                             foreach (var batchTree in _provider.BatchTextData)
                             {
+                                int count = batchTree.Count;
                                 ITree<string> tree = factory.GetTree<string>();
-                                foreach (var node in batchTree)
+                                for (int i = 0; i < batchTree.Count; i++)
                                 {
-                                    tree.Add(node);
+                                    tree.Add(batchTree[i]);
+                                    int progress = (i*100)/count;
+                                    backgroundWorkerAddTree.ReportProgress(progress);
                                 }
                                 var treeObject = new TreeObject(textBoxNameText.Trim(), "text", tree);
                                 _provider.BatchTreeObject.Add(treeObject);
@@ -404,10 +449,13 @@ namespace ForRest
                             _noOfTrees = 0;
                             foreach (var batchTree in _provider.BatchNumericData)
                             {
+                                int count = batchTree.Count;
                                 ITree<double> tree = factory.GetTree<double>();
-                                foreach (var node in batchTree)
+                                for (int i = 0; i < batchTree.Count; i++)
                                 {
-                                    tree.Add(node);
+                                    tree.Add(batchTree[i]);
+                                    int progress = (i*100)/count;
+                                    backgroundWorkerAddTree.ReportProgress(progress);
                                 }
                                 var treeObject = new TreeObject(textBoxNameText.Trim(), "numeric", tree);
                                 _provider.BatchTreeObject.Add(treeObject);
@@ -476,9 +524,6 @@ namespace ForRest
                             e.Result = true;
                             return;
                         }
-                            /*
-                        toolTipHelper.ToolTipTitle = "No data type is selected";
-                        toolTipHelper.Show("Please select data type from the list first.", comboBoxDataType, 3000);*/
                         e.Result = false;
                         return;
                     }
@@ -490,6 +535,20 @@ namespace ForRest
         private void BackgroundWorkerAddTreeProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBarAddTree.Value = e.ProgressPercentage;
+            var percent = (int) (((progressBarAddTree.Value - progressBarAddTree.Minimum)/
+                                  (double) (progressBarAddTree.Maximum - progressBarAddTree.Minimum))*100);
+            using (Graphics gr = progressBarAddTree.CreateGraphics())
+            {
+                gr.DrawString(percent.ToString() + "%",
+                              SystemFonts.DefaultFont,
+                              Brushes.Black,
+                              new PointF(progressBarAddTree.Width/2 - (gr.MeasureString(percent.ToString() + "%",
+                                                                                        SystemFonts.DefaultFont).Width/
+                                                                       2.0F),
+                                         progressBarAddTree.Height/2 - (gr.MeasureString(percent.ToString() + "%",
+                                                                                         SystemFonts.DefaultFont).Height/
+                                                                        2.0F)));
+            }
         }
 
         private void BackgroundWorkerAddTreeRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -42,13 +42,14 @@
             this.toolTipHelper = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorkerAddTree = new System.ComponentModel.BackgroundWorker();
             this.progressBarAddTree = new System.Windows.Forms.ProgressBar();
+            this.labelMode = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBoxAvailableTrees
             // 
             this.comboBoxAvailableTrees.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAvailableTrees.FormattingEnabled = true;
-            this.comboBoxAvailableTrees.Location = new System.Drawing.Point(12, 36);
+            this.comboBoxAvailableTrees.Location = new System.Drawing.Point(12, 56);
             this.comboBoxAvailableTrees.Name = "comboBoxAvailableTrees";
             this.comboBoxAvailableTrees.Size = new System.Drawing.Size(138, 21);
             this.comboBoxAvailableTrees.TabIndex = 0;
@@ -57,7 +58,7 @@
             // btnAdd
             // 
             this.btnAdd.Enabled = false;
-            this.btnAdd.Location = new System.Drawing.Point(12, 124);
+            this.btnAdd.Location = new System.Drawing.Point(12, 140);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(138, 36);
             this.btnAdd.TabIndex = 1;
@@ -68,7 +69,7 @@
             // labelTreeType
             // 
             this.labelTreeType.AutoSize = true;
-            this.labelTreeType.Location = new System.Drawing.Point(26, 20);
+            this.labelTreeType.Location = new System.Drawing.Point(26, 36);
             this.labelTreeType.Name = "labelTreeType";
             this.labelTreeType.Size = new System.Drawing.Size(114, 13);
             this.labelTreeType.TabIndex = 4;
@@ -81,7 +82,7 @@
             this.comboBoxDataType.Items.AddRange(new object[] {
             "Text",
             "Numeric"});
-            this.comboBoxDataType.Location = new System.Drawing.Point(192, 36);
+            this.comboBoxDataType.Location = new System.Drawing.Point(192, 56);
             this.comboBoxDataType.Name = "comboBoxDataType";
             this.comboBoxDataType.Size = new System.Drawing.Size(102, 21);
             this.comboBoxDataType.TabIndex = 5;
@@ -90,7 +91,7 @@
             // labelDataType
             // 
             this.labelDataType.AutoSize = true;
-            this.labelDataType.Location = new System.Drawing.Point(200, 20);
+            this.labelDataType.Location = new System.Drawing.Point(200, 36);
             this.labelDataType.Name = "labelDataType";
             this.labelDataType.Size = new System.Drawing.Size(87, 13);
             this.labelDataType.TabIndex = 6;
@@ -99,7 +100,7 @@
             // 
             // textBoxName
             // 
-            this.textBoxName.Location = new System.Drawing.Point(12, 89);
+            this.textBoxName.Location = new System.Drawing.Point(12, 110);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(138, 20);
             this.textBoxName.TabIndex = 7;
@@ -108,7 +109,7 @@
             // labelName
             // 
             this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(43, 73);
+            this.labelName.Location = new System.Drawing.Point(43, 89);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(85, 13);
             this.labelName.TabIndex = 8;
@@ -117,7 +118,7 @@
             // labelTreeDegree
             // 
             this.labelTreeDegree.AutoSize = true;
-            this.labelTreeDegree.Location = new System.Drawing.Point(195, 73);
+            this.labelTreeDegree.Location = new System.Drawing.Point(195, 89);
             this.labelTreeDegree.Name = "labelTreeDegree";
             this.labelTreeDegree.Size = new System.Drawing.Size(92, 13);
             this.labelTreeDegree.TabIndex = 10;
@@ -126,7 +127,7 @@
             // 
             // maskedTextBoxDegree
             // 
-            this.maskedTextBoxDegree.Location = new System.Drawing.Point(192, 89);
+            this.maskedTextBoxDegree.Location = new System.Drawing.Point(192, 110);
             this.maskedTextBoxDegree.Mask = "000";
             this.maskedTextBoxDegree.Name = "maskedTextBoxDegree";
             this.maskedTextBoxDegree.Size = new System.Drawing.Size(102, 20);
@@ -146,16 +147,28 @@
             // 
             this.progressBarAddTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarAddTree.Location = new System.Drawing.Point(0, 167);
+            this.progressBarAddTree.Location = new System.Drawing.Point(0, 188);
             this.progressBarAddTree.Name = "progressBarAddTree";
             this.progressBarAddTree.Size = new System.Drawing.Size(165, 15);
             this.progressBarAddTree.TabIndex = 12;
+            // 
+            // labelMode
+            // 
+            this.labelMode.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.labelMode.Location = new System.Drawing.Point(0, 0);
+            this.labelMode.Name = "labelMode";
+            this.labelMode.Size = new System.Drawing.Size(165, 36);
+            this.labelMode.TabIndex = 13;
+            this.labelMode.Text = "label1";
+            this.labelMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AddTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(165, 183);
+            this.ClientSize = new System.Drawing.Size(165, 203);
+            this.Controls.Add(this.labelMode);
             this.Controls.Add(this.progressBarAddTree);
             this.Controls.Add(this.maskedTextBoxDegree);
             this.Controls.Add(this.labelTreeDegree);
@@ -193,5 +206,6 @@
         private System.Windows.Forms.ToolTip toolTipHelper;
         private System.ComponentModel.BackgroundWorker backgroundWorkerAddTree;
         private System.Windows.Forms.ProgressBar progressBarAddTree;
+        private System.Windows.Forms.Label labelMode;
     }
 }
