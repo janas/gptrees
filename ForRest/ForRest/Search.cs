@@ -169,7 +169,7 @@ namespace ForRest
                 ucn = new UserControlNode(text, rectangle, false);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
-            ucn.verifySize();
+            ucn.VerifySize();
 
             // Draw children 
             if (node.Neighbors != null && node.Neighbors.Count > 0)
@@ -274,7 +274,7 @@ namespace ForRest
                 ucn = new UserControlNode(text, rectangle, false);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
-            ucn.verifySize();
+            ucn.VerifySize();
 
             // Draw children 
             if (node.Neighbors != null && node.Neighbors.Count > 0)
