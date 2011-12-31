@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Drawing;
 using ForRest.Provider.BLL;
 
 namespace ForRest
@@ -10,6 +11,7 @@ namespace ForRest
     {
         private readonly Provider.Provider _provider;
         private TreeView _treeViewCreate;
+        private Panel _graphPanel;
 
         public int Mode { get; set; }
         public int GraphMode { get; set; }
@@ -46,9 +48,9 @@ namespace ForRest
             switch (GraphMode)
             {
                 case 0:
-                    if (true)
+                    if (_graphPanel != null)
                     {
-                        //Controls.Remove(_graphViewer);
+                        Controls.Remove(_graphPanel);
                     }
                     InitializeTreeView();
                     break;
@@ -60,6 +62,7 @@ namespace ForRest
                     InitializeGraph();
                     break;
             }
+            ShowTree();
         }
 
         private void BtnAddNodeClick(object sender, EventArgs e)
@@ -72,7 +75,7 @@ namespace ForRest
                     string textValue = textBoxValue.Text;
                     treeObject.TextTree.Add(textValue);
                     labelResult.ResetText();
-                    labelResult.ForeColor = System.Drawing.Color.Green;
+                    labelResult.ForeColor = Color.Green;
                     labelResult.Text = "Action performed successfully.";
                     ShowTree();
                 }
@@ -84,13 +87,13 @@ namespace ForRest
                     {
                         treeObject.NumericTree.Add(numericValue);
                         labelResult.ResetText();
-                        labelResult.ForeColor = System.Drawing.Color.Green;
+                        labelResult.ForeColor = Color.Green;
                         labelResult.Text = "Action performed successfully.";
                         ShowTree();
                     }
                     else
                     {
-                        labelResult.ForeColor = System.Drawing.Color.Red;
+                        labelResult.ForeColor = Color.Red;
                         labelResult.Text = "Incorrect input format!";
                         toolTipHelperCreate.ToolTipTitle = "Incorrect input format";
                         toolTipHelperCreate.Show("Please provide apropriate input for selected tree.", textBoxValue,
@@ -118,12 +121,12 @@ namespace ForRest
                     labelResult.ResetText();
                     if (result)
                     {
-                        labelResult.ForeColor = System.Drawing.Color.Green;
+                        labelResult.ForeColor = Color.Green;
                         labelResult.Text = "Action performed successfully.";
                     }
                     else
                     {
-                        labelResult.ForeColor = System.Drawing.Color.Red;
+                        labelResult.ForeColor = Color.Red;
                         labelResult.Text = "Item not found!";
                     }
                     ShowTree();
@@ -138,7 +141,7 @@ namespace ForRest
                         labelResult.ResetText();
                         if (result)
                         {
-                            labelResult.ForeColor = System.Drawing.Color.Green;
+                            labelResult.ForeColor = Color.Green;
                             labelResult.Text = "Action performed successfully.";
                         }
                         else
@@ -150,7 +153,7 @@ namespace ForRest
                     }
                     else
                     {
-                        labelResult.ForeColor = System.Drawing.Color.Red;
+                        labelResult.ForeColor = Color.Red;
                         labelResult.Text = "Incorrect input format!";
                         toolTipHelperCreate.ToolTipTitle = "Incorrect input format";
                         toolTipHelperCreate.Show("Please provide apropriate input for selected tree.", textBoxValue,
@@ -192,7 +195,7 @@ namespace ForRest
                 _provider.TreeObjects.Remove(treeObject);
                 FillSelectedTreeComboBox();
                 labelResult.ResetText();
-                labelResult.ForeColor = System.Drawing.Color.Green;
+                labelResult.ForeColor = Color.Green;
                 labelResult.Text = "Action performed successfully.";
             }
             else
@@ -205,15 +208,7 @@ namespace ForRest
 
         private void ComboBoxSelectTreeSelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (GraphMode)
-            {
-                case 0:
-                    ShowTree();
-                    break;
-                case 1:
-                    DrawGraph();
-                    break;
-            }
+            ShowTree();
         }
 
         private static TreeNode[] NextLevel(Node<string> node)
@@ -223,12 +218,12 @@ namespace ForRest
             NodeList<string> nodeList = node.GetNeighborsList();
             if (nodeList == null)
                 return null;
-            List<TreeNode> resultList = new List<TreeNode>();
+            var resultList = new List<TreeNode>();
             foreach (Node<string> n in nodeList)
             {
                 if (n == null)
                     continue;
-                var print = "";
+                var print = n.NodeInfo;
                 for (int i = 0; i < n.Values.Count; i++)
                     print += n.Values[i] + " ";
                 TreeNode[] whatever = NextLevel(n);
@@ -238,7 +233,7 @@ namespace ForRest
                     resultList.Add(new TreeNode(print, whatever));
             }
             resultList.RemoveAll(item => item == null);
-            TreeNode[] result = new TreeNode[resultList.Count];
+            var result = new TreeNode[resultList.Count];
             resultList.CopyTo(result);
             return result;
         }
@@ -250,12 +245,12 @@ namespace ForRest
             NodeList<double> nodeList = node.GetNeighborsList();
             if (nodeList == null)
                 return null;
-            List<TreeNode> resultList = new List<TreeNode>();
+            var resultList = new List<TreeNode>();
             foreach (Node<double> n in nodeList)
             {
                 if (n == null)
                     continue;
-                var print = "";
+                var print = n.NodeInfo;
                 for (int i = 0; i < n.Values.Count; i++)
                     print += n.Values[i].ToString() + " ";
                 TreeNode[] whatever = NextLevel(n);
@@ -265,7 +260,7 @@ namespace ForRest
                     resultList.Add(new TreeNode(print, whatever));
             }
             resultList.RemoveAll(item => item == null);
-            TreeNode[] result = new TreeNode[resultList.Count];
+            var result = new TreeNode[resultList.Count];
             resultList.CopyTo(result);
             return result;
         }
@@ -277,48 +272,244 @@ namespace ForRest
                                       Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
                                                 | AnchorStyles.Left)
                                                | AnchorStyles.Right,
-                                      Location = new System.Drawing.Point(195, 16),
+                                      Location = new Point(195, 16),
                                       Name = "treeViewCreate",
-                                      Size = new System.Drawing.Size(377, 434),
+                                      Size = new Size(377, 434),
                                       TabIndex = 5
                                   };
             Controls.Add(_treeViewCreate);
-            //ResumeLayout();
         }
 
         private void InitializeGraph()
         {
-            //todo
+            _graphPanel = new Panel
+                              {
+                                  Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                                            | AnchorStyles.Left)
+                                           | AnchorStyles.Right,
+                                  Location = new Point(195, 16),
+                                  Name = "graphPanel",
+                                  Size = new Size(377, 434),
+                                  TabIndex = 5,
+                                  AutoScroll = true
+                              };
+            Controls.Add(_graphPanel);
         }
 
         private void ShowTree()
         {
+            if (GraphMode == 0)
+                ShowTreeView();
+            else
+                DrawGraph();
+        }
+
+        private void ShowTreeView()
+        {
             _treeViewCreate.Nodes.Clear();
             if (comboBoxSelectTree.SelectedItem == null) return;
             var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
-            if (treeObject.Type.Equals("text") && treeObject.TextTree.Root != null)
+            if (treeObject.Type.Equals("text"))
             {
                 ITree<string> iTree = treeObject.TextTree;
-                TreeNode tn = NextLevel(iTree.Root) == null
-                                  ? new TreeNode(iTree.Root.Values[0])
-                                  : new TreeNode(iTree.Root.Values[0], NextLevel(iTree.Root));
+                TreeNode tn;
+                if (iTree.Root == null)
+                    return;
+                string print = iTree.Root.NodeInfo;
+                for (int i = 0; i < iTree.Root.Values.Count; i++)
+                    print += iTree.Root.Values[i] + " ";
+                if (NextLevel(iTree.Root) == null)
+                    tn = new TreeNode(print);
+                else
+                    tn = new TreeNode(print, NextLevel(iTree.Root));
                 _treeViewCreate.Nodes.Add(tn);
                 _treeViewCreate.ExpandAll();
             }
-            if (treeObject.Type.Equals("numeric") && treeObject.NumericTree.Root != null)
+            if (treeObject.Type.Equals("numeric"))
             {
                 ITree<double> iTree = treeObject.NumericTree;
-                TreeNode tn = NextLevel(iTree.Root) == null
-                                  ? new TreeNode(iTree.Root.Values[0].ToString())
-                                  : new TreeNode(iTree.Root.Values[0].ToString(), NextLevel(iTree.Root));
+                TreeNode tn;
+                if (iTree.Root == null)
+                    return;
+                string print = iTree.Root.NodeInfo;
+                for (int i = 0; i < iTree.Root.Values.Count; i++)
+                    print += iTree.Root.Values[i] + " ";
+                if (NextLevel(iTree.Root) == null)
+                    tn = new TreeNode(print);
+                else
+                    tn = new TreeNode(print, NextLevel(iTree.Root));
                 _treeViewCreate.Nodes.Add(tn);
                 _treeViewCreate.ExpandAll();
             }
         }
 
+        private void NextControls(Rectangle rectangle, Node<double> node)
+        {
+            if (node == null)
+                return;
+            var text = new List<string>();
+            for (int i = 0; i < node.Values.Count; i++)
+                text.Add(node.Values[i].ToString());
+
+            // Draw parent
+            var ucn = new UserControlNode(text, rectangle, false) {Location = rectangle.Location, Size = rectangle.Size};
+            ucn.verifySize();
+
+            // Draw children 
+            if (node.Neighbors != null && node.Neighbors.Count > 0)
+            {
+                int notNullChildren = 0;
+                int notNullChildrenIndex = 0;
+                for (int k = 0; k < node.Neighbors.Count; k++)
+                    if (node.Neighbors[k] != null)
+                        notNullChildren++;
+                int blank = 0;
+                if (notNullChildren > 1)
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
+                for (int j = 0; j < node.Neighbors.Count; j++)
+                {
+                    if (node.Neighbors[j] == null)
+                    {
+                        continue;
+                    }
+                    var r = new Rectangle(
+                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        rWidth,
+                        ucn.GetMyArea().Height);
+
+                    // Drawing edge
+                    var from = new Point(
+                        ucn.Location.X + j*
+                        (ucn.Width/node.Values.Count),
+                        ucn.Location.Y + ucn.Height);
+                    var to = new Point(
+                        r.Location.X + r.Width/2,
+                        r.Location.Y);
+                    var e = new Rectangle(
+                        Math.Min(from.X, to.X),
+                        Math.Min(from.Y, to.Y),
+                        Math.Abs(from.X - to.X),
+                        Math.Abs(from.Y - to.Y));
+                    if (e.Width == 0)
+                        e.Width = 1;
+                    if (e.Height == 0)
+                        e.Height = 1;
+                    bool ltr;
+                    if (from.X > to.X)
+                        if (from.Y > to.Y)
+                            ltr = true;
+                        else
+                            ltr = false;
+                    else if (from.Y > to.Y)
+                        ltr = false;
+                    else
+                        ltr = true;
+                    var uce = new UserControlEdge(ltr, false) {Location = e.Location, Size = e.Size};
+                    _graphPanel.Controls.Add(uce);
+                    notNullChildrenIndex++;
+
+                    // Draw child
+                    NextControls(r, node.Neighbors[j]);
+                }
+            }
+            _graphPanel.Controls.Add(ucn);
+        }
+
+        private void NextControls(Rectangle rectangle, Node<string> node)
+        {
+            if (node == null)
+                return;
+            var text = new List<string>();
+            for (int i = 0; i < node.Values.Count; i++)
+                text.Add(node.Values[i]);
+
+            // Draw parent
+            var ucn = new UserControlNode(text, rectangle, false) {Location = rectangle.Location, Size = rectangle.Size};
+            ucn.verifySize();
+
+            // Draw children 
+            if (node.Neighbors != null && node.Neighbors.Count > 0)
+            {
+                int notNullChildren = 0;
+                int notNullChildrenIndex = 0;
+                for (int k = 0; k < node.Neighbors.Count; k++)
+                    if (node.Neighbors[k] != null)
+                        notNullChildren++;
+                int blank = 0;
+                if (notNullChildren > 1)
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
+                for (int j = 0; j < node.Neighbors.Count; j++)
+                {
+                    if (node.Neighbors[j] == null)
+                    {
+                        continue;
+                    }
+                    var r = new Rectangle(
+                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        rWidth,
+                        ucn.GetMyArea().Height);
+
+                    // Drawing edge
+                    var from = new Point(
+                        ucn.Location.X + j*
+                        (ucn.Width/node.Values.Count),
+                        ucn.Location.Y + ucn.Height);
+                    var to = new Point(
+                        r.Location.X + r.Width/2,
+                        r.Location.Y);
+                    var e = new Rectangle(
+                        Math.Min(from.X, to.X),
+                        Math.Min(from.Y, to.Y),
+                        Math.Abs(from.X - to.X),
+                        Math.Abs(from.Y - to.Y));
+                    if (e.Width == 0)
+                        e.Width = 1;
+                    if (e.Height == 0)
+                        e.Height = 1;
+                    bool ltr;
+                    if (from.X > to.X)
+                        if (from.Y > to.Y)
+                            ltr = true;
+                        else
+                            ltr = false;
+                    else if (from.Y > to.Y)
+                        ltr = false;
+                    else
+                        ltr = true;
+                    var uce = new UserControlEdge(ltr, false) {Location = e.Location, Size = e.Size};
+                    _graphPanel.Controls.Add(uce);
+                    notNullChildrenIndex++;
+
+                    // Draw child
+                    NextControls(r, node.Neighbors[j]);
+                }
+            }
+            _graphPanel.Controls.Add(ucn);
+        }
+
         private void DrawGraph()
         {
-            //todo   
+            _graphPanel.Controls.Clear();
+            if (comboBoxSelectTree.SelectedItem == null) return;
+            var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
+            if (treeObject.Type.Equals("text"))
+            {
+                ITree<string> iTree = treeObject.TextTree;
+                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
+                NextControls(rootRectangle, iTree.Root);
+            }
+            else if (treeObject.Type.Equals("numeric"))
+            {
+                ITree<double> iTree = treeObject.NumericTree;
+                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
+                NextControls(rootRectangle, iTree.Root);
+            }
         }
     }
 }
