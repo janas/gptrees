@@ -561,5 +561,11 @@ namespace ForRest
             List<int> result = null;
             ShowTree(ref result);
         }
+
+        private void SearchResize(object sender, EventArgs e)
+        {
+            List<int> result = null;
+            ShowTree(ref result);
+        }
     }
 }

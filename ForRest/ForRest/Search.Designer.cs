@@ -200,6 +200,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Search";
+            this.Resize += new System.EventHandler(this.SearchResize);
             this.groupBoxResults.ResumeLayout(false);
             this.groupBoxResults.PerformLayout();
             this.groupBoxSelectTree.ResumeLayout(false);

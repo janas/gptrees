@@ -173,6 +173,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Create";
+            this.Resize += new System.EventHandler(this.CreateResize);
             this.groupBoxSelectTree.ResumeLayout(false);
             this.groupBoxControlsCreate.ResumeLayout(false);
             this.groupBoxControlsCreate.PerformLayout();

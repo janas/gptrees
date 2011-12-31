@@ -509,5 +509,10 @@ namespace ForRest
                 NextControls(rootRectangle, iTree.Root);
             }
         }
+
+        private void CreateResize(object sender, EventArgs e)
+        {
+            ShowTree();
+        }
     }
 }
