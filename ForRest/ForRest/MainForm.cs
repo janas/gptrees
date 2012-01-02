@@ -23,6 +23,24 @@ namespace ForRest
             _provider.CheckDirectoryExists(Application.ExecutablePath);
         }
 
+        public void CreateClosing()
+        {
+            _createState = 0;
+            createToolStripMenuItem.Checked = false;
+        }
+
+        public void SearchClosing()
+        {
+            _searchState = 0;
+            searchToolStripMenuItem.Checked = false;
+        }
+
+        public void BatchProcessClosing()
+        {
+            _batchProcessState = 0;
+            batchProcessToolStripMenuItem.Checked = false;
+        }
+
         private void BtnCreateClick(object sender, EventArgs e)
         {
             if (_createState == 0)

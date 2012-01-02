@@ -442,5 +442,11 @@ namespace ForRest
             EnableExportButton();
             ToggleBatchSearchButton();
         }
+
+        private void BatchProcess_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MainForm mainForm = (MainForm)MdiParent;
+            mainForm.BatchProcessClosing();
+        }
     }
 }

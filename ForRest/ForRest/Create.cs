@@ -560,5 +560,11 @@ namespace ForRest
         {
             ShowTree();
         }
+
+        private void Create_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MainForm mainForm = (MainForm)MdiParent;
+            mainForm.CreateClosing();
+        }
     }
 }
