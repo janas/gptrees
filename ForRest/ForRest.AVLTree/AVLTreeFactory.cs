@@ -36,8 +36,8 @@ namespace ForRest.AVLTree
 
         public ITree<T> GetTree<T>()
         {
-            object obj = Activator.CreateInstance(typeof(AVLTree<>).MakeGenericType(typeof(T)));
-            var t = (ITree<T>)obj;
+            object obj = Activator.CreateInstance(typeof (AVLTree<>).MakeGenericType(typeof (T)));
+            var t = (ITree<T>) obj;
             return t;
         }
 

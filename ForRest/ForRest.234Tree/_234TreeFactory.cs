@@ -37,14 +37,14 @@ namespace ForRest._234Tree
 
         public ITree<T> GetTree<T>()
         {
-            object obj = Activator.CreateInstance(typeof(_234Tree<>).MakeGenericType(typeof(T)));
-            var t = (ITree<T>)obj;
+            object obj = Activator.CreateInstance(typeof (_234Tree<>).MakeGenericType(typeof (T)));
+            var t = (ITree<T>) obj;
             return t;
         }
 
         public ITree<T> GetTree<T>(int degree)
         {
-            throw new NotImplementedException();
+            return GetTree<T>();
         }
     }
 }

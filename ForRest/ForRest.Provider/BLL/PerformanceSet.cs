@@ -6,7 +6,7 @@
 
 namespace ForRest.Provider.BLL
 {
-    
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>

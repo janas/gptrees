@@ -34,7 +34,7 @@ namespace ForRest.AVLTree
 
         public override List<int> Contains(T data)
         {
-            List<int> path = new List<int>();
+            var path = new List<int>();
             AVLTreeNode<T> current = _root;
             while (current != null)
             {
@@ -88,9 +88,10 @@ namespace ForRest.AVLTree
             }
             node.Parent = parent;
             while (_root.Balance())
-                ;
+            {
+            }
             while (_root.Parent != null)
-                _root = (AVLTreeNode<T>)_root.Parent;
+                _root = (AVLTreeNode<T>) _root.Parent;
         }
 
         public override bool Remove(T data)
@@ -212,7 +213,8 @@ namespace ForRest.AVLTree
             }
             current.Parent = current.Left = current.Right = null;
             while (_root.Balance())
-                ;
+            {
+            }
             return true;
         }
     }

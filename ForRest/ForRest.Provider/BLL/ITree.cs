@@ -21,4 +21,3 @@ namespace ForRest.Provider.BLL
         bool Remove(T data);
     }
 }
-

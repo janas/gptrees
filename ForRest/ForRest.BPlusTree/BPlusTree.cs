@@ -33,7 +33,7 @@ namespace ForRest.BPlusTree
 
         public override List<int> Contains(T data)
         {
-            List<int> path = new List<int>();
+            var path = new List<int>();
             BPlusTreeNode<T> current = _root;
             while (current != null)
             {
@@ -50,16 +50,13 @@ namespace ForRest.BPlusTree
                         path.Add(i);
                         break;
                     }
-                    else
+                    if (i + 1 == current.Values.Count)
                     {
-                        if (i + 1 == current.Values.Count)
-                        {
-                            if (current.Neighbors == null)
-                                return null;
-                            current = (BPlusTreeNode<T>) current.Neighbors[i + 1];
-                            path.Add(i + 1);
-                            break;
-                        }
+                        if (current.Neighbors == null)
+                            return null;
+                        current = (BPlusTreeNode<T>) current.Neighbors[i + 1];
+                        path.Add(i + 1);
+                        break;
                     }
                 }
             }
@@ -68,7 +65,7 @@ namespace ForRest.BPlusTree
 
         private BPlusTreeNode<T> Insert(BPlusTreeNode<T> node, T data)
         {
-            if (!node.isLeaf)
+            if (!node.IsLeaf)
             {
                 // Look for child to go to
                 for (int i = 0; i < node.Values.Count; i++)
@@ -92,23 +89,22 @@ namespace ForRest.BPlusTree
                 return _root;
             }
             node.Parent = node.Split(data);
-            return (BPlusTreeNode<T>)node.Parent;
+            return (BPlusTreeNode<T>) node.Parent;
         }
 
         public override void Add(T data)
         {
             if (_root == null)
             {
-                List<T> dataList = new List<T>();
-                dataList.Add(data);
-                BPlusTreeNode<T> node = new BPlusTreeNode<T>(_m, null, dataList);
+                var dataList = new List<T> {data};
+                var node = new BPlusTreeNode<T>(_m, null, dataList);
                 _root = node;
             }
             else
             {
                 BPlusTreeNode<T> node = Insert(_root, data);
                 while (node.Parent != null)
-                    node = (BPlusTreeNode<T>)node.Parent;
+                    node = (BPlusTreeNode<T>) node.Parent;
                 _root = node;
             }
         }
@@ -126,16 +122,13 @@ namespace ForRest.BPlusTree
                     {
                         if (node.Neighbors == null)
                             return null;
-                        return Delete((BPlusTreeNode<T>)node.Neighbors[i], data);
+                        return Delete((BPlusTreeNode<T>) node.Neighbors[i], data);
                     }
-                    else
+                    if (i + 1 == node.Values.Count)
                     {
-                        if (i + 1 == node.Values.Count)
-                        {
-                            if (node.Neighbors == null)
-                                return null;
-                            return Delete((BPlusTreeNode<T>)node.Neighbors[i + 1], data);
-                        }
+                        if (node.Neighbors == null)
+                            return null;
+                        return Delete((BPlusTreeNode<T>) node.Neighbors[i + 1], data);
                     }
                 }
             }
@@ -147,16 +140,13 @@ namespace ForRest.BPlusTree
             BPlusTreeNode<T> node = Delete(_root, data);
             if (node == null)
                 return false;
+            while (node.Parent != null)
+                node = (BPlusTreeNode<T>) node.Parent;
+            if (node.Values.Count > 0)
+                _root = node;
             else
-            {
-                while (node.Parent != null)
-                    node = (BPlusTreeNode<T>)node.Parent;
-                if (node.Values.Count > 0)
-                    _root = node;
-                else
-                    _root = null;
-                return true;
-            }
+                _root = null;
+            return true;
         }
     }
 }

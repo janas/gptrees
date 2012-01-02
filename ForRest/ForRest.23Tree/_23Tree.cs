@@ -26,7 +26,7 @@ namespace ForRest._23Tree
 
         public override List<int> Contains(T data)
         {
-            List<int> path = new List<int>();
+            var path = new List<int>();
             _23TreeNode<T> current = _root;
             while (current != null)
             {
@@ -43,16 +43,13 @@ namespace ForRest._23Tree
                         path.Add(i);
                         break;
                     }
-                    else
+                    if (i + 1 == current.Values.Count)
                     {
-                        if (i + 1 == current.Values.Count)
-                        {
-                            if (current.Neighbors == null)
-                                return null;
-                            current = (_23TreeNode<T>) current.Neighbors[i + 1];
-                            path.Add(i + 1);
-                            break;
-                        }
+                        if (current.Neighbors == null)
+                            return null;
+                        current = (_23TreeNode<T>) current.Neighbors[i + 1];
+                        path.Add(i + 1);
+                        break;
                     }
                 }
             }
@@ -61,7 +58,7 @@ namespace ForRest._23Tree
 
         private _23TreeNode<T> Insert(_23TreeNode<T> node, T data)
         {
-            if (!node.isLeaf)
+            if (!node.IsLeaf)
             {
                 // Look for child to go to
                 for (int i = 0; i < node.Values.Count; i++)
@@ -85,23 +82,22 @@ namespace ForRest._23Tree
                 return _root;
             }
             node.Parent = node.Split(data);
-            return (_23TreeNode<T>)node.Parent;
+            return (_23TreeNode<T>) node.Parent;
         }
 
         public override void Add(T data)
         {
             if (_root == null)
             {
-                List<T> dataList = new List<T>();
-                dataList.Add(data);
-                _23TreeNode<T> node = new _23TreeNode<T>(null, dataList);
+                var dataList = new List<T> {data};
+                var node = new _23TreeNode<T>(null, dataList);
                 _root = node;
             }
             else
             {
                 _23TreeNode<T> node = Insert(_root, data);
                 while (node.Parent != null)
-                    node = (_23TreeNode<T>)node.Parent;
+                    node = (_23TreeNode<T>) node.Parent;
                 _root = node;
             }
         }
@@ -119,16 +115,13 @@ namespace ForRest._23Tree
                     {
                         if (node.Neighbors == null)
                             return null;
-                        return Delete((_23TreeNode<T>)node.Neighbors[i], data);
+                        return Delete((_23TreeNode<T>) node.Neighbors[i], data);
                     }
-                    else
+                    if (i + 1 == node.Values.Count)
                     {
-                        if (i + 1 == node.Values.Count)
-                        {
-                            if (node.Neighbors == null)
-                                return null;
-                            return Delete((_23TreeNode<T>)node.Neighbors[i + 1], data);
-                        }
+                        if (node.Neighbors == null)
+                            return null;
+                        return Delete((_23TreeNode<T>) node.Neighbors[i + 1], data);
                     }
                 }
             }
@@ -140,16 +133,13 @@ namespace ForRest._23Tree
             _23TreeNode<T> node = Delete(_root, data);
             if (node == null)
                 return false;
+            while (node.Parent != null)
+                node = (_23TreeNode<T>) node.Parent;
+            if (node.Values.Count > 0)
+                _root = node;
             else
-            {
-                while (node.Parent != null)
-                    node = (_23TreeNode<T>)node.Parent;
-                if (node.Values.Count > 0)
-                    _root = node;
-                else
-                    _root = null;
-                return true;
-            }
+                _root = null;
+            return true;
         }
     }
 }

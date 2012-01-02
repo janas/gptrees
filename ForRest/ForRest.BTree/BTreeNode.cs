@@ -16,13 +16,13 @@ namespace ForRest.BTree
     {
         private BTreeNode<T> _parent;
         private bool _isLeaf;
-        private readonly int _M;
+        private readonly int _m;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
         public override Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = (BTreeNode<T>)value; }
+            set { _parent = (BTreeNode<T>) value; }
         }
 
         public override string NodeInfo
@@ -32,7 +32,7 @@ namespace ForRest.BTree
                 string result = "<";
                 if (_parent == null)
                     result += "R";
-                if (isLeaf)
+                if (IsLeaf)
                     result += "L";
                 if (IsDeficient)
                     result += "D";
@@ -56,7 +56,7 @@ namespace ForRest.BTree
         /// <summary>
         /// Indicates whether BTreeNode is a leaf
         /// </summary>
-        public bool isLeaf
+        public bool IsLeaf
         {
             set { _isLeaf = value; }
             get { return _isLeaf; }
@@ -69,10 +69,9 @@ namespace ForRest.BTree
         {
             get
             {
-                if (Values.Count < _M * 2)
+                if (Values.Count < _m*2)
                     return false;
-                else
-                    return true;
+                return true;
             }
         }
 
@@ -83,10 +82,9 @@ namespace ForRest.BTree
         {
             get
             {
-                if (Values.Count > _M)
+                if (Values.Count > _m)
                     return false;
-                else
-                    return true;
+                return true;
             }
         }
 
@@ -97,10 +95,9 @@ namespace ForRest.BTree
         {
             get
             {
-                if (Values.Count < _M)
+                if (Values.Count < _m)
                     return true;
-                else
-                    return false;
+                return false;
             }
         }
 
@@ -117,8 +114,8 @@ namespace ForRest.BTree
             Values = data;
             Neighbors = null;
             _isLeaf = true;
-            _M = degree;
-             
+            _m = degree;
+
         }
 
         /// <summary>
@@ -134,12 +131,11 @@ namespace ForRest.BTree
             Values = data;
             Neighbors = children;
             _isLeaf = true;
-            _M = degree;
-            for (int i = 0; i < Neighbors.Count; i++)
+            _m = degree;
+            foreach (Node<T> t in Neighbors)
             {
-                ((BTreeNode<T>)Neighbors[i]).Parent = this;
+                t.Parent = this;
             }
-             
         }
 
         /// <summary>
@@ -149,7 +145,7 @@ namespace ForRest.BTree
         /// <returns>Child node of index i</returns>
         public BTreeNode<T> ChildAt(int i)
         {
-            return (BTreeNode<T>)Neighbors[i];
+            return (BTreeNode<T>) Neighbors[i];
         }
 
         /// <summary>
@@ -161,8 +157,8 @@ namespace ForRest.BTree
             if (node.Values.Count != 1 || node.Neighbors.Count != 2)
                 throw new System.NotImplementedException();
             T nodeData = node.Values[0];
-            BTreeNode<T> rightNode = (BTreeNode<T>)node.Neighbors[1];
-            BTreeNode<T> leftNode = (BTreeNode<T>)node.Neighbors[0];
+            var rightNode = (BTreeNode<T>) node.Neighbors[1];
+            var leftNode = (BTreeNode<T>) node.Neighbors[0];
             rightNode.Parent = this;
             leftNode.Parent = this;
             for (int m = 0; m < Values.Count; m++)
@@ -178,36 +174,29 @@ namespace ForRest.BTree
                         Neighbors.Insert(m, leftNode);
                         return Split();
                     }
-                    else
-                    {
-                        Values.Insert(m, nodeData);
-                        Neighbors.RemoveAt(m);
-                        Neighbors.Insert(m, rightNode);
-                        Neighbors.Insert(m, leftNode);
-                        break;
-                    }
+                    Values.Insert(m, nodeData);
+                    Neighbors.RemoveAt(m);
+                    Neighbors.Insert(m, rightNode);
+                    Neighbors.Insert(m, leftNode);
+                    break;
                 }
-                else
-                    if (m + 1 == Values.Count)
+                if (m + 1 == Values.Count)
+                {
+                    if (IsFull)
                     {
-                        if (IsFull)
-                        {
-                            Values.Add(nodeData);
-                            Neighbors.RemoveAt(m + 1);
-                            Neighbors.Add(leftNode);
-                            Neighbors.Add(rightNode);
-                             
-                            return Split();
-                        }
-                        else
-                        {
-                            Values.Add(nodeData);
-                            Neighbors.RemoveAt(m + 1);
-                            Neighbors.Add(leftNode);
-                            Neighbors.Add(rightNode);
-                            break;
-                        }
+                        Values.Add(nodeData);
+                        Neighbors.RemoveAt(m + 1);
+                        Neighbors.Add(leftNode);
+                        Neighbors.Add(rightNode);
+
+                        return Split();
                     }
+                    Values.Add(nodeData);
+                    Neighbors.RemoveAt(m + 1);
+                    Neighbors.Add(leftNode);
+                    Neighbors.Add(rightNode);
+                    break;
+                }
             }
             return this;
         }
@@ -226,12 +215,11 @@ namespace ForRest.BTree
                     Values.Insert(i, data);
                     return this;
                 }
-                else
-                    if (i + 1 == Values.Count)
-                    {
-                        Values.Add(data);
-                        return this;
-                    }
+                if (i + 1 == Values.Count)
+                {
+                    Values.Add(data);
+                    return this;
+                }
             }
             return this;
         }
@@ -241,18 +229,17 @@ namespace ForRest.BTree
         /// </summary>
         public BTreeNode<T> Split()
         {
-            T centerData;
-            List<T> leftData = new List<T>();
-            List<T> rightData = new List<T>();
-            NodeList<T> leftNeighbors = new NodeList<T>(0);
-            NodeList<T> rightNeighbors = new NodeList<T>(0);
+            var leftData = new List<T>();
+            var rightData = new List<T>();
+            var leftNeighbors = new NodeList<T>(0);
+            var rightNeighbors = new NodeList<T>(0);
             int i, j;
-            for (i = 0; i < Values.Count / 2; i++)
+            for (i = 0; i < Values.Count/2; i++)
             {
                 leftData.Add(Values[i]);
                 leftNeighbors.Add(Neighbors[i]);
             }
-            centerData = Values[i];
+            T centerData = Values[i];
             leftNeighbors.Add(Neighbors[i]);
             for (j = ++i; j < Values.Count; j++)
             {
@@ -262,29 +249,20 @@ namespace ForRest.BTree
             rightNeighbors.Add(Neighbors[j]);
 
             Values.Clear();
-            BTreeNode<T> leftNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, leftData, leftNeighbors);
-            leftNode.isLeaf = false;
-            BTreeNode<T> rightNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, rightData, rightNeighbors);
-            rightNode.isLeaf = false;
+            var leftNode = new BTreeNode<T>(_m, (BTreeNode<T>) Parent, leftData, leftNeighbors) {IsLeaf = false};
+            var rightNode = new BTreeNode<T>(_m, (BTreeNode<T>) Parent, rightData, rightNeighbors) {IsLeaf = false};
 
-            List<T> centerDataList = new List<T>();
-            centerDataList.Add(centerData);
-            NodeList<T> children = new NodeList<T>(0);
-            children.Add(leftNode);
-            children.Add(rightNode);
-            BTreeNode<T> centerNode = new BTreeNode<T>(_M, null, centerDataList, children);
-            centerNode.isLeaf = false;
+            var centerDataList = new List<T> {centerData};
+            var children = new NodeList<T>(0) {leftNode, rightNode};
+            var centerNode = new BTreeNode<T>(_m, null, centerDataList, children) {IsLeaf = false};
 
             if (_parent != null)
             {
-                _parent.isLeaf = false;
+                _parent.IsLeaf = false;
                 _parent = _parent.Add(centerNode);
                 return _parent;
             }
-            else
-            {
-                return centerNode;
-            }
+            return centerNode;
         }
 
         /// <summary>
@@ -293,34 +271,29 @@ namespace ForRest.BTree
         /// <param name="data">Input item forcing the split</param>
         public BTreeNode<T> Split(T data)
         {
-            T centerData;
-            List<T> leftData = new List<T>();
-            List<T> rightData = new List<T>();
-            int centerResult, leftResult, rightResult;
+            var leftData = new List<T>();
+            var rightData = new List<T>();
             int i, j;
-            for (i = 0; i < Values.Count / 2; i++)
+            for (i = 0; i < Values.Count/2; i++)
                 leftData.Add(Values[i]);
-            centerData = Values[i];
-            centerResult = _comparer.Compare(Values[i], data);
+            T centerData = Values[i];
+            int centerResult = _comparer.Compare(Values[i], data);
             for (j = ++i; j < Values.Count; j++)
                 rightData.Add(Values[j]);
             if (centerResult > 0)
             {
                 for (int k = 0; k < leftData.Count; k++)
                 {
-                    leftResult = _comparer.Compare(leftData[k], data);
+                    int leftResult = _comparer.Compare(leftData[k], data);
                     if (leftResult > 0)
                     {
                         leftData.Insert(k, data);
                         break;
                     }
-                    else
+                    if (k + 1 == leftData.Count)
                     {
-                        if (k + 1 == leftData.Count)
-                        {
-                            leftData.Insert(k + 1, data);
-                            break;
-                        }
+                        leftData.Insert(k + 1, data);
+                        break;
                     }
                 }
                 if (leftData.Count == 0)
@@ -330,52 +303,42 @@ namespace ForRest.BTree
             {
                 for (int l = 0; l < rightData.Count; l++)
                 {
-                    rightResult = _comparer.Compare(rightData[l], data);
+                    int rightResult = _comparer.Compare(rightData[l], data);
                     if (rightResult > 0)
                     {
                         rightData.Insert(l, data);
                         break;
                     }
-                    else
+                    if (l + 1 == rightData.Count)
                     {
-                        if (l + 1 == rightData.Count)
-                        {
-                            rightData.Insert(l + 1, data);
-                            break;
-                        }
+                        rightData.Insert(l + 1, data);
+                        break;
                     }
                 }
                 if (rightData.Count == 0)
                     rightData.Add(data);
             }
             Values.Clear();
-            BTreeNode<T> leftNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, leftData);
-            BTreeNode<T> rightNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, rightData);
+            var leftNode = new BTreeNode<T>(_m, (BTreeNode<T>) Parent, leftData);
+            var rightNode = new BTreeNode<T>(_m, (BTreeNode<T>) Parent, rightData);
 
-            List<T> centerDataList = new List<T>();
-            centerDataList.Add(centerData);
-            NodeList<T> children = new NodeList<T>(0);
-            children.Add(leftNode);
-            children.Add(rightNode);
-            BTreeNode<T> centerNode = new BTreeNode<T>(_M, null, centerDataList, children);
-            centerNode.isLeaf = false;
+            var centerDataList = new List<T> {centerData};
+            var children = new NodeList<T>(0) {leftNode, rightNode};
+            var centerNode = new BTreeNode<T>(_m, null, centerDataList, children) {IsLeaf = false};
 
             if (_parent != null)
             {
                 leftNode.Parent = _parent;
                 rightNode.Parent = _parent;
-                _parent.isLeaf = false;
+                _parent.IsLeaf = false;
                 _parent = _parent.Add(centerNode);
-                 
+
                 return _parent;
             }
-            else
-            {
-                leftNode.Parent = centerNode;
-                rightNode.Parent = centerNode;
-                 
-                return centerNode;
-            }
+            leftNode.Parent = centerNode;
+            rightNode.Parent = centerNode;
+
+            return centerNode;
         }
 
         public BTreeNode<T> Merge()
@@ -389,16 +352,14 @@ namespace ForRest.BTree
                 if (_parent.Neighbors[i] == this)
                 {
                     myIndex = i;
-                    try
+                    if (i > 0)
                     {
-                        left = (BTreeNode<T>)_parent.Neighbors[i - 1];
+                        left = (BTreeNode<T>) _parent.Neighbors[i - 1];
                     }
-                    catch { }
-                    try
+                    if (i + 1 < _parent.Neighbors.Count)
                     {
-                        right = (BTreeNode<T>)_parent.Neighbors[i + 1];
+                        right = (BTreeNode<T>) _parent.Neighbors[i + 1];
                     }
-                    catch { }
                 }
             }
             // If it is the only child.
@@ -419,7 +380,7 @@ namespace ForRest.BTree
                     if (right.Neighbors != null)
                     {
                         Neighbors.Add(right.Neighbors[0]);
-                        ((BTreeNode<T>)right.Neighbors[0]).Parent = this;
+                        right.Neighbors[0].Parent = this;
                         right.Neighbors.RemoveAt(0);
                     }
                 }
@@ -434,7 +395,7 @@ namespace ForRest.BTree
                         for (int j = 0; j < right.Neighbors.Count; j++)
                         {
                             Neighbors.Add(right.Neighbors[j]);
-                            ((BTreeNode<T>)right.Neighbors[j]).Parent = this;
+                            right.Neighbors[j].Parent = this;
                         }
                     _parent.Neighbors.Remove(right);
                     _parent.Values.Remove(fromParent);
@@ -452,7 +413,7 @@ namespace ForRest.BTree
                     if (left.Neighbors != null)
                     {
                         Neighbors.Add(left.Neighbors[left.Neighbors.Count - 1]);
-                        ((BTreeNode<T>)left.Neighbors[left.Neighbors.Count - 1]).Parent = this;
+                        left.Neighbors[left.Neighbors.Count - 1].Parent = this;
                         left.Neighbors.RemoveAt(left.Neighbors.Count - 1);
                     }
                 }
@@ -461,13 +422,13 @@ namespace ForRest.BTree
                     // Merge with left
                     T fromParent = _parent.Values[myIndex - 1];
                     left.Values.Add(fromParent);
-                    for (int i = 0; i < this.Values.Count; i++)
-                        left.Values.Add(this.Values[i]);
-                    if (this.Neighbors != null)
-                        for (int j = 0; j < this.Neighbors.Count; j++)
+                    for (int i = 0; i < Values.Count; i++)
+                        left.Values.Add(Values[i]);
+                    if (Neighbors != null)
+                        for (int j = 0; j < Neighbors.Count; j++)
                         {
-                            left.Neighbors.Add(this.Neighbors[j]);
-                            ((BTreeNode<T>)this.Neighbors[j]).Parent = this;
+                            left.Neighbors.Add(Neighbors[j]);
+                            Neighbors[j].Parent = this;
                         }
                     _parent.Neighbors.Remove(this);
                     _parent.Values.Remove(fromParent);
@@ -479,49 +440,40 @@ namespace ForRest.BTree
             }
             if (_parent.Parent == null && (_parent.Values == null || _parent.Values.Count == 0))
             {
-                this.Parent = null;
+                Parent = null;
             }
             return this;
         }
 
         public BTreeNode<T> Delete(T data, int index)
         {
-            if (isLeaf)
+            if (IsLeaf)
             {
                 if (!IsHalf)
                 {
                     Values.RemoveAt(index);
                     return this;
                 }
-                else
+                if (_parent == null)
                 {
-                    if (_parent == null)
-                    {
-                        Values.RemoveAt(index);
-                        return this;
-                    }
-                    else
-                    {
-                        Values.Remove(data);
-                        return Merge();
-                    }
+                    Values.RemoveAt(index);
+                    return this;
                 }
+                Values.Remove(data);
+                return Merge();
             }
-            else
+            // Find successor.
+            BTreeNode<T> successorNode = null;
+            for (int i = 0; i < Values.Count; i++)
             {
-                // Find successor.
-                BTreeNode<T> successorNode = null;
-                for (int i = 0; i < Values.Count; i++)
-                {
-                    int result = _comparer.Compare(Values[i], data);
-                    if (result <= 0)
-                        successorNode = (BTreeNode<T>)Neighbors[i + 1];
-                }
-                while (successorNode.Neighbors != null)
-                    successorNode = (BTreeNode<T>)successorNode.Neighbors[0];
-                Values[index] = successorNode.Values[0];
-                return successorNode.Delete(Values[index], 0);
+                int result = _comparer.Compare(Values[i], data);
+                if (result <= 0)
+                    successorNode = (BTreeNode<T>) Neighbors[i + 1];
             }
+            while (successorNode.Neighbors != null)
+                successorNode = (BTreeNode<T>) successorNode.Neighbors[0];
+            Values[index] = successorNode.Values[0];
+            return successorNode.Delete(Values[index], 0);
         }
     }
 }

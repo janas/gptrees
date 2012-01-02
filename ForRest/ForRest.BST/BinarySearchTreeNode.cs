@@ -19,14 +19,14 @@ namespace ForRest.BST
         public override Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = (BinarySearchTreeNode<T>)value; }
+            set { _parent = (BinarySearchTreeNode<T>) value; }
         }
 
         public override string NodeInfo
         {
             get
             {
-                if (_parent == null )
+                if (_parent == null)
                     return "";
                 string result = "<";
                 for (int i = 0; i < _parent.Values.Count; i++)
@@ -40,14 +40,15 @@ namespace ForRest.BST
         {
         }
 
-        public BinarySearchTreeNode(List<T> data) : base(data, null)
+        public BinarySearchTreeNode(List<T> data)
+            : base(data, null)
         {
         }
 
         public BinarySearchTreeNode(List<T> data, BinarySearchTreeNode<T> left, BinarySearchTreeNode<T> right)
         {
             Values = data;
-            NodeList<T> children = new NodeList<T>(2);
+            var children = new NodeList<T>(2);
             children[0] = left;
             children[1] = right;
             Neighbors = children;
@@ -68,6 +69,7 @@ namespace ForRest.BST
                 Neighbors[0] = value;
             }
         }
+
         public BinarySearchTreeNode<T> Right
         {
             get

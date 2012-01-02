@@ -37,7 +37,7 @@ namespace ForRest.BST
 
         public ITree<T> GetTree<T>()
         {
-            object obj = Activator.CreateInstance(typeof(BinarySearchTree<>).MakeGenericType(typeof(T)));
+            object obj = Activator.CreateInstance(typeof (BinarySearchTree<>).MakeGenericType(typeof (T)));
             var t = (ITree<T>) obj;
             return t;
         }
