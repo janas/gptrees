@@ -95,14 +95,7 @@ namespace ForRest.Provider.DAL
             {
                 return true;
             }
-            foreach (var i in rowCellCount)
-            {
-                if (i != temp)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return rowCellCount.All(i => i == temp);
         }
 
         public List<double> ParseNumericFile(string filePath, char separator)

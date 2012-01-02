@@ -34,16 +34,17 @@ namespace ForRest.BTree
         {
             return "Plugin that implements B-Tree Algorithms";
         }
-        
+
         public ITree<T> GetTree<T>()
         {
-            throw new NotImplementedException();
+            //default degree if it is not specified explicitly
+            return GetTree<T>(2);
         }
 
         public ITree<T> GetTree<T>(int degree)
         {
-            object obj = Activator.CreateInstance(typeof(BTree<>).MakeGenericType(typeof(T)), degree);
-            var t = (ITree<T>)obj;
+            object obj = Activator.CreateInstance(typeof (BTree<>).MakeGenericType(typeof (T)), degree);
+            var t = (ITree<T>) obj;
             return t;
         }
     }

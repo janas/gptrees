@@ -34,7 +34,7 @@ namespace ForRest.BST
 
         public override List<int> Contains(T data)
         {
-            List<int> path = new List<int>();
+            var path = new List<int>();
             BinarySearchTreeNode<T> current = _root;
             while (current != null)
             {
@@ -169,7 +169,6 @@ namespace ForRest.BST
             else
             {
                 BinarySearchTreeNode<T> leftMost = current.Right, lmParent = current;
-                //BinarySearchTreeNode<T> leftMost = current.Right.Left, lmParent = current.Right;
                 while (leftMost.Left != null)
                 {
                     lmParent = leftMost;

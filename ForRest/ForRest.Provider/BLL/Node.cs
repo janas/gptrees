@@ -14,13 +14,12 @@ namespace ForRest.Provider.BLL
     {
         public List<T> Values { get; set; }
         public NodeList<T> Neighbors { get; set; }
-        public virtual string NodeInfo 
-        { 
-            get
-            { 
-                return ""; 
-            }
+
+        public virtual string NodeInfo
+        {
+            get { return ""; }
         }
+
         public virtual Node<T> Parent { get; set; }
 
         public Node()

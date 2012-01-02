@@ -11,8 +11,8 @@ namespace ForRest.Provider.BLL
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class NodeList<T> : Collection<Node<T>> 
-    { 
+    public class NodeList<T> : Collection<Node<T>>
+    {
         public NodeList(int initialSize)
         {
             for (int i = 0; i < initialSize; i++)

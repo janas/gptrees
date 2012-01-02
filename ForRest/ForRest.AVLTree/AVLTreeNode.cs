@@ -21,12 +21,12 @@ namespace ForRest.AVLTree
         public override Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = (AVLTreeNode<T>)value; }
+            set { _parent = (AVLTreeNode<T>) value; }
         }
 
-        public int Height {
-            get
-            { return _height; }
+        public int Height
+        {
+            get { return _height; }
         }
 
         public int UpdateHeight()
@@ -58,12 +58,8 @@ namespace ForRest.AVLTree
                 // right rotation
                 AVLTreeNode<T> z = this;
                 AVLTreeNode<T> y = Left;
-                AVLTreeNode<T> a = Left.Left;
                 AVLTreeNode<T> b = Left.Right;
-                AVLTreeNode<T> c = Right;
-                bool zIsleftNode = false;
-                if (z.Parent!=null && ((AVLTreeNode<T>)z.Parent).Left == this)
-                    zIsleftNode = true;
+                bool zIsleftNode = z.Parent != null && ((AVLTreeNode<T>) z.Parent).Left == this;
                 z.Left = b;
                 if (b != null)
                     b.Parent = z;
@@ -74,25 +70,21 @@ namespace ForRest.AVLTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
-                            ((AVLTreeNode<T>)y.Parent).Left = y;
+                            ((AVLTreeNode<T>) y.Parent).Left = y;
                         else
-                            ((AVLTreeNode<T>)y.Parent).Right = y;
+                            ((AVLTreeNode<T>) y.Parent).Right = y;
                     }
                 }
                 z.Parent = y;
                 return true;
             }
-            else if (rightHeight - leftHeight > 1)
+            if (rightHeight - leftHeight > 1)
             {
                 // left rotation
                 AVLTreeNode<T> z = this;
                 AVLTreeNode<T> y = Right;
-                AVLTreeNode<T> a = Left;
                 AVLTreeNode<T> b = Right.Left;
-                AVLTreeNode<T> c = Right.Right;
-                bool zIsleftNode = false;
-                if (z.Parent != null && ((AVLTreeNode<T>)z.Parent).Left == this)
-                    zIsleftNode = true;
+                bool zIsleftNode = z.Parent != null && ((AVLTreeNode<T>) z.Parent).Left == this;
                 z.Right = b;
                 if (b != null)
                     b.Parent = z;
@@ -103,17 +95,15 @@ namespace ForRest.AVLTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
-                            ((AVLTreeNode<T>)y.Parent).Left = y;
+                            ((AVLTreeNode<T>) y.Parent).Left = y;
                         else
-                            ((AVLTreeNode<T>)y.Parent).Right = y;
+                            ((AVLTreeNode<T>) y.Parent).Right = y;
                     }
                 }
                 z.Parent = y;
                 return true;
             }
-            bool balanced = false;
-            if (Left != null && Left.Balance())
-                balanced = true;
+            bool balanced = Left != null && Left.Balance();
             if (Right != null && Right.Balance())
                 balanced = true;
             return balanced;
@@ -123,7 +113,7 @@ namespace ForRest.AVLTree
         {
             get
             {
-                string result = "h=" + _height.ToString() + " ";
+                string result = "h=" + _height + " ";
                 if (_parent == null)
                     return result;
                 result += "<";
@@ -139,7 +129,8 @@ namespace ForRest.AVLTree
             _height = 1;
         }
 
-        public AVLTreeNode(List<T> data) : base(data, null)
+        public AVLTreeNode(List<T> data)
+            : base(data, null)
         {
             _height = 1;
         }
@@ -147,7 +138,7 @@ namespace ForRest.AVLTree
         public AVLTreeNode(List<T> data, AVLTreeNode<T> left, AVLTreeNode<T> right)
         {
             Values = data;
-            NodeList<T> children = new NodeList<T>(2);
+            var children = new NodeList<T>(2);
             children[0] = left;
             children[1] = right;
             Neighbors = children;
@@ -172,6 +163,7 @@ namespace ForRest.AVLTree
                 Neighbors[0] = value;
             }
         }
+
         public AVLTreeNode<T> Right
         {
             get
