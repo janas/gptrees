@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OpenDialog));
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.comboBoxSeparator = new System.Windows.Forms.ComboBox();
+            this.btnProcess = new System.Windows.Forms.Button();
             this.comboBoxDataType = new System.Windows.Forms.ComboBox();
             this.textBoxFile = new System.Windows.Forms.TextBox();
             this.btnOpen = new System.Windows.Forms.Button();
@@ -56,11 +57,20 @@
             ", (comma)",
             "; (semicolon)",
             ": (colon)"});
-            this.comboBoxSeparator.Location = new System.Drawing.Point(115, 12);
+            this.comboBoxSeparator.Location = new System.Drawing.Point(101, 72);
             this.comboBoxSeparator.Name = "comboBoxSeparator";
             this.comboBoxSeparator.Size = new System.Drawing.Size(100, 21);
             this.comboBoxSeparator.TabIndex = 0;
-            this.comboBoxSeparator.SelectedIndexChanged += new System.EventHandler(this.comboBoxSeparator_SelectedIndexChanged);
+            // 
+            // btnProcess
+            // 
+            this.btnProcess.Location = new System.Drawing.Point(280, 121);
+            this.btnProcess.Name = "btnProcess";
+            this.btnProcess.Size = new System.Drawing.Size(134, 32);
+            this.btnProcess.TabIndex = 1;
+            this.btnProcess.Text = "Process";
+            this.btnProcess.UseVisualStyleBackColor = true;
+            this.btnProcess.Click += new System.EventHandler(this.BtnProcessClick);
             // 
             // comboBoxDataType
             // 
@@ -69,15 +79,14 @@
             this.comboBoxDataType.Items.AddRange(new object[] {
             "Text",
             "Numeric"});
-            this.comboBoxDataType.Location = new System.Drawing.Point(115, 43);
+            this.comboBoxDataType.Location = new System.Drawing.Point(334, 72);
             this.comboBoxDataType.Name = "comboBoxDataType";
-            this.comboBoxDataType.Size = new System.Drawing.Size(100, 21);
+            this.comboBoxDataType.Size = new System.Drawing.Size(80, 21);
             this.comboBoxDataType.TabIndex = 2;
-            this.comboBoxDataType.SelectedIndexChanged += new System.EventHandler(this.comboBoxDataType_SelectedIndexChanged);
             // 
             // textBoxFile
             // 
-            this.textBoxFile.Location = new System.Drawing.Point(14, 98);
+            this.textBoxFile.Location = new System.Drawing.Point(14, 30);
             this.textBoxFile.Name = "textBoxFile";
             this.textBoxFile.Size = new System.Drawing.Size(295, 20);
             this.textBoxFile.TabIndex = 3;
@@ -85,10 +94,9 @@
             // 
             // btnOpen
             // 
-            this.btnOpen.Enabled = false;
-            this.btnOpen.Location = new System.Drawing.Point(322, 96);
+            this.btnOpen.Location = new System.Drawing.Point(325, 28);
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(92, 22);
+            this.btnOpen.Size = new System.Drawing.Size(89, 22);
             this.btnOpen.TabIndex = 4;
             this.btnOpen.Text = "Open...";
             this.btnOpen.UseVisualStyleBackColor = true;
@@ -97,7 +105,7 @@
             // labelSeparator
             // 
             this.labelSeparator.AutoSize = true;
-            this.labelSeparator.Location = new System.Drawing.Point(15, 15);
+            this.labelSeparator.Location = new System.Drawing.Point(11, 75);
             this.labelSeparator.Name = "labelSeparator";
             this.labelSeparator.Size = new System.Drawing.Size(89, 13);
             this.labelSeparator.TabIndex = 5;
@@ -106,7 +114,7 @@
             // labelDataType
             // 
             this.labelDataType.AutoSize = true;
-            this.labelDataType.Location = new System.Drawing.Point(16, 46);
+            this.labelDataType.Location = new System.Drawing.Point(235, 75);
             this.labelDataType.Name = "labelDataType";
             this.labelDataType.Size = new System.Drawing.Size(93, 13);
             this.labelDataType.TabIndex = 6;
@@ -114,22 +122,22 @@
             // 
             // labelError
             // 
-            this.labelError.Location = new System.Drawing.Point(16, 82);
+            this.labelError.AutoSize = true;
+            this.labelError.Location = new System.Drawing.Point(112, 126);
             this.labelError.Name = "labelError";
-            this.labelError.Size = new System.Drawing.Size(293, 13);
+            this.labelError.Size = new System.Drawing.Size(75, 13);
             this.labelError.TabIndex = 7;
             this.labelError.Text = "No file loaded!";
-            this.labelError.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // groupBoxLoadStatus
             // 
             this.groupBoxLoadStatus.Controls.Add(this.pictureBoxLoadStatus);
-            this.groupBoxLoadStatus.Location = new System.Drawing.Point(322, 43);
+            this.groupBoxLoadStatus.Location = new System.Drawing.Point(14, 109);
             this.groupBoxLoadStatus.Name = "groupBoxLoadStatus";
             this.groupBoxLoadStatus.Size = new System.Drawing.Size(92, 44);
             this.groupBoxLoadStatus.TabIndex = 8;
             this.groupBoxLoadStatus.TabStop = false;
-            this.groupBoxLoadStatus.Text = "File Processing";
+            this.groupBoxLoadStatus.Text = "File Processed";
             // 
             // pictureBoxLoadStatus
             // 
@@ -144,7 +152,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 132);
+            this.ClientSize = new System.Drawing.Size(426, 184);
             this.Controls.Add(this.groupBoxLoadStatus);
             this.Controls.Add(this.labelError);
             this.Controls.Add(this.labelDataType);
@@ -152,6 +160,7 @@
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.textBoxFile);
             this.Controls.Add(this.comboBoxDataType);
+            this.Controls.Add(this.btnProcess);
             this.Controls.Add(this.comboBoxSeparator);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -172,6 +181,7 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ComboBox comboBoxSeparator;
+        private System.Windows.Forms.Button btnProcess;
         private System.Windows.Forms.ComboBox comboBoxDataType;
         private System.Windows.Forms.TextBox textBoxFile;
         private System.Windows.Forms.Button btnOpen;

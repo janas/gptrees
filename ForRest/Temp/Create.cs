@@ -173,19 +173,12 @@ namespace ForRest
         {
             if (_provider.NumericData.Count != 0 || _provider.TextData.Count != 0)
             {
-                var addTree = new AddTree(_provider, true, Mode) { Owner = this };
+                var addTree = new AddTree(_provider, true, Mode) {Owner = this};
                 addTree.ShowDialog();
             }
             else
-            {
-                OpenDialog openDialog = new OpenDialog(_provider);
-                MainForm mainForm = (MainForm)MdiParent;
-                openDialog.Owner = mainForm;
-                openDialog.ShowDialog();
-                //BtnAddTreeFromFileClick(sender, e);
-                /*MessageBox.Show("No file is loaded. Please load file with data first.", "Error!", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);*/
-            }
+                MessageBox.Show("No file is loaded. Please load file with data first.", "Error!", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
         }
 
         private void BtnAddTreeClick(object sender, EventArgs e)
@@ -371,12 +364,12 @@ namespace ForRest
                     if (node.Neighbors[k] != null)
                         notNullChildren++;
                 int blank = 0;
+                int rWidth = 0;
                 if (notNullChildren > 1)
                     blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
-                int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
                     rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
+                             / notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 for (int j = 0; j < node.Neighbors.Count; j++)
@@ -473,12 +466,8 @@ namespace ForRest
                 int blank = 0;
                 if (notNullChildren > 1)
                     blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
-                int rWidth = ucn.GetMyArea().Width;
-                if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
-                if (rWidth < 3)
-                    rWidth = 3;
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
                     if (node.Neighbors[j] == null)

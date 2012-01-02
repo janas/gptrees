@@ -32,7 +32,6 @@ namespace ForRest
         {
             InitializeComponent();
             _provider = provider;
-            _multiselect = false;
         }
 
         public OpenDialog(Provider.Provider provider, bool multiselect)
@@ -132,10 +131,9 @@ namespace ForRest
                     }
                 }
             }
-            ProcessFile();
         }
 
-        private void ProcessFile()
+        private void BtnProcessClick(object sender, EventArgs e)
         {
             if (_multiselect == false)
             {
@@ -162,8 +160,6 @@ namespace ForRest
                         Thread.Sleep(1000);
                         Close();
                     }
-                    else
-                        labelError.Text = "Invalid file selected!";
                 }
                 else
                 {
@@ -201,29 +197,11 @@ namespace ForRest
                         Thread.Sleep(1000);
                         Close();
                     }
-                    else
-                        labelError.Text = "Invalid file selected!";
                 }
                 else
                 {
                     labelError.Text = "Files are not processed!";
                 }
-            }
-        }
-
-        private void comboBoxSeparator_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxDataType.SelectedItem != null && comboBoxSeparator.SelectedItem != null)
-            {
-                btnOpen.Enabled = true;
-            }
-        }
-
-        private void comboBoxDataType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxDataType.SelectedItem != null && comboBoxSeparator.SelectedItem != null)
-            {
-                btnOpen.Enabled = true;
             }
         }
     }

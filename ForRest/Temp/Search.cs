@@ -181,13 +181,9 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
-                int rWidth = ucn.GetMyArea().Width;
-                if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
-                if (rWidth < 3)
-                    rWidth = 3;
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
                 bool allEdgesMarked = false;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
@@ -317,12 +313,8 @@ namespace ForRest
                 int blank = 0;
                 if (notNullChildren > 1)
                     blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
-                int rWidth = ucn.GetMyArea().Width;
-                if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
-                if (rWidth < 3)
-                    rWidth = 3;
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
                 bool allEdgesMarked = false;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
