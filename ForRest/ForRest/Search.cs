@@ -619,5 +619,11 @@ namespace ForRest
             List<int> result = null;
             ShowTree(ref result);
         }
+
+        private void Search_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MainForm mainForm = (MainForm)MdiParent;
+            mainForm.SearchClosing();
+        }
     }
 }
