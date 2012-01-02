@@ -34,7 +34,7 @@ namespace ForRest.RedBlackTree
 
         public override List<int> Contains(T data)
         {
-            List<int> path = new List<int>();
+            var path = new List<int>();
             RedBlackTreeNode<T> current = _root;
             while (current != null)
             {
@@ -88,9 +88,10 @@ namespace ForRest.RedBlackTree
             }
             node.Parent = parent;
             while (_root.Balance())
-                ;
+            {
+            }
             while (_root.Parent != null)
-                _root = (RedBlackTreeNode<T>)_root.Parent;
+                _root = (RedBlackTreeNode<T>) _root.Parent;
         }
 
         public override bool Remove(T data)
@@ -173,7 +174,6 @@ namespace ForRest.RedBlackTree
             else
             {
                 RedBlackTreeNode<T> leftMost = current.Right, lmParent = current;
-                //RedBlackTreeNode<T> leftMost = current.Right.Left, lmParent = current.Right;
                 while (leftMost.Left != null)
                 {
                     lmParent = leftMost;
@@ -212,7 +212,8 @@ namespace ForRest.RedBlackTree
             }
             current.Parent = current.Left = current.Right = null;
             while (_root.Balance())
-                ;
+            {
+            }
             return true;
         }
     }

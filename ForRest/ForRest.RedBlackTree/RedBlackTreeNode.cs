@@ -20,12 +20,12 @@ namespace ForRest.RedBlackTree
         public override Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = (RedBlackTreeNode<T>)value; }
+            set { _parent = (RedBlackTreeNode<T>) value; }
         }
 
-        public int Height {
-            get
-            { return _height; }
+        public int Height
+        {
+            get { return _height; }
         }
 
         public int UpdateHeight()
@@ -57,12 +57,8 @@ namespace ForRest.RedBlackTree
                 // right rotation
                 RedBlackTreeNode<T> z = this;
                 RedBlackTreeNode<T> y = Left;
-                RedBlackTreeNode<T> a = Left.Left;
                 RedBlackTreeNode<T> b = Left.Right;
-                RedBlackTreeNode<T> c = Right;
-                bool zIsleftNode = false;
-                if (z.Parent!=null && ((RedBlackTreeNode<T>)z.Parent).Left == this)
-                    zIsleftNode = true;
+                bool zIsleftNode = z.Parent != null && ((RedBlackTreeNode<T>) z.Parent).Left == this;
                 z.Left = b;
                 if (b != null)
                     b.Parent = z;
@@ -73,25 +69,21 @@ namespace ForRest.RedBlackTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
-                            ((RedBlackTreeNode<T>)y.Parent).Left = y;
+                            ((RedBlackTreeNode<T>) y.Parent).Left = y;
                         else
-                            ((RedBlackTreeNode<T>)y.Parent).Right = y;
+                            ((RedBlackTreeNode<T>) y.Parent).Right = y;
                     }
                 }
                 z.Parent = y;
                 return true;
             }
-            else if (rightHeight - leftHeight > 1)
+            if (rightHeight - leftHeight > 1)
             {
                 // left rotation
                 RedBlackTreeNode<T> z = this;
                 RedBlackTreeNode<T> y = Right;
-                RedBlackTreeNode<T> a = Left;
                 RedBlackTreeNode<T> b = Right.Left;
-                RedBlackTreeNode<T> c = Right.Right;
-                bool zIsleftNode = false;
-                if (z.Parent != null && ((RedBlackTreeNode<T>)z.Parent).Left == this)
-                    zIsleftNode = true;
+                bool zIsleftNode = z.Parent != null && ((RedBlackTreeNode<T>) z.Parent).Left == this;
                 z.Right = b;
                 if (b != null)
                     b.Parent = z;
@@ -102,17 +94,15 @@ namespace ForRest.RedBlackTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
-                            ((RedBlackTreeNode<T>)y.Parent).Left = y;
+                            ((RedBlackTreeNode<T>) y.Parent).Left = y;
                         else
-                            ((RedBlackTreeNode<T>)y.Parent).Right = y;
+                            ((RedBlackTreeNode<T>) y.Parent).Right = y;
                     }
                 }
                 z.Parent = y;
                 return true;
             }
-            bool balanced = false;
-            if (Left != null && Left.Balance())
-                balanced = true;
+            bool balanced = Left != null && Left.Balance();
             if (Right != null && Right.Balance())
                 balanced = true;
             return balanced;
@@ -124,13 +114,9 @@ namespace ForRest.RedBlackTree
             {
                 if (_parent == null)
                     return false;
-                else
-                {
-                    if (_parent.IsRed)
-                        return false;
-                    else
-                        return true;
-                }
+                if (_parent.IsRed)
+                    return false;
+                return true;
             }
         }
 
@@ -140,8 +126,7 @@ namespace ForRest.RedBlackTree
             {
                 if (IsRed)
                     return "<Red>";
-                else
-                    return "<Black>";
+                return "<Black>";
             }
         }
 
@@ -150,7 +135,8 @@ namespace ForRest.RedBlackTree
             _height = 1;
         }
 
-        public RedBlackTreeNode(List<T> data) : base(data, null)
+        public RedBlackTreeNode(List<T> data)
+            : base(data, null)
         {
             _height = 1;
         }
@@ -158,7 +144,7 @@ namespace ForRest.RedBlackTree
         public RedBlackTreeNode(List<T> data, RedBlackTreeNode<T> left, RedBlackTreeNode<T> right)
         {
             Values = data;
-            NodeList<T> children = new NodeList<T>(2);
+            var children = new NodeList<T>(2);
             children[0] = left;
             children[1] = right;
             Neighbors = children;
@@ -183,6 +169,7 @@ namespace ForRest.RedBlackTree
                 Neighbors[0] = value;
             }
         }
+
         public RedBlackTreeNode<T> Right
         {
             get
