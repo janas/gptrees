@@ -86,6 +86,11 @@ namespace ForRest.AVLTree
                 else
                     parent.Right = node;
             }
+            node.Parent = parent;
+            while (_root.Balance())
+                ;
+            while (_root.Parent != null)
+                _root = (AVLTreeNode<T>)_root.Parent;
         }
 
         public override bool Remove(T data)
@@ -101,7 +106,7 @@ namespace ForRest.AVLTree
                     parent = current;
                     current = current.Left;
                 }
-                else if (result < 0)
+                else
                 {
                     parent = current;
                     current = current.Right;
@@ -115,53 +120,99 @@ namespace ForRest.AVLTree
             if (current.Right == null)
             {
                 if (parent == null)
+                {
+                    if (current.Left != null)
+                        current.Left.Parent = parent;
                     _root = current.Left;
+                }
                 else
                 {
                     result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
+                    {
+                        if (current.Left != null)
+                            current.Left.Parent = parent;
                         parent.Left = current.Left;
-                    else if (result < 0)
+                    }
+                    else
+                    {
+                        if (current.Right != null)
+                            current.Right.Parent = parent;
                         parent.Right = current.Right;
+                    }
                 }
             }
             else if (current.Right.Left == null)
             {
                 current.Right.Left = current.Left;
+                if (current.Left != null)
+                    current.Left.Parent = current.Right;
                 if (parent == null)
+                {
+                    if (current.Right != null)
+                        current.Right.Parent = parent;
                     _root = current.Right;
+                }
                 else
                 {
                     result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
+                    {
+                        if (current.Right != null)
+                            current.Right.Parent = parent;
                         parent.Left = current.Right;
-                    else if (result < 0)
+                    }
+                    else
+                    {
+                        if (current.Right != null)
+                            current.Right.Parent = parent;
                         parent.Right = current.Right;
+                    }
                 }
             }
             else
             {
-                AVLTreeNode<T> leftmost = current.Right.Left, lmParent = current.Right;
-                while (leftmost.Left != null)
+                AVLTreeNode<T> leftMost = current.Right, lmParent = current;
+                //AVLTreeNode<T> leftMost = current.Right.Left, lmParent = current.Right;
+                while (leftMost.Left != null)
                 {
-                    lmParent = leftmost;
-                    leftmost = lmParent.Left;
+                    lmParent = leftMost;
+                    leftMost = lmParent.Left;
                 }
-                lmParent.Left = leftmost.Right;
-                leftmost.Left = current.Left;
-                leftmost.Right = current.Right;
+                lmParent.Left = leftMost.Right;
+                leftMost.Left = current.Left;
+                leftMost.Right = current.Right;
+                if (lmParent.Left != null)
+                    lmParent.Left.Parent = leftMost;
+                if (leftMost.Right != null)
+                    leftMost.Right.Parent = lmParent;
+                if (current.Left != null)
+                    current.Left.Parent = leftMost;
+                if (current.Right != null)
+                    current.Right.Parent = leftMost;
                 if (parent == null)
-                    _root = leftmost;
+                {
+                    leftMost.Parent = parent;
+                    _root = leftMost;
+                }
                 else
                 {
                     result = _comparer.Compare(parent.Values[0], current.Values[0]);
                     if (result > 0)
-                        parent.Left = leftmost;
-                    else if (result < 0)
-                        parent.Right = leftmost;
+                    {
+                        leftMost.Parent = parent;
+                        parent.Left = leftMost;
+                    }
+                    else
+                    {
+                        leftMost.Parent = parent;
+                        parent.Right = leftMost;
+                    }
                 }
             }
-            current.Left = current.Right = null;
+            current.Parent = current.Left = current.Right = null;
+            while (_root.Balance())
+                ;
             return true;
         }
     }

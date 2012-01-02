@@ -19,36 +19,39 @@ namespace ForRest.BTree
         private readonly int _M;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
-        public BTreeNode<T> Parent
+        public override Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = value; }
+            set { _parent = (BTreeNode<T>)value; }
         }
 
-        private void UpdateNodeInfo()
+        public override string NodeInfo
         {
-            string result = "<";
-            if (_parent == null)
-                result += "R";
-            if (isLeaf)
-                result += "L";
-            if (IsDeficient)
-                result += "D";
-            if (IsHalf)
-                result += "H";
-            if (IsFull)
-                result += "F";
-            result += "> ";
-            NodeInfo = result;
+            get
+            {
+                string result = "<";
+                if (_parent == null)
+                    result += "R";
+                if (isLeaf)
+                    result += "L";
+                if (IsDeficient)
+                    result += "D";
+                if (IsHalf)
+                    result += "H";
+                if (IsFull)
+                    result += "F";
+                result += "> ";
+                return result;
+            }
         }
 
-        public void UpdateNodesInfo()
+        /*public void UpdateNodesInfo()
         {
             UpdateNodeInfo();
             if (Neighbors != null)
                 foreach (Node<T> n in Neighbors)
                     ((BTreeNode<T>)n).UpdateNodesInfo();
-        }
+        }*/
 
         /// <summary>
         /// Indicates whether BTreeNode is a leaf
@@ -259,9 +262,9 @@ namespace ForRest.BTree
             rightNeighbors.Add(Neighbors[j]);
 
             Values.Clear();
-            BTreeNode<T> leftNode = new BTreeNode<T>(_M, this.Parent, leftData, leftNeighbors);
+            BTreeNode<T> leftNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, leftData, leftNeighbors);
             leftNode.isLeaf = false;
-            BTreeNode<T> rightNode = new BTreeNode<T>(_M, this.Parent, rightData, rightNeighbors);
+            BTreeNode<T> rightNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, rightData, rightNeighbors);
             rightNode.isLeaf = false;
 
             List<T> centerDataList = new List<T>();
@@ -346,8 +349,8 @@ namespace ForRest.BTree
                     rightData.Add(data);
             }
             Values.Clear();
-            BTreeNode<T> leftNode = new BTreeNode<T>(_M, this.Parent, leftData);
-            BTreeNode<T> rightNode = new BTreeNode<T>(_M, this.Parent, rightData);
+            BTreeNode<T> leftNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, leftData);
+            BTreeNode<T> rightNode = new BTreeNode<T>(_M, (BTreeNode<T>)this.Parent, rightData);
 
             List<T> centerDataList = new List<T>();
             centerDataList.Add(centerData);

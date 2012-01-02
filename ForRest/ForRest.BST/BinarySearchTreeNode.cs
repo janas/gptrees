@@ -13,7 +13,29 @@ namespace ForRest.BST
     /// TODO: Update summary.
     /// </summary>
     public class BinarySearchTreeNode<T> : Node<T>
-    {   
+    {
+        private BinarySearchTreeNode<T> _parent;
+
+        public override Node<T> Parent
+        {
+            get { return _parent; }
+            set { _parent = (BinarySearchTreeNode<T>)value; }
+        }
+
+        public override string NodeInfo
+        {
+            get
+            {
+                if (_parent == null )
+                    return "";
+                string result = "<";
+                for (int i = 0; i < _parent.Values.Count; i++)
+                    result += _parent.Values[i].ToString();
+                result += "> ";
+                return result;
+            }
+        }
+
         public BinarySearchTreeNode()
         {
         }

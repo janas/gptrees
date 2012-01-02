@@ -20,35 +20,30 @@ namespace ForRest.BPlusTree
         private readonly int _M;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
-        public new Node<T> Parent
+        public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (BPlusTreeNode<T>)value; }
         }
 
-        private void UpdateNodeInfo()
+        public override string NodeInfo
         {
-            string result = "<";
-            if (_parent == null)
-                result += "R";
-            if (isLeaf)
-                result += "L";
-            if (IsDeficient)
-                result += "D";
-            if (IsHalf)
-                result += "H";
-            if (IsFull)
-                result += "F";
-            result += "> ";
-            NodeInfo = result;
-        }
-
-        public void UpdateNodesInfo()
-        {
-            UpdateNodeInfo();
-            if (Neighbors != null)
-                foreach (Node<T> n in Neighbors)
-                    ((BPlusTreeNode<T>)n).UpdateNodesInfo();
+            get
+            {
+                string result = "<";
+                if (_parent == null)
+                    result += "R";
+                if (isLeaf)
+                    result += "L";
+                if (IsDeficient)
+                    result += "D";
+                if (IsHalf)
+                    result += "H";
+                if (IsFull)
+                    result += "F";
+                result += "> ";
+                return result;
+            }
         }
 
         /// <summary>
@@ -252,6 +247,9 @@ namespace ForRest.BPlusTree
                 leftData.Add(Values[i]);
                 leftNeighbors.Add(Neighbors[i]);
             }
+            if (leftNeighbors[leftNeighbors.Count - 1].Neighbors != null)
+                leftNeighbors[leftNeighbors.Count - 1].Neighbors.RemoveAt(
+                    leftNeighbors[leftNeighbors.Count - 1].Neighbors.Count - 1);
             centerData = Values[i];
             //leftNeighbors.Add(Neighbors[i]);
             for (j = i; j < Values.Count; j++)
@@ -271,7 +269,6 @@ namespace ForRest.BPlusTree
 
             this.Values = leftNode.Values;
             this.Neighbors = leftNode.Neighbors;
-            this.NodeInfo = leftNode.NodeInfo;
             this.Parent = leftNode.Parent;
             this.isLeaf = leftNode.isLeaf;
             this.Neighbors.Add(rightNode);

@@ -9,17 +9,19 @@ namespace ForRest
     public partial class UserControlNode : UserControl
     {
         private readonly List<string> _values;
+        private readonly string _nodeInfo;
         public Rectangle MyArea;
         public Font UserFont;
         public bool Mark;
 
-        public UserControlNode(List<string> values, Rectangle myArea, bool mark)
+        public UserControlNode(List<string> values, string nodeInfo, Rectangle myArea, bool mark)
         {
             InitializeComponent();
             _values = values;
             MyArea = myArea;
             Mark = mark;
             UserFont = new Font("Tahoma", 10);
+            _nodeInfo = nodeInfo;
         }
 
         public Rectangle GetMyArea()
@@ -71,6 +73,7 @@ namespace ForRest
         private void UserControlNodeMouseHover(object sender, EventArgs e)
         {
             string result = "";
+            result += _nodeInfo + " ";
             for (int i = 0; i < _values.Count; i++)
             {
                 if (i != 0)

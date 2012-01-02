@@ -9,17 +9,18 @@ namespace ForRest.BTree
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
         private readonly int _m;
 
+        /*
         private void UpdateNodesInfo()
         {
             if (_root != null)
                 _root.UpdateNodesInfo();
-        }
+        }*/
 
         public BTree(int degree)
         {
             _root = null;
             _m = degree;
-            UpdateNodesInfo();
+            //UpdateNodesInfo();
         }
 
         public int M
@@ -36,7 +37,7 @@ namespace ForRest.BTree
         public override void Clear()
         {
             _root = null;
-            UpdateNodesInfo();
+            //UpdateNodesInfo();
         }
 
         public override List<int> Contains(T data)
@@ -99,7 +100,7 @@ namespace ForRest.BTree
                 return _root;
             }
             node.Parent = node.Split(data);
-            return node.Parent;
+            return (BTreeNode<T>)node.Parent;
         }
 
         public override void Add(T data)
@@ -115,10 +116,10 @@ namespace ForRest.BTree
             {
                 BTreeNode<T> node = Insert(_root, data);
                 while (node.Parent != null)
-                    node = node.Parent;
+                    node = (BTreeNode<T>)node.Parent;
                 _root = node;
             }
-            UpdateNodesInfo();
+            //UpdateNodesInfo();
         }
 
         private BTreeNode<T> Delete(BTreeNode<T> node, T data)
@@ -158,12 +159,12 @@ namespace ForRest.BTree
             else
             {
                 while (node.Parent != null)
-                    node = node.Parent;
+                    node = (BTreeNode<T>)node.Parent;
                 if (node.Values.Count > 0)
                     _root = node;
                 else
                     _root = null;
-                UpdateNodesInfo();
+                //UpdateNodesInfo();
                 return true;
             }
         }
