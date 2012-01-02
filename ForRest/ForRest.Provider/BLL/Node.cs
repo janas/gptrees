@@ -14,28 +14,34 @@ namespace ForRest.Provider.BLL
     {
         public List<T> Values { get; set; }
         public NodeList<T> Neighbors { get; set; }
-        public string NodeInfo { get; set; }
-        public Node<T> Parent { get; set; }
+        public virtual string NodeInfo 
+        { 
+            get
+            { 
+                return ""; 
+            }
+        }
+        public virtual Node<T> Parent { get; set; }
 
         public Node()
         {
             Values = null;
             Neighbors = null;
-            NodeInfo = "";
+            //NodeInfo = "";
         }
 
         public Node(List<T> data)
         {
             Values = data;
             Neighbors = null;
-            NodeInfo = "";
+            //NodeInfo = "";
         }
 
         public Node(List<T> data, NodeList<T> neighbors)
         {
             Values = data;
             Neighbors = neighbors;
-            NodeInfo = "";
+            //NodeInfo = "";
         }
 
         public Node<T>[] GetNeighborsArray()

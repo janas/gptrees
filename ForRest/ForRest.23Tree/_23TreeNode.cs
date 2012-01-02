@@ -19,35 +19,29 @@ namespace ForRest._23Tree
         private bool _isLeaf;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
-        public _23TreeNode<T> Parent
+        public override Node<T> Parent
         {
             get { return _parent; }
-            set { _parent = value; }
+            set { _parent = (_23TreeNode<T>)value; }
         }
-
-        private void UpdateNodeInfo()
+        public override string NodeInfo
         {
-            string result = "<";
-            if (_parent == null)
-                result += "R";
-            if (isLeaf)
-                result += "L";
-            if (IsDeficient)
-                result += "D";
-            if (IsHalf)
-                result += "H";
-            if (IsFull)
-                result += "F";
-            result += "> ";
-            NodeInfo = result;
-        }
-
-        public void UpdateNodesInfo()
-        {
-            UpdateNodeInfo();
-            if (Neighbors != null)
-                foreach (Node<T> n in Neighbors)
-                    ((_23TreeNode<T>)n).UpdateNodesInfo();
+            get
+            {
+                string result = "<";
+                if (_parent == null)
+                    result += "R";
+                if (isLeaf)
+                    result += "L";
+                if (IsDeficient)
+                    result += "D";
+                if (IsHalf)
+                    result += "H";
+                if (IsFull)
+                    result += "F";
+                result += "> ";
+                return result;
+            }
         }
 
         /// <summary>
@@ -259,9 +253,9 @@ namespace ForRest._23Tree
             rightNeighbors.Add(Neighbors[j]);
 
             Values.Clear();
-            _23TreeNode<T> leftNode = new _23TreeNode<T>(this.Parent, leftData, leftNeighbors);
+            _23TreeNode<T> leftNode = new _23TreeNode<T>((_23TreeNode<T>)this.Parent, leftData, leftNeighbors);
             leftNode.isLeaf = false;
-            _23TreeNode<T> rightNode = new _23TreeNode<T>(this.Parent, rightData, rightNeighbors);
+            _23TreeNode<T> rightNode = new _23TreeNode<T>((_23TreeNode<T>)this.Parent, rightData, rightNeighbors);
             rightNode.isLeaf = false;
 
             List<T> centerDataList = new List<T>();
@@ -311,8 +305,8 @@ namespace ForRest._23Tree
                 rightData.Add(data);
             }
             Values.Clear();
-            _23TreeNode<T> leftNode = new _23TreeNode<T>(this.Parent, leftData);
-            _23TreeNode<T> rightNode = new _23TreeNode<T>(this.Parent, rightData);
+            _23TreeNode<T> leftNode = new _23TreeNode<T>((_23TreeNode<T>)this.Parent, leftData);
+            _23TreeNode<T> rightNode = new _23TreeNode<T>((_23TreeNode<T>)this.Parent, rightData);
 
             List<T> centerDataList = new List<T>();
             centerDataList.Add(centerData);

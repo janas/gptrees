@@ -132,17 +132,17 @@ namespace ForRest
             {
                 ITree<string> iTree = treeObject.TextTree;
                 var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
-                NextControls(rootRectangle, iTree.Root, ref result, -1);
+                NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
             }
             else if (treeObject.Type.Equals("numeric"))
             {
                 ITree<double> iTree = treeObject.NumericTree;
                 var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
-                NextControls(rootRectangle, iTree.Root, ref result, -1);
+                NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
             }
         }
 
-        private void NextControls(Rectangle rectangle, Node<double> node,
+        private void NextControls(Rectangle rectangle, int levelBlank, Node<double> node,
                                   ref List<int> result, int nodeIndex)
         {
             if (node == null)
@@ -156,7 +156,7 @@ namespace ForRest
             if (result != null &&
                 (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
-                ucn = new UserControlNode(text, rectangle, true);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, true);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -166,7 +166,7 @@ namespace ForRest
                 }
             }
             else
-                ucn = new UserControlNode(text, rectangle, false);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
             ucn.VerifySize();
@@ -184,6 +184,7 @@ namespace ForRest
                     blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
                 int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
                              /notNullChildren;
+                bool allEdgesMarked = false;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
                     if (node.Neighbors[j] == null)
@@ -195,7 +196,6 @@ namespace ForRest
                         ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
                         rWidth,
                         ucn.GetMyArea().Height);
-
                     // Drawing edge
                     var from = new Point(
                         ucn.Location.X + j*
@@ -204,6 +204,19 @@ namespace ForRest
                     var to = new Point(
                         r.Location.X + r.Width/2,
                         r.Location.Y);
+                    int drawChild = -1;
+                    if (node.Parent != null && node.Parent.Neighbors != null)
+                    {
+                        for (int l = 0; l < node.Parent.Neighbors.Count; l++)
+                            if (node.Parent.Neighbors[l] == node && l + 1 < node.Parent.Neighbors.Count
+                                && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
+                            {
+                                to = new Point(
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.Y);
+                                drawChild = l + 1;
+                            }
+                    }
                     var e = new Rectangle(
                         Math.Min(from.X, to.X),
                         Math.Min(from.Y, to.Y),
@@ -224,44 +237,57 @@ namespace ForRest
                     else
                         ltr = true;
                     UserControlEdge uce;
-                    if (result != null && result.Count > 0 && result[0] == j)
+                    if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
+                    {
                         uce = new UserControlEdge(ltr, true);
+                        allEdgesMarked = true;
+                    }
                     else
                         uce = new UserControlEdge(ltr, false);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
+                    if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);
                     notNullChildrenIndex++;
 
                     // Draw child
-                    if (result != null && result.Count > 0 && result[0] == j)
-                        NextControls(r, node.Neighbors[j], ref result, j);
+                    if (drawChild == -1)
+                    {
+                        if (result != null && result.Count > 0 && result[0] == j)
+                            NextControls(r, blank, node.Neighbors[j], ref result, j);
+                        else
+                        {
+                            // Dumb C#... I have to pass it this way
+                            List<int> nullResult = null;
+                            NextControls(r, blank, node.Neighbors[j], ref nullResult, j);
+                        }
+                    }
                     else
                     {
-                        // Dumb C#... I have to pass it this way
-                        List<int> nullResult = null;
-                        NextControls(r, node.Neighbors[j], ref nullResult, j);
+                        if (result != null && result.Count > 0)
+                            result[0] = drawChild;
                     }
                 }
             }
             _graphPanel.Controls.Add(ucn);
         }
 
-        private void NextControls(Rectangle rectangle, Node<string> node,
+        private void NextControls(Rectangle rectangle, int levelBlank, Node<string> node,
                                   ref List<int> result, int nodeIndex)
         {
             if (node == null)
                 return;
             var text = new List<string>();
             for (int i = 0; i < node.Values.Count; i++)
-                text.Add(node.Values[i]);
+                text.Add(node.Values[i].ToString());
 
             // Draw parent
             UserControlNode ucn;
             if (result != null &&
                 (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
-                ucn = new UserControlNode(text, rectangle, true);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, true);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -271,7 +297,7 @@ namespace ForRest
                 }
             }
             else
-                ucn = new UserControlNode(text, rectangle, false);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
             ucn.VerifySize();
@@ -286,9 +312,10 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
-                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
-                             /notNullChildren;
+                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
+                bool allEdgesMarked = false;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
                     if (node.Neighbors[j] == null)
@@ -296,19 +323,31 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
                         rWidth,
                         ucn.GetMyArea().Height);
-
                     // Drawing edge
                     var from = new Point(
-                        ucn.Location.X + j*
-                        (ucn.Width/node.Values.Count),
+                        ucn.Location.X + j *
+                        (ucn.Width / node.Values.Count),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width/2,
+                        r.Location.X + r.Width / 2,
                         r.Location.Y);
+                    int drawChild = -1;
+                    if (node.Parent != null && node.Parent.Neighbors != null)
+                    {
+                        for (int l = 0; l < node.Parent.Neighbors.Count; l++)
+                            if (node.Parent.Neighbors[l] == node && l + 1 < node.Parent.Neighbors.Count
+                                && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
+                            {
+                                to = new Point(
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.Y);
+                                drawChild = l + 1;
+                            }
+                    }
                     var e = new Rectangle(
                         Math.Min(from.X, to.X),
                         Math.Min(from.Y, to.Y),
@@ -329,27 +368,40 @@ namespace ForRest
                     else
                         ltr = true;
                     UserControlEdge uce;
-                    if (result != null && result.Count > 0 && result[0] == j)
+                    if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
+                    {
                         uce = new UserControlEdge(ltr, true);
+                        allEdgesMarked = true;
+                    }
                     else
                         uce = new UserControlEdge(ltr, false);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
-                    _graphPanel.Invoke((MethodInvoker) (() => _graphPanel.Controls.Add(uce)));
+                    _graphPanel.Controls.Add(uce);
+                    if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);
                     notNullChildrenIndex++;
 
                     // Draw child
-                    if (result != null && result.Count > 0 && result[0] == j)
-                        NextControls(r, node.Neighbors[j], ref result, j);
+                    if (drawChild == -1)
+                    {
+                        if (result != null && result.Count > 0 && result[0] == j)
+                            NextControls(r, blank, node.Neighbors[j], ref result, j);
+                        else
+                        {
+                            // Dumb C#... I have to pass it this way
+                            List<int> nullResult = null;
+                            NextControls(r, blank, node.Neighbors[j], ref nullResult, j);
+                        }
+                    }
                     else
                     {
-                        // Dumb C#... I have to pass it this way
-                        List<int> nullResult = null;
-                        NextControls(r, node.Neighbors[j], ref nullResult, j);
+                        if (result != null && result.Count > 0)
+                            result[0] = drawChild;
                     }
                 }
             }
-            _graphPanel.Invoke((MethodInvoker) (() => _graphPanel.Controls.Add(ucn)));
+            _graphPanel.Controls.Add(ucn);
         }
 
         private void InitializeTreeView()

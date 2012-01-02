@@ -9,17 +9,10 @@ namespace ForRest.BPlusTree
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
         private readonly int _m;
 
-        private void UpdateNodesInfo()
-        {
-            if (_root != null)
-                _root.UpdateNodesInfo();
-        }
-
         public BPlusTree(int degree)
         {
             _root = null;
             _m = degree;
-            UpdateNodesInfo();
         }
 
         public int M
@@ -36,7 +29,6 @@ namespace ForRest.BPlusTree
         public override void Clear()
         {
             _root = null;
-            UpdateNodesInfo();
         }
 
         public override List<int> Contains(T data)
@@ -119,7 +111,6 @@ namespace ForRest.BPlusTree
                     node = (BPlusTreeNode<T>)node.Parent;
                 _root = node;
             }
-            UpdateNodesInfo();
         }
 
         private BPlusTreeNode<T> Delete(BPlusTreeNode<T> node, T data)
@@ -164,7 +155,6 @@ namespace ForRest.BPlusTree
                     _root = node;
                 else
                     _root = null;
-                UpdateNodesInfo();
                 return true;
             }
         }
