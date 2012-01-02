@@ -9,6 +9,76 @@ namespace ForRest.SplayTree
         private int _count;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        public void Splay(SplayTreeNode<T> node)
+        {
+            if (_root == null)
+                return;
+            SplayTreeNode<T> current = _root;
+            SplayTreeNode<T> parent = null;
+            SplayTreeNode<T> grandParent = null;
+            while (current != node)
+            {
+                if (current == null || current.Neighbors == null)
+                    return;
+                for (int i = 0; i < current.Neighbors.Count; i++)
+                {
+                    if (current.Neighbors[i] == null)
+                        continue;
+                    grandParent = parent;
+                    parent = current;
+                    current = (SplayTreeNode<T>)current.Neighbors[i];
+                    if (current.Neighbors == null)
+                        break;
+                }
+            }
+            if (parent == null)
+                return;
+            if (grandParent == null)
+            {
+                // ZIG
+                if (parent.Left == current)
+                    parent.Balance(true);
+                // ZAG
+                else
+                    parent.Balance(false);
+            }
+            else
+            {
+                if (grandParent.Left == parent)
+                {
+                    // ZIG...
+                    if (parent.Left == current)
+                    {
+                        // ...ZIG
+                        parent.Balance(true);
+                        grandParent.Balance(true);
+                    }
+                    else
+                    {
+                        // ...ZAG
+                        parent.Balance(false);
+                        grandParent.Balance(true);
+                    }
+                }
+                else
+                {
+                    // ZAG...
+                    if (parent.Neighbors[0] == current)
+                    {
+                        // ...ZIG
+                        parent.Balance(true);
+                        grandParent.Balance(false);
+                    }
+                    else
+                    {
+                        // ...ZAG
+                        parent.Balance(false);
+                        grandParent.Balance(false);
+                    }
+                }
+            }
+        }
+
         public SplayTree()
         {
             _root = null;
@@ -40,7 +110,15 @@ namespace ForRest.SplayTree
             {
                 int result = _comparer.Compare(current.Values[0], data);
                 if (result == 0)
+                {
+                    //Splay(current);
+                    if (path == null)
+                    {
+                        path.Clear();
+                        path = new List<int>();
+                    }
                     return path;
+                }
                 if (result > 0)
                 {
                     current = current.Left;
@@ -52,6 +130,7 @@ namespace ForRest.SplayTree
                     path.Add(1);
                 }
             }
+            //Splay(current);
             return null;
         }
 
@@ -87,10 +166,12 @@ namespace ForRest.SplayTree
                     parent.Right = node;
             }
             node.Parent = parent;
+            //Splay(node);
             while (_root.Balance())
                 ;
             while (_root.Parent != null)
                 _root = (SplayTreeNode<T>)_root.Parent;
+            
         }
 
         public override bool Remove(T data)
@@ -101,6 +182,7 @@ namespace ForRest.SplayTree
             int result = _comparer.Compare(current.Values[0], data);
             while (result != 0)
             {
+                SplayTreeNode<T> lastVisited = parent;
                 if (result > 0)
                 {
                     parent = current;
@@ -112,11 +194,15 @@ namespace ForRest.SplayTree
                     current = current.Right;
                 }
                 if (current == null)
+                {
+                    //Splay(lastVisited);
                     return false;
+                }
                 result = _comparer.Compare(current.Values[0], data);
             }
             _count--;
 
+            //Splay(current);
             if (current.Right == null)
             {
                 if (parent == null)

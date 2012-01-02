@@ -61,7 +61,7 @@ namespace ForRest.SplayTree
                 SplayTreeNode<T> b = Left.Right;
                 SplayTreeNode<T> c = Right;
                 bool zIsleftNode = false;
-                if (z.Parent!=null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                if (z.Parent != null && ((SplayTreeNode<T>)z.Parent).Left == this)
                     zIsleftNode = true;
                 z.Left = b;
                 if (b != null)
@@ -116,6 +116,66 @@ namespace ForRest.SplayTree
             if (Right != null && Right.Balance())
                 balanced = true;
             return balanced;
+        }
+        
+        public void Balance(bool leftBalance)
+        {
+            if (leftBalance)
+            {
+                // right rotation
+                SplayTreeNode<T> z = this;
+                SplayTreeNode<T> y = Left;
+                SplayTreeNode<T> a = Left.Left;
+                SplayTreeNode<T> b = Left.Right;
+                SplayTreeNode<T> c = Right;
+                bool zIsleftNode = false;
+                if (z.Parent!=null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                    zIsleftNode = true;
+                z.Left = b;
+                if (b != null)
+                    b.Parent = z;
+                y.Right = z;
+                if (y != null)
+                {
+                    y.Parent = z.Parent;
+                    if (y.Parent != null)
+                    {
+                        if (zIsleftNode)
+                            ((SplayTreeNode<T>)y.Parent).Left = y;
+                        else
+                            ((SplayTreeNode<T>)y.Parent).Right = y;
+                    }
+                }
+                z.Parent = y;
+            }
+            else
+            {
+                // left rotation
+                SplayTreeNode<T> z = this;
+                SplayTreeNode<T> y = Right;
+                SplayTreeNode<T> a = Left;
+                SplayTreeNode<T> b = Right.Left;
+                SplayTreeNode<T> c = Right.Right;
+                bool zIsleftNode = false;
+                if (z.Parent != null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                    zIsleftNode = true;
+                z.Right = b;
+                if (b != null)
+                    b.Parent = z;
+                y.Left = z;
+                if (y != null)
+                {
+                    y.Parent = z.Parent;
+                    if (y.Parent != null)
+                    {
+                        if (zIsleftNode)
+                            ((SplayTreeNode<T>)y.Parent).Left = y;
+                        else
+                            ((SplayTreeNode<T>)y.Parent).Right = y;
+                    }
+                }
+                z.Parent = y;
+            }
         }
 
         public override string NodeInfo

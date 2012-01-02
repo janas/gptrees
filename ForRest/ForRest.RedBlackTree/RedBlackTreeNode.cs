@@ -118,18 +118,30 @@ namespace ForRest.RedBlackTree
             return balanced;
         }
 
+        public bool IsRed
+        {
+            get
+            {
+                if (_parent == null)
+                    return false;
+                else
+                {
+                    if (_parent.IsRed)
+                        return false;
+                    else
+                        return true;
+                }
+            }
+        }
+
         public override string NodeInfo
         {
             get
             {
-                string result = "h=" + _height.ToString() + " ";
-                if (_parent == null)
-                    return result;
-                result += "<";
-                for (int i = 0; i < _parent.Values.Count; i++)
-                    result += _parent.Values[i].ToString();
-                result += "> ";
-                return result;
+                if (IsRed)
+                    return "<Red>";
+                else
+                    return "<Black>";
             }
         }
 
