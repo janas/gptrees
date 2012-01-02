@@ -8,16 +8,9 @@ namespace ForRest._234Tree
         private _234TreeNode<T> _root;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
-        private void UpdateNodesInfo()
-        {
-            if (_root != null)
-                _root.UpdateNodesInfo();
-        }
-
         public _234Tree()
         {
             _root = null;
-            UpdateNodesInfo();
         }
 
         public override Node<T> Root
@@ -29,7 +22,6 @@ namespace ForRest._234Tree
         public override void Clear()
         {
             _root = null;
-            UpdateNodesInfo();
         }
 
         public override List<int> Contains(T data)
@@ -93,7 +85,7 @@ namespace ForRest._234Tree
                 return _root;
             }
             node.Parent = node.Split(data);
-            return node.Parent;
+            return (_234TreeNode<T>)node.Parent;
         }
 
         public override void Add(T data)
@@ -109,10 +101,9 @@ namespace ForRest._234Tree
             {
                 _234TreeNode<T> node = Insert(_root, data);
                 while (node.Parent != null)
-                    node = node.Parent;
+                    node = (_234TreeNode<T>)node.Parent;
                 _root = node;
             }
-            UpdateNodesInfo();
         }
 
         private _234TreeNode<T> Delete(_234TreeNode<T> node, T data)
@@ -152,12 +143,11 @@ namespace ForRest._234Tree
             else
             {
                 while (node.Parent != null)
-                    node = node.Parent;
+                    node = (_234TreeNode<T>)node.Parent;
                 if (node.Values.Count > 0)
                     _root = node;
                 else
                     _root = null;
-                UpdateNodesInfo();
                 return true;
             }
         }

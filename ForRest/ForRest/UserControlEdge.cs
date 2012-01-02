@@ -7,7 +7,7 @@ namespace ForRest
     public partial class UserControlEdge : UserControl
     {
         private readonly bool _leftToRight;
-        private readonly bool _mark;
+        public bool _mark;
 
         protected override CreateParams CreateParams
         {

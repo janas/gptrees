@@ -341,7 +341,7 @@ namespace ForRest
             }
         }
 
-        private void NextControls(Rectangle rectangle, Node<double> node)
+        private void NextControls(Rectangle rectangle, int levelBlank, Node<double> node)
         {
             if (node == null)
                 return;
@@ -350,7 +350,9 @@ namespace ForRest
                 text.Add(node.Values[i].ToString());
 
             // Draw parent
-            var ucn = new UserControlNode(text, rectangle, false) {Location = rectangle.Location, Size = rectangle.Size};
+            var ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
+            ucn.Location = rectangle.Location;
+            ucn.Size = rectangle.Size;
             ucn.VerifySize();
 
             // Draw children 
@@ -362,10 +364,14 @@ namespace ForRest
                     if (node.Neighbors[k] != null)
                         notNullChildren++;
                 int blank = 0;
+                int rWidth = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
-                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
-                             /notNullChildren;
+                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                if (notNullChildren > 0)
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
+                if (rWidth < 3)
+                    rWidth = 3;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
                     if (node.Neighbors[j] == null)
@@ -373,19 +379,31 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
                         rWidth,
                         ucn.GetMyArea().Height);
-
                     // Drawing edge
                     var from = new Point(
-                        ucn.Location.X + j*
-                        (ucn.Width/node.Values.Count),
+                        ucn.Location.X + j *
+                        (ucn.Width / node.Values.Count),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width/2,
+                        r.Location.X + r.Width / 2,
                         r.Location.Y);
+                    int drawChild = -1;
+                    if (node.Parent != null && node.Parent.Neighbors != null)
+                    {
+                        for (int l = 0; l < node.Parent.Neighbors.Count; l++)
+                            if (node.Parent.Neighbors[l] == node && l + 1 < node.Parent.Neighbors.Count
+                                && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
+                            {
+                                to = new Point(
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.Y);
+                                drawChild = l + 1;
+                            }
+                    }
                     var e = new Rectangle(
                         Math.Min(from.X, to.X),
                         Math.Min(from.Y, to.Y),
@@ -405,27 +423,36 @@ namespace ForRest
                         ltr = false;
                     else
                         ltr = true;
-                    var uce = new UserControlEdge(ltr, false) {Location = e.Location, Size = e.Size};
+                    var uce = new UserControlEdge(ltr, false);
+                    uce.Location = e.Location;
+                    uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
+                    if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);
                     notNullChildrenIndex++;
 
                     // Draw child
-                    NextControls(r, node.Neighbors[j]);
+                    if (drawChild == -1)
+                    {
+                        NextControls(r, blank, node.Neighbors[j]);
+                    }
                 }
             }
             _graphPanel.Controls.Add(ucn);
         }
 
-        private void NextControls(Rectangle rectangle, Node<string> node)
+        private void NextControls(Rectangle rectangle, int levelBlank, Node<string> node)
         {
             if (node == null)
                 return;
             var text = new List<string>();
             for (int i = 0; i < node.Values.Count; i++)
-                text.Add(node.Values[i]);
+                text.Add(node.Values[i].ToString());
 
             // Draw parent
-            var ucn = new UserControlNode(text, rectangle, false) {Location = rectangle.Location, Size = rectangle.Size};
+            var ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
+            ucn.Location = rectangle.Location;
+            ucn.Size = rectangle.Size;
             ucn.VerifySize();
 
             // Draw children 
@@ -438,9 +465,9 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
-                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
-                             /notNullChildren;
+                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                int rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
                 for (int j = 0; j < node.Neighbors.Count; j++)
                 {
                     if (node.Neighbors[j] == null)
@@ -448,19 +475,31 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
                         rWidth,
                         ucn.GetMyArea().Height);
-
                     // Drawing edge
                     var from = new Point(
-                        ucn.Location.X + j*
-                        (ucn.Width/node.Values.Count),
+                        ucn.Location.X + j *
+                        (ucn.Width / node.Values.Count),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width/2,
+                        r.Location.X + r.Width / 2,
                         r.Location.Y);
+                    int drawChild = -1;
+                    if (node.Parent != null && node.Parent.Neighbors != null)
+                    {
+                        for (int l = 0; l < node.Parent.Neighbors.Count; l++)
+                            if (node.Parent.Neighbors[l] == node && l + 1 < node.Parent.Neighbors.Count
+                                && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
+                            {
+                                to = new Point(
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.Y);
+                                drawChild = l + 1;
+                            }
+                    }
                     var e = new Rectangle(
                         Math.Min(from.X, to.X),
                         Math.Min(from.Y, to.Y),
@@ -480,12 +519,19 @@ namespace ForRest
                         ltr = false;
                     else
                         ltr = true;
-                    var uce = new UserControlEdge(ltr, false) {Location = e.Location, Size = e.Size};
+                    var uce = new UserControlEdge(ltr, false);
+                    uce.Location = e.Location;
+                    uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
+                    if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);
                     notNullChildrenIndex++;
 
                     // Draw child
-                    NextControls(r, node.Neighbors[j]);
+                    if (drawChild == -1)
+                    {
+                        NextControls(r, blank, node.Neighbors[j]);
+                    }
                 }
             }
             _graphPanel.Controls.Add(ucn);
@@ -500,13 +546,13 @@ namespace ForRest
             {
                 ITree<string> iTree = treeObject.TextTree;
                 var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
-                NextControls(rootRectangle, iTree.Root);
+                NextControls(rootRectangle, 0, iTree.Root);
             }
             else if (treeObject.Type.Equals("numeric"))
             {
                 ITree<double> iTree = treeObject.NumericTree;
                 var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
-                NextControls(rootRectangle, iTree.Root);
+                NextControls(rootRectangle, 0, iTree.Root);
             }
         }
 
