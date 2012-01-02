@@ -1,22 +1,64 @@
-﻿// -----------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Tree.cs" company="">
-// TODO: Update copyright text.
+//   
 // </copyright>
-// -----------------------------------------------------------------------
-
-using System.Collections.Generic;
+// <summary>
+//   TODO: Update summary.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.Provider.BLL
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    /// <typeparam name="T">
+    /// </typeparam>
     public abstract class Tree<T> : ITree<T>
     {
+        #region ITree<T> Members
+
+        /// <summary>
+        /// Gets or sets Root.
+        /// </summary>
         public abstract Node<T> Root { get; set; }
+
+        /// <summary>
+        /// The clear.
+        /// </summary>
         public abstract void Clear();
+
+        /// <summary>
+        /// The contains.
+        /// </summary>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        /// <returns>
+        /// </returns>
         public abstract List<int> Contains(T data);
+
+        /// <summary>
+        /// The add.
+        /// </summary>
+        /// <param name="data">
+        /// The data.
+        /// </param>
         public abstract void Add(T data);
+
+        /// <summary>
+        /// The remove.
+        /// </summary>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        /// <returns>
+        /// True if item was removed or false otherwise.
+        /// </returns>
         public abstract bool Remove(T data);
+
+        #endregion
     }
 }
