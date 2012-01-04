@@ -178,13 +178,22 @@ namespace ForRest
             }
             else
             {
-                OpenDialog openDialog = new OpenDialog(_provider);
                 MainForm mainForm = (MainForm)MdiParent;
+                ToolStrip toolStrip = (ToolStrip)mainForm.Controls["toolStrip"];
+                ToolStripItem toolStripBtnOpen = toolStrip.Items["toolStripBtnOpen"];
+                toolTipHelperCreate.ToolTipTitle = "No file loaded";
+                toolTipHelperCreate.Show("No file loaded. Please load file first.", toolStrip,
+                    toolStripBtnOpen.Image.Width, toolStripBtnOpen.Image.Height / 2, 3000);
+                /*
+                OpenDialog openDialog = new OpenDialog(_provider);
                 openDialog.Owner = mainForm;
                 openDialog.ShowDialog();
-                //BtnAddTreeFromFileClick(sender, e);
-                /*MessageBox.Show("No file is loaded. Please load file with data first.", "Error!", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);*/
+                if (_provider.NumericData.Count != 0 || _provider.TextData.Count != 0)
+                {
+                    var addTree = new AddTree(_provider, true, Mode) { Owner = this };
+                    addTree.ShowDialog();
+                }
+                */
             }
         }
 
@@ -556,13 +565,13 @@ namespace ForRest
             if (treeObject.Type.Equals("text"))
             {
                 ITree<string> iTree = treeObject.TextTree;
-                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
+                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 27, 24);
                 NextControls(rootRectangle, 0, iTree.Root);
             }
             else if (treeObject.Type.Equals("numeric"))
             {
                 ITree<double> iTree = treeObject.NumericTree;
-                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
+                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 27, 24);
                 NextControls(rootRectangle, 0, iTree.Root);
             }
         }

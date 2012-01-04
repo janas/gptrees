@@ -131,13 +131,13 @@ namespace ForRest
             if (treeObject.Type.Equals("text"))
             {
                 ITree<string> iTree = treeObject.TextTree;
-                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
+                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 27, 24);
                 NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
             }
             else if (treeObject.Type.Equals("numeric"))
             {
                 ITree<double> iTree = treeObject.NumericTree;
-                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 10, 24);
+                var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 27, 24);
                 NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
             }
         }
