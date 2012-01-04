@@ -7,7 +7,8 @@ namespace ForRest
     public partial class UserControlEdge : UserControl
     {
         private readonly bool _leftToRight;
-        public bool _mark;
+        private Color _color;
+        private int _lineWidth;
 
         protected override CreateParams CreateParams
         {
@@ -19,25 +20,30 @@ namespace ForRest
             }
         }
 
-        public UserControlEdge(bool ltr, bool mark)
+        public UserControlEdge(bool ltr, Color color)
         {
             InitializeComponent();
             _leftToRight = ltr;
-            _mark = mark;
+            _color = color;
+            _lineWidth = 1;
+        }
+
+        public UserControlEdge(bool ltr, Color color, int lineWidth)
+        {
+            InitializeComponent();
+            _leftToRight = ltr;
+            _color = color;
+            _lineWidth = lineWidth;
         }
 
         private void UserControlEdgePaint(object sender, PaintEventArgs e)
         {
             BackColor = Color.Transparent;
-            Pen pen;
-            if (_mark)
-                pen = new Pen(Color.Red, 1);
-            else
-                pen = new Pen(Color.Black, 1);
+            Pen pen = new Pen(_color, _lineWidth);
             Graphics g = CreateGraphics();
             //g.SmoothingMode = SmoothingMode.AntiAlias;
             if (_leftToRight)
-                g.DrawLine(pen, 0, 0, //Location.X, Location.Y,
+                g.DrawLine(pen, 0, 0,
                            Width - 1, Height - 1);
             else
                 g.DrawLine(pen, Width - 1, 0,

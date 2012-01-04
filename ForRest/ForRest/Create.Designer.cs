@@ -58,6 +58,7 @@
             // 
             // btnAddNode
             // 
+            this.btnAddNode.Enabled = false;
             this.btnAddNode.Location = new System.Drawing.Point(6, 263);
             this.btnAddNode.Name = "btnAddNode";
             this.btnAddNode.Size = new System.Drawing.Size(149, 36);
@@ -68,6 +69,7 @@
             // 
             // btnRemoveNode
             // 
+            this.btnRemoveNode.Enabled = false;
             this.btnRemoveNode.Location = new System.Drawing.Point(6, 305);
             this.btnRemoveNode.Name = "btnRemoveNode";
             this.btnRemoveNode.Size = new System.Drawing.Size(149, 36);
@@ -135,6 +137,7 @@
             // 
             // btnRemoveTree
             // 
+            this.btnRemoveTree.Enabled = false;
             this.btnRemoveTree.Location = new System.Drawing.Point(6, 170);
             this.btnRemoveTree.Name = "btnRemoveTree";
             this.btnRemoveTree.Size = new System.Drawing.Size(149, 36);
