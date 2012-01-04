@@ -159,6 +159,7 @@ namespace ForRest
                         labelError.ResetText();
                         labelError.Text = "File processed successfully!";
                         Application.DoEvents();
+                        btnOpen.Enabled = false;
                         Thread.Sleep(1000);
                         Close();
                     }
@@ -198,6 +199,7 @@ namespace ForRest
                         labelError.ResetText();
                         labelError.Text = "Files processed successfully!";
                         Application.DoEvents();
+                        btnOpen.Enabled = false;
                         Thread.Sleep(1000);
                         Close();
                     }
