@@ -182,7 +182,8 @@ namespace ForRest.SplayTree
         {
             get
             {
-                string result = "h=" + _height.ToString() + " ";
+                string result = "";
+                //result += "h=" + _height.ToString() + " ";
                 if (_parent == null)
                     return result;
                 result += "<";
@@ -231,6 +232,7 @@ namespace ForRest.SplayTree
                 Neighbors[0] = value;
             }
         }
+
         public SplayTreeNode<T> Right
         {
             get
