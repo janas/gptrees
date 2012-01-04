@@ -6,6 +6,7 @@
 
 using ForRest.Provider.BLL;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace ForRest.RedBlackTree
 {
@@ -127,6 +128,16 @@ namespace ForRest.RedBlackTree
                 if (IsRed)
                     return "<Red>";
                 return "<Black>";
+            }
+        }
+
+        public override Color NodeColor
+        {
+            get
+            {
+                if (IsRed)
+                    return Color.Red;
+                return Color.Black;
             }
         }
 
