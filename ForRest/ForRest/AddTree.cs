@@ -187,7 +187,45 @@ namespace ForRest
 
         private void TextBoxNameTextChanged(object sender, EventArgs e)
         {
-            btnAdd.Enabled = !string.IsNullOrEmpty(textBoxName.Text.Trim());
+            BtnAddEnableDisable();
+        }
+
+        private void BtnAddEnableDisable()
+        {
+            if (string.IsNullOrEmpty(textBoxName.Text.Trim()))
+            {
+                btnAdd.Enabled = false;
+                return;
+            }
+            var factory = (ITreeFactory)comboBoxAvailableTrees.SelectedItem;
+            switch (_fromFile)
+            {
+                case true:
+                    if (factory.NeedDegree && (string.IsNullOrEmpty(maskedTextBoxDegree.Text) ||
+                        int.Parse(maskedTextBoxDegree.Text) < 2))
+                    {
+                        btnAdd.Enabled = false;
+                        return;
+                    }
+                    else
+                    {
+                    }
+                    break;
+                case false:
+                    if (factory.NeedDegree && (string.IsNullOrEmpty(maskedTextBoxDegree.Text) ||
+                        int.Parse(maskedTextBoxDegree.Text) < 2))
+                    {
+                        btnAdd.Enabled = false;
+                        return;
+                    }
+                    else if (comboBoxDataType.SelectedItem == null)
+                    {
+                        btnAdd.Enabled = false;
+                        return;
+                    }
+                    break;
+            }
+            btnAdd.Enabled = true;
         }
 
         private void MaskedTextBoxDegreeMaskInputRejected(object sender, MaskInputRejectedEventArgs e)
@@ -236,6 +274,7 @@ namespace ForRest
                     }
                     break;
             }
+            BtnAddEnableDisable();
         }
 
         private void BackgroundWorkerAddTreeDoWork(object sender, DoWorkEventArgs e)
@@ -577,6 +616,16 @@ namespace ForRest
             }
             PopulateComboBox();
             Close();
+        }
+
+        private void comboBoxDataTypeSelectedIndexChanged(object sender, EventArgs e)
+        {
+            BtnAddEnableDisable();
+        }
+
+        private void maskedTextBoxDegreeTextChanged(object sender, EventArgs e)
+        {
+            BtnAddEnableDisable();
         }
     }
 }

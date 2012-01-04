@@ -55,7 +55,7 @@
             // 
             this.comboBoxSelectTree.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSelectTree.FormattingEnabled = true;
-            this.comboBoxSelectTree.Location = new System.Drawing.Point(8, 19);
+            this.comboBoxSelectTree.Location = new System.Drawing.Point(6, 19);
             this.comboBoxSelectTree.Name = "comboBoxSelectTree";
             this.comboBoxSelectTree.Size = new System.Drawing.Size(136, 21);
             this.comboBoxSelectTree.TabIndex = 0;

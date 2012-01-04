@@ -10,6 +10,7 @@
 namespace ForRest.Provider.BLL
 {
     using System.Collections.Generic;
+    using System.Drawing;
 
     /// <summary>
     /// TODO: Update summary.
@@ -38,7 +39,6 @@ namespace ForRest.Provider.BLL
         {
             this.Values = data;
             this.Neighbors = null;
-
         }
 
         /// <summary>
@@ -54,7 +54,6 @@ namespace ForRest.Provider.BLL
         {
             this.Values = data;
             this.Neighbors = neighbors;
-
         }
 
         /// <summary>
@@ -73,6 +72,11 @@ namespace ForRest.Provider.BLL
         public virtual string NodeInfo
         {
             get { return string.Empty; }
+        }
+
+        public virtual Color NodeColor
+        {
+            get { return Color.Black; }
         }
 
         /// <summary>

@@ -225,6 +225,18 @@ namespace ForRest
         private void ComboBoxSelectTreeSelectedIndexChanged(object sender, EventArgs e)
         {
             ShowTree();
+            if (comboBoxSelectTree.SelectedItem == null)
+            {
+                btnRemoveTree.Enabled = false;
+                btnAddNode.Enabled = false;
+                btnRemoveNode.Enabled = false;
+            }
+            else
+            {
+                btnRemoveTree.Enabled = true;
+                btnAddNode.Enabled = true;
+                btnRemoveNode.Enabled = true;
+            }
         }
 
         private static TreeNode[] NextLevel(Node<string> node)
@@ -366,7 +378,7 @@ namespace ForRest
                 text.Add(node.Values[i].ToString());
 
             // Draw parent
-            var ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
+            var ucn = new UserControlNode(text, node.NodeInfo, rectangle, node.NodeColor);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
             ucn.VerifySize();
@@ -439,12 +451,12 @@ namespace ForRest
                         ltr = false;
                     else
                         ltr = true;
-                    var uce = new UserControlEdge(ltr, false);
+                    var uce = new UserControlEdge(ltr, node.Neighbors[j].NodeColor);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
-                    if (uce._mark)
-                        _graphPanel.Controls.SetChildIndex(uce, 0);
+                    /*if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);*/
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -466,7 +478,7 @@ namespace ForRest
                 text.Add(node.Values[i].ToString());
 
             // Draw parent
-            var ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
+            var ucn = new UserControlNode(text, node.NodeInfo, rectangle, node.NodeColor);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
             ucn.VerifySize();
@@ -539,12 +551,12 @@ namespace ForRest
                         ltr = false;
                     else
                         ltr = true;
-                    var uce = new UserControlEdge(ltr, false);
+                    var uce = new UserControlEdge(ltr, node.Neighbors[j].NodeColor);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
-                    if (uce._mark)
-                        _graphPanel.Controls.SetChildIndex(uce, 0);
+                    /*if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);*/
                     notNullChildrenIndex++;
 
                     // Draw child

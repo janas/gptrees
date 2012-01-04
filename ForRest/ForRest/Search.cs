@@ -13,6 +13,8 @@ namespace ForRest
         private readonly Provider.Provider _provider;
         private TreeView _treeViewCreate;
         private Panel _graphPanel;
+        private Color _graphPanelMarkColor = Color.Green;
+        private int _graphPanelMarkLineWidth = 2;
 
         public int GraphMode { get; set; }
 
@@ -156,7 +158,7 @@ namespace ForRest
             if (result != null &&
                 (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
-                ucn = new UserControlNode(text, node.NodeInfo, rectangle, true);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, _graphPanelMarkColor, _graphPanelMarkLineWidth);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -166,7 +168,7 @@ namespace ForRest
                 }
             }
             else
-                ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, node.NodeColor);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
             ucn.VerifySize();
@@ -243,16 +245,16 @@ namespace ForRest
                     UserControlEdge uce;
                     if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
                     {
-                        uce = new UserControlEdge(ltr, true);
+                        uce = new UserControlEdge(ltr, _graphPanelMarkColor, _graphPanelMarkLineWidth);
                         allEdgesMarked = true;
                     }
                     else
-                        uce = new UserControlEdge(ltr, false);
+                        uce = new UserControlEdge(ltr, node.Neighbors[j].NodeColor);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
-                    if (uce._mark)
-                        _graphPanel.Controls.SetChildIndex(uce, 0);
+                    /*if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);*/
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -291,7 +293,7 @@ namespace ForRest
             if (result != null &&
                 (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
-                ucn = new UserControlNode(text, node.NodeInfo, rectangle, true);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, _graphPanelMarkColor, _graphPanelMarkLineWidth);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -301,7 +303,7 @@ namespace ForRest
                 }
             }
             else
-                ucn = new UserControlNode(text, node.NodeInfo, rectangle, false);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, node.NodeColor);
             ucn.Location = rectangle.Location;
             ucn.Size = rectangle.Size;
             ucn.VerifySize();
@@ -378,16 +380,16 @@ namespace ForRest
                     UserControlEdge uce;
                     if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
                     {
-                        uce = new UserControlEdge(ltr, true);
+                        uce = new UserControlEdge(ltr, _graphPanelMarkColor, _graphPanelMarkLineWidth);
                         allEdgesMarked = true;
                     }
                     else
-                        uce = new UserControlEdge(ltr, false);
+                        uce = new UserControlEdge(ltr, node.Neighbors[j].NodeColor);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
-                    if (uce._mark)
-                        _graphPanel.Controls.SetChildIndex(uce, 0);
+                    /*if (uce._mark)
+                        _graphPanel.Controls.SetChildIndex(uce, 0);*/
                     notNullChildrenIndex++;
 
                     // Draw child
