@@ -622,6 +622,14 @@ namespace ForRest
         {
             List<int> result = null;
             ShowTree(ref result);
+            if (comboBoxSelectTree.SelectedItem == null)
+            {
+                btnSearch.Enabled = false;
+            }
+            else
+            {
+                btnSearch.Enabled = true;
+            }
         }
 
         private void SearchResize(object sender, EventArgs e)
