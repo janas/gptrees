@@ -6,83 +6,56 @@ namespace ForRest.SplayTree
     public class SplayTree<T> : Tree<T>
     {
         private SplayTreeNode<T> _root;
-        private int _count;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
-
-        public void Splay(SplayTreeNode<T> node)
-        {
-            if (_root == null)
-                return;
-            SplayTreeNode<T> current = _root;
-            SplayTreeNode<T> parent = null;
-            SplayTreeNode<T> grandParent = null;
-            while (current != node)
-            {
-                if (current == null || current.Neighbors == null)
-                    return;
-                for (int i = 0; i < current.Neighbors.Count; i++)
-                {
-                    if (current.Neighbors[i] == null)
-                        continue;
-                    grandParent = parent;
-                    parent = current;
-                    current = (SplayTreeNode<T>)current.Neighbors[i];
-                    if (current.Neighbors == null)
-                        break;
-                }
-            }
-            if (parent == null)
-                return;
-            if (grandParent == null)
-            {
-                // ZIG
-                if (parent.Left == current)
-                    parent.Balance(true);
-                // ZAG
-                else
-                    parent.Balance(false);
-            }
-            else
-            {
-                if (grandParent.Left == parent)
-                {
-                    // ZIG...
-                    if (parent.Left == current)
-                    {
-                        // ...ZIG
-                        parent.Balance(true);
-                        grandParent.Balance(true);
-                    }
-                    else
-                    {
-                        // ...ZAG
-                        parent.Balance(false);
-                        grandParent.Balance(true);
-                    }
-                }
-                else
-                {
-                    // ZAG...
-                    if (parent.Neighbors[0] == current)
-                    {
-                        // ...ZIG
-                        parent.Balance(true);
-                        grandParent.Balance(false);
-                    }
-                    else
-                    {
-                        // ...ZAG
-                        parent.Balance(false);
-                        grandParent.Balance(false);
-                    }
-                }
-            }
-        }
 
         public SplayTree()
         {
             _root = null;
-            _count = 0;
+        }
+
+        public void Splay(SplayTreeNode<T> node)
+        {
+            if (_root == null || node == null)
+                return;
+            SplayTreeNode<T> current = _root;
+            SplayTreeNode<T> parent = null;
+            while (current != node)
+            {
+                if (current == null || current.Neighbors == null)
+                    return;
+                int result = _comparer.Compare(current.Values[0], node.Values[0]);
+                if (result > 0)
+                {
+                    if (current.Left != null)
+                    {
+                        parent = current;
+                        current = (SplayTreeNode<T>)current.Left;
+                    }
+                }
+                else
+                {
+                    if (current.Right != null)
+                    {
+                        parent = current;
+                        current = (SplayTreeNode<T>)current.Right;
+                    }
+                }
+            }
+            if (parent == null)
+                return;
+            // ZIG
+            if (parent.Left == current)
+                parent.Balance(true);
+            // ZAG
+            else
+                parent.Balance(false);
+            while (current.Parent != null)
+                current = (SplayTreeNode<T>)current.Parent;
+            _root = current;
+            if (_root != node)
+                Splay(node);
+            else if (_root != null)
+                _root.UpdateHeight();
         }
 
         public override Node<T> Root
@@ -91,28 +64,23 @@ namespace ForRest.SplayTree
             set { _root = (SplayTreeNode<T>) value; }
         }
 
-        public int Count
-        {
-            get { return _count; }
-        }
-
         public override void Clear()
         {
             _root = null;
-            _count = 0;
         }
 
         public override List<int> Contains(T data)
         {
             List<int> path = new List<int>();
+            SplayTreeNode<T> lastVisited = null;
             SplayTreeNode<T> current = _root;
             while (current != null)
             {
                 int result = _comparer.Compare(current.Values[0], data);
                 if (result == 0)
                 {
-                    //Splay(current);
-                    if (path == null)
+                    Splay(current);
+                    if (path != null)
                     {
                         path.Clear();
                         path = new List<int>();
@@ -121,16 +89,18 @@ namespace ForRest.SplayTree
                 }
                 if (result > 0)
                 {
+                    lastVisited = current;
                     current = current.Left;
                     path.Add(0);
                 }
                 else
                 {
+                    lastVisited = current;
                     current = current.Right;
                     path.Add(1);
                 }
             }
-            //Splay(current);
+            Splay(lastVisited);
             return null;
         }
 
@@ -154,7 +124,6 @@ namespace ForRest.SplayTree
                     current = current.Right;
                 }
             }
-            _count++;
             if (parent == null)
                 _root = node;
             else
@@ -166,12 +135,7 @@ namespace ForRest.SplayTree
                     parent.Right = node;
             }
             node.Parent = parent;
-            //Splay(node);
-            while (_root.Balance())
-                ;
-            while (_root.Parent != null)
-                _root = (SplayTreeNode<T>)_root.Parent;
-            
+            Splay(node);
         }
 
         public override bool Remove(T data)
@@ -182,7 +146,6 @@ namespace ForRest.SplayTree
             int result = _comparer.Compare(current.Values[0], data);
             while (result != 0)
             {
-                SplayTreeNode<T> lastVisited = parent;
                 if (result > 0)
                 {
                     parent = current;
@@ -195,14 +158,12 @@ namespace ForRest.SplayTree
                 }
                 if (current == null)
                 {
-                    //Splay(lastVisited);
+                    Splay(parent);
                     return false;
                 }
                 result = _comparer.Compare(current.Values[0], data);
             }
-            _count--;
 
-            //Splay(current);
             if (current.Right == null)
             {
                 if (parent == null)
@@ -259,7 +220,6 @@ namespace ForRest.SplayTree
             else
             {
                 SplayTreeNode<T> leftMost = current.Right, lmParent = current;
-                //SplayTreeNode<T> leftMost = current.Right.Left, lmParent = current.Right;
                 while (leftMost.Left != null)
                 {
                     lmParent = leftMost;
@@ -296,9 +256,9 @@ namespace ForRest.SplayTree
                     }
                 }
             }
+            if (current != null)
+                Splay((SplayTreeNode<T>)current.Parent);
             current.Parent = current.Left = current.Right = null;
-            while (_root.Balance())
-                ;
             return true;
         }
     }
