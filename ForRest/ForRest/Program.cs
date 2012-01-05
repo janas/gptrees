@@ -20,9 +20,12 @@ namespace ForRest
         private static void LoadApplication()
         {
             string providerDll = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ForRest.Provider.dll");
-            if (File.Exists(providerDll))
+            string gleeDll = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Microsoft.GLEE.dll");
+            string gleeDrawingDll = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Microsoft.GLEE.Drawing.dll");
+            string gleeGdiDll = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Microsoft.GLEE.GraphViewerGDI.dll");
+            if (File.Exists(providerDll) && File.Exists(gleeDll) && File.Exists(gleeDrawingDll) && File.Exists(gleeGdiDll))
             {
-                Application.Run(new MainForm());
+                Application.Run(new MainForm(true));
             }
             else
             {
