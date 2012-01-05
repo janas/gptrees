@@ -144,7 +144,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 132);
+            this.ClientSize = new System.Drawing.Size(424, 132);
             this.Controls.Add(this.groupBoxLoadStatus);
             this.Controls.Add(this.labelError);
             this.Controls.Add(this.labelDataType);
