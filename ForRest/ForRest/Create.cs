@@ -4,6 +4,10 @@ using System.Globalization;
 using System.Windows.Forms;
 using System.Drawing;
 using ForRest.Provider.BLL;
+using Microsoft.Glee.Drawing;
+using Microsoft.Glee.GraphViewerGdi;
+using Color = System.Drawing.Color;
+using Size = System.Drawing.Size;
 
 namespace ForRest
 {
@@ -12,6 +16,7 @@ namespace ForRest
         private readonly Provider.Provider _provider;
         private TreeView _treeViewCreate;
         private Panel _graphPanel;
+        private GViewer _graphViewer;
 
         public int Mode { get; set; }
         public int GraphMode { get; set; }
@@ -23,13 +28,17 @@ namespace ForRest
             Mode = mode;
             GraphMode = graphMode;
             FillSelectedTreeComboBox();
-            if (GraphMode == 0)
+            switch (GraphMode)
             {
-                InitializeTreeView();
-            }
-            else
-            {
-                InitializeGraph();
+                case 0:
+                    InitializeTreeView();
+                    break;
+                case 1:
+                    InitializeGraph();
+                    break;
+                case 2:
+                    InitializeGleeGraph();
+                    break;
             }
         }
 
@@ -52,6 +61,10 @@ namespace ForRest
                     {
                         Controls.Remove(_graphPanel);
                     }
+                    if (_graphViewer != null)
+                    {
+                        Controls.Remove(_graphViewer);
+                    }
                     InitializeTreeView();
                     break;
                 case 1:
@@ -59,7 +72,22 @@ namespace ForRest
                     {
                         Controls.Remove(_treeViewCreate);
                     }
+                    if (_graphViewer != null)
+                    {
+                        Controls.Remove(_graphViewer);
+                    }
                     InitializeGraph();
+                    break;
+                case 2:
+                    if (_treeViewCreate != null)
+                    {
+                        Controls.Remove(_treeViewCreate);
+                    }
+                    if (_graphPanel != null)
+                    {
+                        Controls.Remove(_graphPanel);
+                    }
+                    InitializeGleeGraph();
                     break;
             }
             ShowTree();
@@ -173,17 +201,17 @@ namespace ForRest
         {
             if (_provider.NumericData.Count != 0 || _provider.TextData.Count != 0)
             {
-                var addTree = new AddTree(_provider, true, Mode) { Owner = this };
+                var addTree = new AddTree(_provider, true, Mode) {Owner = this};
                 addTree.ShowDialog();
             }
             else
             {
-                MainForm mainForm = (MainForm)MdiParent;
-                ToolStrip toolStrip = (ToolStrip)mainForm.Controls["toolStrip"];
+                MainForm mainForm = (MainForm) MdiParent;
+                ToolStrip toolStrip = (ToolStrip) mainForm.Controls["toolStrip"];
                 ToolStripItem toolStripBtnOpen = toolStrip.Items["toolStripBtnOpen"];
                 toolTipHelperCreate.ToolTipTitle = "No file loaded";
                 toolTipHelperCreate.Show("No file loaded. Please load file first.", toolStrip,
-                    toolStripBtnOpen.Image.Width, toolStripBtnOpen.Image.Height / 2, 3000);
+                                         toolStripBtnOpen.Image.Width, toolStripBtnOpen.Image.Height/2, 3000);
             }
         }
 
@@ -292,7 +320,7 @@ namespace ForRest
                                                | AnchorStyles.Right,
                                       Location = new Point(195, 16),
                                       Name = "treeViewCreate",
-                                      Size = new Size(Width-220, Height-65),
+                                      Size = new Size(Width - 220, Height - 65),
                                   };
             Controls.Add(_treeViewCreate);
         }
@@ -312,12 +340,46 @@ namespace ForRest
             Controls.Add(_graphPanel);
         }
 
+        private void InitializeGleeGraph()
+        {
+            _graphViewer = new GViewer
+                               {
+                                   Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                                             | AnchorStyles.Left)
+                                            | AnchorStyles.Right,
+                                   AsyncLayout = false,
+                                   AutoScroll = true,
+                                   BackwardEnabled = false,
+                                   ForwardEnabled = false,
+                                   Graph = null,
+                                   Location = new Point(195, 16),
+                                   MouseHitDistance = 0.05D,
+                                   Name = "graphViewer",
+                                   NavigationVisible = true,
+                                   PanButtonPressed = false,
+                                   SaveButtonVisible = true,
+                                   Size = new Size(Width - 220, Height - 65),
+                                   ZoomF = 1D,
+                                   ZoomFraction = 0.5D,
+                                   ZoomWindowThreshold = 0.05D
+                               };
+            Controls.Add(_graphViewer);
+        }
+
         private void ShowTree()
         {
-            if (GraphMode == 0)
-                ShowTreeView();
-            else
-                DrawGraph();
+            switch (GraphMode)
+            {
+                case 0:
+                    ShowTreeView();
+                    break;
+                case 1:
+                    DrawGraph();
+                    break;
+                case 2:
+                    DrawGleeGraph();
+                    break;
+            }
         }
 
         private void ShowTreeView()
@@ -383,11 +445,11 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
                 int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 for (int j = 0; j < node.Neighbors.Count; j++)
@@ -397,8 +459,8 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
+                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
@@ -406,11 +468,11 @@ namespace ForRest
                     if (node.Values.Count > nodeValuesCount)
                         nodeValuesCount = node.Values.Count;
                     var from = new Point(
-                        ucn.Location.X + j *
-                        (ucn.Width / nodeValuesCount),
+                        ucn.Location.X + j*
+                        (ucn.Width/nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width / 2,
+                        r.Location.X + r.Width/2,
                         r.Location.Y);
                     int drawChild = -1;
                     if (node.Parent != null && node.Parent.Neighbors != null)
@@ -420,7 +482,7 @@ namespace ForRest
                                 && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
                             {
                                 to = new Point(
-                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width*3/2 + levelBlank,
                                     ucn.GetMyArea().Location.Y);
                                 drawChild = l + 1;
                             }
@@ -484,11 +546,11 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
                 int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 for (int j = 0; j < node.Neighbors.Count; j++)
@@ -498,8 +560,8 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
+                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
@@ -507,11 +569,11 @@ namespace ForRest
                     if (node.Values.Count > nodeValuesCount)
                         nodeValuesCount = node.Values.Count;
                     var from = new Point(
-                        ucn.Location.X + j *
-                        (ucn.Width / nodeValuesCount),
+                        ucn.Location.X + j*
+                        (ucn.Width/nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width / 2,
+                        r.Location.X + r.Width/2,
                         r.Location.Y);
                     int drawChild = -1;
                     if (node.Parent != null && node.Parent.Neighbors != null)
@@ -521,7 +583,7 @@ namespace ForRest
                                 && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
                             {
                                 to = new Point(
-                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width*3/2 + levelBlank,
                                     ucn.GetMyArea().Location.Y);
                                 drawChild = l + 1;
                             }
@@ -580,14 +642,24 @@ namespace ForRest
             }
         }
 
+        private void DrawGleeGraph()
+        {
+            if (comboBoxSelectTree.SelectedItem == null) return;
+            var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
+            var graphName = treeObject.Name;
+            var graph = new Graph(graphName);
+            graph.AddNode("123").Attr.Label = "create test";
+            _graphViewer.Graph = graph;
+        }
+
         private void CreateResize(object sender, EventArgs e)
         {
             ShowTree();
         }
 
-        private void Create_FormClosing(object sender, FormClosingEventArgs e)
+        private void CreateFormClosing(object sender, FormClosingEventArgs e)
         {
-            MainForm mainForm = (MainForm)MdiParent;
+            MainForm mainForm = (MainForm) MdiParent;
             mainForm.CreateClosing();
         }
     }

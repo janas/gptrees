@@ -17,10 +17,11 @@ namespace ForRest
 
         public int Mode;
 
-        public MainForm()
+        public MainForm(bool isGleeEnabled)
         {
             InitializeComponent();
             _provider.CheckDirectoryExists(Application.ExecutablePath);
+            EnableGleeMode(isGleeEnabled);
         }
 
         public void CreateClosing()
@@ -202,11 +203,13 @@ namespace ForRest
             {
                 _graphMode = 0;
                 graphToolStripMenuItem.Checked = false;
+                gLEEGraphToolStripMenuItem.Checked = false;
             }
             else
             {
                 treeViewToolStripMenuItem.Checked = true;
                 graphToolStripMenuItem.Checked = false;
+                gLEEGraphToolStripMenuItem.Checked = false;
                 _graphMode = 0;
             }
             if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
@@ -234,11 +237,13 @@ namespace ForRest
             {
                 _graphMode = 1;
                 treeViewToolStripMenuItem.Checked = false;
+                gLEEGraphToolStripMenuItem.Checked = false;
             }
             else
             {
                 graphToolStripMenuItem.Checked = true;
                 treeViewToolStripMenuItem.Checked = false;
+                gLEEGraphToolStripMenuItem.Checked = false;
                 _graphMode = 1;
             }
             if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
@@ -252,6 +257,53 @@ namespace ForRest
                 var search = (Search) ActiveMdiChild;
                 search.GraphMode = _graphMode;
                 search.ChangeGraphMode();
+            }
+        }
+
+        private void GLeeGraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (_graphMode == 2)
+            {
+                gLEEGraphToolStripMenuItem.Checked = true;
+                return;
+            }
+            if (gLEEGraphToolStripMenuItem.Checked)
+            {
+                _graphMode = 2;
+                graphToolStripMenuItem.Checked = false;
+                treeViewToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                gLEEGraphToolStripMenuItem.Checked = true;
+                treeViewToolStripMenuItem.Checked = false;
+                graphToolStripMenuItem.Checked = false;
+                _graphMode = 2;
+            }
+            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
+            {
+                var create = (Create) ActiveMdiChild;
+                create.GraphMode = _graphMode;
+                create.ChangeGraphMode();
+            }
+            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
+            {
+                var search = (Search) ActiveMdiChild;
+                search.GraphMode = _graphMode;
+                search.ChangeGraphMode();
+            }
+        }
+
+        private void EnableGleeMode(bool isGleeEnabled)
+        {
+            switch (isGleeEnabled)
+            {
+                case true:
+                    gLEEGraphToolStripMenuItem.Visible = true;
+                    break;
+                default:
+                    gLEEGraphToolStripMenuItem.Visible = false;
+                    break;
             }
         }
     }

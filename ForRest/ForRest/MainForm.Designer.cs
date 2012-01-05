@@ -38,6 +38,7 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gLEEGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,7 +117,8 @@
             this.viewToolStripMenuItem.CheckOnClick = true;
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.treeViewToolStripMenuItem,
-            this.graphToolStripMenuItem});
+            this.graphToolStripMenuItem,
+            this.gLEEGraphToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "&View";
@@ -127,7 +129,7 @@
             this.treeViewToolStripMenuItem.CheckOnClick = true;
             this.treeViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.treeViewToolStripMenuItem.Name = "treeViewToolStripMenuItem";
-            this.treeViewToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.treeViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.treeViewToolStripMenuItem.Text = "&Tree View";
             this.treeViewToolStripMenuItem.Click += new System.EventHandler(this.TreeViewToolStripMenuItemClick);
             // 
@@ -135,9 +137,17 @@
             // 
             this.graphToolStripMenuItem.CheckOnClick = true;
             this.graphToolStripMenuItem.Name = "graphToolStripMenuItem";
-            this.graphToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.graphToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.graphToolStripMenuItem.Text = "&Graph";
             this.graphToolStripMenuItem.Click += new System.EventHandler(this.GraphToolStripMenuItemClick);
+            // 
+            // gLEEGraphToolStripMenuItem
+            // 
+            this.gLEEGraphToolStripMenuItem.Name = "gLEEGraphToolStripMenuItem";
+            this.gLEEGraphToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gLEEGraphToolStripMenuItem.Text = "G&LEE Graph";
+            this.gLEEGraphToolStripMenuItem.Visible = false;
+            this.gLEEGraphToolStripMenuItem.Click += new System.EventHandler(this.GLeeGraphToolStripMenuItemClick);
             // 
             // modeToolStripMenuItem
             // 
@@ -369,5 +379,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem treeViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem graphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gLEEGraphToolStripMenuItem;
     }
 }

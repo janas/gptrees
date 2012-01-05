@@ -5,6 +5,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using ForRest.Provider.BLL;
+using Microsoft.Glee.Drawing;
+using Microsoft.Glee.GraphViewerGdi;
+using Color = System.Drawing.Color;
+using Size = System.Drawing.Size;
 
 namespace ForRest
 {
@@ -13,8 +17,9 @@ namespace ForRest
         private readonly Provider.Provider _provider;
         private TreeView _treeViewCreate;
         private Panel _graphPanel;
-        private Color _graphPanelMarkColor = Color.Green;
-        private int _graphPanelMarkLineWidth = 2;
+        private GViewer _graphViewer;
+        private readonly Color _graphPanelMarkColor = Color.Green;
+        private const int GraphPanelMarkLineWidth = 2;
 
         public int GraphMode { get; set; }
 
@@ -24,13 +29,17 @@ namespace ForRest
             _provider = provider;
             GraphMode = graphMode;
             FillSelectedTreeComboBox();
-            if (GraphMode == 0)
+            switch (GraphMode)
             {
-                InitializeTreeView();
-            }
-            else
-            {
-                InitializeGraph();
+                case 0:
+                    InitializeTreeView();
+                    break;
+                case 1:
+                    InitializeGraph();
+                    break;
+                case 2:
+                    InitializeGleeGraph();
+                    break;
             }
         }
 
@@ -53,6 +62,10 @@ namespace ForRest
                     {
                         Controls.Remove(_graphPanel);
                     }
+                    if (_graphViewer != null)
+                    {
+                        Controls.Remove(_graphViewer);
+                    }
                     InitializeTreeView();
                     break;
                 case 1:
@@ -60,7 +73,22 @@ namespace ForRest
                     {
                         Controls.Remove(_treeViewCreate);
                     }
+                    if (_graphViewer != null)
+                    {
+                        Controls.Remove(_graphViewer);
+                    }
                     InitializeGraph();
+                    break;
+                case 2:
+                    if (_treeViewCreate != null)
+                    {
+                        Controls.Remove(_treeViewCreate);
+                    }
+                    if (_graphPanel != null)
+                    {
+                        Controls.Remove(_graphPanel);
+                    }
+                    InitializeGleeGraph();
                     break;
             }
             List<int> result = null;
@@ -69,10 +97,18 @@ namespace ForRest
 
         private void ShowTree(ref List<int> result)
         {
-            if (GraphMode == 0)
-                ShowTreeView();
-            else
-                DrawGraph(ref result);
+            switch (GraphMode)
+            {
+                case 0:
+                    ShowTreeView();
+                    break;
+                case 1:
+                    DrawGraph(ref result);
+                    break;
+                case 2:
+                    DrawGleeGraph();
+                    break;
+            }
         }
 
         private void ShowTreeView()
@@ -144,6 +180,16 @@ namespace ForRest
             }
         }
 
+        private void DrawGleeGraph()
+        {
+            if (comboBoxSelectTree.SelectedItem == null) return;
+            var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
+            var graphName = treeObject.Name;
+            var graph = new Graph(graphName);
+            graph.AddNode("123").Attr.Label = "search test";
+            _graphViewer.Graph = graph;
+        }
+
         private void NextControls(Rectangle rectangle, int levelBlank, Node<double> node,
                                   ref List<int> result, int nodeIndex)
         {
@@ -158,7 +204,7 @@ namespace ForRest
             if (result != null &&
                 (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
-                ucn = new UserControlNode(text, node.NodeInfo, rectangle, _graphPanelMarkColor, _graphPanelMarkLineWidth);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, _graphPanelMarkColor, GraphPanelMarkLineWidth);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -183,11 +229,11 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
                 int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 bool allEdgesMarked = false;
@@ -221,7 +267,7 @@ namespace ForRest
                                 && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
                             {
                                 to = new Point(
-                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width*3/2 + levelBlank,
                                     ucn.GetMyArea().Location.Y);
                                 drawChild = l + 1;
                             }
@@ -248,7 +294,7 @@ namespace ForRest
                     UserControlEdge uce;
                     if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
                     {
-                        uce = new UserControlEdge(ltr, _graphPanelMarkColor, _graphPanelMarkLineWidth);
+                        uce = new UserControlEdge(ltr, _graphPanelMarkColor, GraphPanelMarkLineWidth);
                         allEdgesMarked = true;
                     }
                     else
@@ -294,7 +340,7 @@ namespace ForRest
             if (result != null &&
                 (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
-                ucn = new UserControlNode(text, node.NodeInfo, rectangle, _graphPanelMarkColor, _graphPanelMarkLineWidth);
+                ucn = new UserControlNode(text, node.NodeInfo, rectangle, _graphPanelMarkColor, GraphPanelMarkLineWidth);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -319,11 +365,11 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
+                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
                 int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
-                                 / notNullChildren;
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
+                             /notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 bool allEdgesMarked = false;
@@ -334,8 +380,8 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
+                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
@@ -343,11 +389,11 @@ namespace ForRest
                     if (node.Values.Count > nodeValuesCount)
                         nodeValuesCount = node.Values.Count;
                     var from = new Point(
-                        ucn.Location.X + j *
-                        (ucn.Width / nodeValuesCount),
+                        ucn.Location.X + j*
+                        (ucn.Width/nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width / 2,
+                        r.Location.X + r.Width/2,
                         r.Location.Y);
                     int drawChild = -1;
                     if (node.Parent != null && node.Parent.Neighbors != null)
@@ -357,7 +403,7 @@ namespace ForRest
                                 && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
                             {
                                 to = new Point(
-                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width*3/2 + levelBlank,
                                     ucn.GetMyArea().Location.Y);
                                 drawChild = l + 1;
                             }
@@ -384,7 +430,7 @@ namespace ForRest
                     UserControlEdge uce;
                     if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
                     {
-                        uce = new UserControlEdge(ltr, _graphPanelMarkColor, _graphPanelMarkLineWidth);
+                        uce = new UserControlEdge(ltr, _graphPanelMarkColor, GraphPanelMarkLineWidth);
                         allEdgesMarked = true;
                     }
                     else
@@ -443,6 +489,32 @@ namespace ForRest
                                   AutoScroll = true
                               };
             Controls.Add(_graphPanel);
+        }
+
+        private void InitializeGleeGraph()
+        {
+            _graphViewer = new GViewer
+                               {
+                                   Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                                             | AnchorStyles.Left)
+                                            | AnchorStyles.Right,
+                                   AsyncLayout = false,
+                                   AutoScroll = true,
+                                   BackwardEnabled = false,
+                                   ForwardEnabled = false,
+                                   Graph = null,
+                                   Location = new Point(195, 16),
+                                   MouseHitDistance = 0.05D,
+                                   Name = "graphViewer",
+                                   NavigationVisible = true,
+                                   PanButtonPressed = false,
+                                   SaveButtonVisible = true,
+                                   Size = new Size(Width - 220, Height - 65),
+                                   ZoomF = 1D,
+                                   ZoomFraction = 0.5D,
+                                   ZoomWindowThreshold = 0.05D
+                               };
+            Controls.Add(_graphViewer);
         }
 
         private static TreeNode[] NextLevel(Node<string> node)
@@ -640,9 +712,9 @@ namespace ForRest
             ShowTree(ref result);
         }
 
-        private void Search_FormClosing(object sender, FormClosingEventArgs e)
+        private void SearchFormClosing(object sender, FormClosingEventArgs e)
         {
-            MainForm mainForm = (MainForm)MdiParent;
+            var mainForm = (MainForm) MdiParent;
             mainForm.SearchClosing();
         }
     }

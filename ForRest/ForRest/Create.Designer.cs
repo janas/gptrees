@@ -176,7 +176,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Create";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Create_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateFormClosing);
             this.Resize += new System.EventHandler(this.CreateResize);
             this.groupBoxSelectTree.ResumeLayout(false);
             this.groupBoxControlsCreate.ResumeLayout(false);

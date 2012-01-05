@@ -201,7 +201,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Search";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Search_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SearchFormClosing);
             this.Resize += new System.EventHandler(this.SearchResize);
             this.groupBoxResults.ResumeLayout(false);
             this.groupBoxResults.PerformLayout();
