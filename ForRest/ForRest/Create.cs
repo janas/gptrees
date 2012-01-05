@@ -184,16 +184,6 @@ namespace ForRest
                 toolTipHelperCreate.ToolTipTitle = "No file loaded";
                 toolTipHelperCreate.Show("No file loaded. Please load file first.", toolStrip,
                     toolStripBtnOpen.Image.Width, toolStripBtnOpen.Image.Height / 2, 3000);
-                /*
-                OpenDialog openDialog = new OpenDialog(_provider);
-                openDialog.Owner = mainForm;
-                openDialog.ShowDialog();
-                if (_provider.NumericData.Count != 0 || _provider.TextData.Count != 0)
-                {
-                    var addTree = new AddTree(_provider, true, Mode) { Owner = this };
-                    addTree.ShowDialog();
-                }
-                */
             }
         }
 
@@ -412,9 +402,12 @@ namespace ForRest
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
+                    int nodeValuesCount = 1;
+                    if (node.Values.Count > nodeValuesCount)
+                        nodeValuesCount = node.Values.Count;
                     var from = new Point(
                         ucn.Location.X + j *
-                        (ucn.Width / node.Values.Count),
+                        (ucn.Width / nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
                         r.Location.X + r.Width / 2,
@@ -455,8 +448,6 @@ namespace ForRest
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
-                    /*if (uce._mark)
-                        _graphPanel.Controls.SetChildIndex(uce, 0);*/
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -512,9 +503,12 @@ namespace ForRest
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
+                    int nodeValuesCount = 1;
+                    if (node.Values.Count > nodeValuesCount)
+                        nodeValuesCount = node.Values.Count;
                     var from = new Point(
                         ucn.Location.X + j *
-                        (ucn.Width / node.Values.Count),
+                        (ucn.Width / nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
                         r.Location.X + r.Width / 2,
@@ -555,8 +549,6 @@ namespace ForRest
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
-                    /*if (uce._mark)
-                        _graphPanel.Controls.SetChildIndex(uce, 0);*/
                     notNullChildrenIndex++;
 
                     // Draw child
