@@ -118,22 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Actions-folder-new-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\Actions-folder-new-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Actions-edit-copy-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\Actions-edit-copy-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Actions-gear-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\Actions-gear-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Actions-edit-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\Actions-edit-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Actions-floppy-save-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\Actions-floppy-save-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Actions-gear-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\Actions-gear-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Actions-info-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\Actions-info-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Actions-folder-new-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\Actions-folder-new-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Actions-edit-copy-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\Actions-edit-copy-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Tree-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tree-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

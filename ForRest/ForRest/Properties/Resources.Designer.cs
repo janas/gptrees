@@ -101,5 +101,12 @@ namespace ForRest.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap Tree_32 {
+            get {
+                object obj = ResourceManager.GetObject("Tree-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
