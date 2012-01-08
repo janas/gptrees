@@ -331,19 +331,23 @@ namespace ForRest
         private void BackgroundWorkerBatchProcessDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             string comboBoxDataTypeSelectedItem = "";
+            int threadId = Thread.CurrentThread.ManagedThreadId;
             if (comboBoxDataType.InvokeRequired)
             {
                 comboBoxDataType.Invoke(new MethodInvoker
                                             (delegate
-                                            { comboBoxDataTypeSelectedItem = comboBoxDataType.SelectedItem.ToString(); }));
+                                                 {
+                                                     comboBoxDataTypeSelectedItem =
+                                                         comboBoxDataType.SelectedItem.ToString();
+                                                 }));
             }
             else
             {
                 comboBoxDataTypeSelectedItem = comboBoxDataType.SelectedItem.ToString();
             }
-            textBoxLog.Invoke((MethodInvoker)(() => 
-            textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tThread ID " +
-                                  Thread.CurrentThread.ManagedThreadId + " is started.\n")));
+            textBoxLog.Invoke((MethodInvoker) (() =>
+                                               textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tThread ID " +
+                                                                     threadId + " is started.\n")));
             switch (comboBoxDataTypeSelectedItem)
             {
                 case "Text":
@@ -365,16 +369,21 @@ namespace ForRest
                                                                   watch.ElapsedMilliseconds.ToString(
                                                                       CultureInfo.InvariantCulture),
                                                               TypeOfNodes = "String",
-                                                              TypeOfTree = batchTextTree.TextTree.GetType().ToString(),
+                                                              TypeOfTree = batchTextTree.TextTree.TreeType,
                                                               NoOfNodes = "notImplemented"
                                                           };
                                 _provider.BatchPerformanceSet.Add(peroformanceSet);
-                                
-                                textBoxLog.Invoke((MethodInvoker)(() => 
-                                    textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: " +
-                                                      batchTextTree.Name + " Value: " + item +
-                                                      " Found in " + watch.ElapsedMilliseconds + " ms for tree type: " +
-                                                      batchTextTree.TextTree.GetType() + "\n")));
+
+                                textBoxLog.Invoke((MethodInvoker) (() =>
+                                                                   textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay +
+                                                                                         "]" + "\tGroup tree name: " +
+                                                                                         batchTextTree.Name + " Value: " +
+                                                                                         item +
+                                                                                         " Found in " +
+                                                                                         watch.ElapsedMilliseconds +
+                                                                                         " ms for tree type: " +
+                                                                                         batchTextTree.TextTree.TreeType +
+                                                                                         "\n")));
                             }
                             else
                             {
@@ -383,16 +392,21 @@ namespace ForRest
                                                               TreeName = batchTextTree.Name,
                                                               SearchTime = watch.ElapsedMilliseconds + "/Not Found",
                                                               TypeOfNodes = "String",
-                                                              TypeOfTree = batchTextTree.TextTree.GetType().ToString(),
+                                                              TypeOfTree = batchTextTree.TextTree.TreeType,
                                                               NoOfNodes = "notImplemented"
                                                           };
                                 _provider.BatchPerformanceSet.Add(peroformanceSet);
-                                
-                                textBoxLog.Invoke((MethodInvoker)(() => 
-                                    textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: " +
-                                                      batchTextTree.Name + " Value: " + item +
-                                                      " Not found in " + watch.ElapsedMilliseconds +
-                                                      " ms for tree type: " + batchTextTree.TextTree.GetType() + "\n")));
+
+                                textBoxLog.Invoke((MethodInvoker) (() =>
+                                                                   textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay +
+                                                                                         "]" + "\tGroup tree name: " +
+                                                                                         batchTextTree.Name + " Value: " +
+                                                                                         item +
+                                                                                         " Not found in " +
+                                                                                         watch.ElapsedMilliseconds +
+                                                                                         " ms for tree type: " +
+                                                                                         batchTextTree.TextTree.TreeType +
+                                                                                         "\n")));
                             }
                         }
                     }
@@ -417,15 +431,19 @@ namespace ForRest
                                                                      CultureInfo.InvariantCulture),
                                                              TypeOfNodes = "Double",
                                                              TypeOfTree =
-                                                                 batchNumericTree.NumericTree.GetType().ToString(),
+                                                                 batchNumericTree.NumericTree.TreeType,
                                                              NoOfNodes = "notImplemented"
                                                          };
                                 _provider.BatchPerformanceSet.Add(performanceSet);
-                                textBoxLog.Invoke((MethodInvoker)(() => 
-                                    textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: " +
-                                                      batchNumericTree.Name + " Value: " + item +
-                                                      " Found in " + watch.ElapsedMilliseconds + " ms for tree type: " +
-                                                      batchNumericTree.NumericTree.GetType() + "\n")));
+                                textBoxLog.Invoke((MethodInvoker) (() =>
+                                                                   textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay +
+                                                                                         "]" + "\tGroup tree name: " +
+                                                                                         batchNumericTree.Name +
+                                                                                         " Value: " + item +
+                                                                                         " Found in " +
+                                                                                         watch.ElapsedMilliseconds +
+                                                                                         " ms for tree type: " +
+                                                                                         batchNumericTree.NumericTree.TreeType + "\n")));
                             }
                             else
                             {
@@ -435,16 +453,20 @@ namespace ForRest
                                                               SearchTime = watch.ElapsedMilliseconds + "/Not Found",
                                                               TypeOfNodes = "Double",
                                                               TypeOfTree =
-                                                                  batchNumericTree.NumericTree.GetType().ToString(),
+                                                                  batchNumericTree.NumericTree.TreeType,
                                                               NoOfNodes = "notImplemented"
                                                           };
                                 _provider.BatchPerformanceSet.Add(peroformanceSet);
-                                textBoxLog.Invoke((MethodInvoker)(() => 
-                                    textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: " +
-                                                      batchNumericTree.Name + " Value: " + item +
-                                                      " Not found in " + watch.ElapsedMilliseconds +
-                                                      " ms for tree type: " + batchNumericTree.NumericTree.GetType() +
-                                                      "\n")));
+                                textBoxLog.Invoke((MethodInvoker) (() =>
+                                                                   textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay +
+                                                                                         "]" + "\tGroup tree name: " +
+                                                                                         batchNumericTree.Name +
+                                                                                         " Value: " + item +
+                                                                                         " Not found in " +
+                                                                                         watch.ElapsedMilliseconds +
+                                                                                         " ms for tree type: " +
+                                                                                         batchNumericTree.NumericTree.TreeType +
+                                                                                         "\n")));
                             }
                         }
                     }
@@ -456,15 +478,16 @@ namespace ForRest
         private void BackgroundWorkerBatchProcessRunWorkerCompleted(object sender,
                                                                     System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            textBoxLog.Invoke((MethodInvoker)(() => 
-                textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tThread ID " + e.Result + " is done.\n")));
+            textBoxLog.Invoke((MethodInvoker) (() =>
+                                               textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tThread ID " +
+                                                                     e.Result + " is done.\n")));
             EnableExportButton();
             ToggleBatchSearchButton();
         }
 
-        private void BatchProcess_FormClosing(object sender, FormClosingEventArgs e)
+        private void BatchProcessFormClosing(object sender, FormClosingEventArgs e)
         {
-            MainForm mainForm = (MainForm)MdiParent;
+            var mainForm = (MainForm) MdiParent;
             mainForm.BatchProcessClosing();
         }
     }

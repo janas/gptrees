@@ -625,7 +625,7 @@ namespace ForRest
                     peroformanceSet.TreeName = treeObject.Name;
                     peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
                     peroformanceSet.TypeOfNodes = "String";
-                    peroformanceSet.TypeOfTree = treeObject.TextTree.GetType().ToString();
+                    peroformanceSet.TypeOfTree = treeObject.TextTree.TreeType;
                     peroformanceSet.NoOfNodes = "notImplemented";
                     _provider.PerformanceSets.Add(peroformanceSet);
                 }
@@ -637,7 +637,7 @@ namespace ForRest
                     peroformanceSet.TreeName = treeObject.Name;
                     peroformanceSet.SearchTime = watch.ElapsedMilliseconds + "/Not Found";
                     peroformanceSet.TypeOfNodes = "String";
-                    peroformanceSet.TypeOfTree = treeObject.TextTree.GetType().ToString();
+                    peroformanceSet.TypeOfTree = treeObject.TextTree.TreeType;
                     peroformanceSet.NoOfNodes = "notImplemented";
                     _provider.PerformanceSets.Add(peroformanceSet);
                 }
@@ -661,7 +661,7 @@ namespace ForRest
                         peroformanceSet.TreeName = treeObject.Name;
                         peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
                         peroformanceSet.TypeOfNodes = "Double";
-                        peroformanceSet.TypeOfTree = treeObject.NumericTree.GetType().ToString();
+                        peroformanceSet.TypeOfTree = treeObject.NumericTree.TreeType;
                         peroformanceSet.NoOfNodes = "notImplemented";
                         _provider.PerformanceSets.Add(peroformanceSet);
                     }
@@ -675,7 +675,7 @@ namespace ForRest
                         peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture) +
                                                      "/Not Found";
                         peroformanceSet.TypeOfNodes = "Double";
-                        peroformanceSet.TypeOfTree = treeObject.NumericTree.GetType().ToString();
+                        peroformanceSet.TypeOfTree = treeObject.NumericTree.TreeType;
                         peroformanceSet.NoOfNodes = "notImplemented";
                         _provider.PerformanceSets.Add(peroformanceSet);
                     }
