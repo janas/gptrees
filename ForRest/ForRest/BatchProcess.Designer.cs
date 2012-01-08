@@ -197,7 +197,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = "Batch Process";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchProcess_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchProcessFormClosing);
             this.groupBoxControlsBatchProcess.ResumeLayout(false);
             this.groupBoxDataType.ResumeLayout(false);
             this.groupBoxLog.ResumeLayout(false);
