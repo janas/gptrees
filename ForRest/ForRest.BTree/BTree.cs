@@ -15,6 +15,11 @@ namespace ForRest.BTree
             _m = degree;
         }
 
+        public override string TreeType
+        {
+            get { return "B Tree"; }
+        }
+
         public int M
         {
             get { return _m; }

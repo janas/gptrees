@@ -13,6 +13,11 @@ namespace ForRest.SplayTree
             _root = null;
         }
 
+        public override string TreeType
+        {
+            get { return "Splay Tree"; }
+        }
+
         public void Splay(SplayTreeNode<T> node)
         {
             if (_root == null || node == null)

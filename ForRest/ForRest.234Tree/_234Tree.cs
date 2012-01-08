@@ -13,6 +13,11 @@ namespace ForRest._234Tree
             _root = null;
         }
 
+        public override string TreeType
+        {
+            get { return "2-3-4 Tree"; }
+        }
+
         public override Node<T> Root
         {
             get { return _root; }

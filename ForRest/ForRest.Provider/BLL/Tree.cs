@@ -21,6 +21,11 @@ namespace ForRest.Provider.BLL
         #region ITree<T> Members
 
         /// <summary>
+        /// Gets tree type.
+        /// </summary>
+        public abstract string TreeType { get; }
+        
+        /// <summary>
         /// Gets or sets Root.
         /// </summary>
         public abstract Node<T> Root { get; set; }

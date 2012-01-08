@@ -15,6 +15,11 @@ namespace ForRest.AVLTree
             _count = 0;
         }
 
+        public override string TreeType
+        {
+            get { return "AVL Tree"; }
+        }
+
         public override Node<T> Root
         {
             get { return _root; }

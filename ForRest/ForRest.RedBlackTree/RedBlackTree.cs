@@ -15,6 +15,11 @@ namespace ForRest.RedBlackTree
             _count = 0;
         }
 
+        public override string TreeType
+        {
+            get { return "Red-Black Tree"; }
+        }
+
         public override Node<T> Root
         {
             get { return _root; }

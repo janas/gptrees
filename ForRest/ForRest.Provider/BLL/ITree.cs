@@ -19,6 +19,11 @@ namespace ForRest.Provider.BLL
     public interface ITree<T>
     {
         /// <summary>
+        /// Gets tree type.
+        /// </summary>
+        string TreeType { get; }
+
+        /// <summary>
         /// Gets or sets Root.
         /// </summary>
         Node<T> Root { get; set; }

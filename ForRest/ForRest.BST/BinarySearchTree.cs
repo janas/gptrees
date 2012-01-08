@@ -15,6 +15,11 @@ namespace ForRest.BST
             _count = 0;
         }
 
+        public override string TreeType
+        {
+            get { return "Binary Search Tree"; }
+        }
+
         public override Node<T> Root
         {
             get { return _root; }
