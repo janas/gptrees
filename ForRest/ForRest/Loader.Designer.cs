@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -64,9 +65,10 @@ namespace ForRest
             // labelChecking
             // 
             this.labelChecking.AutoSize = true;
+            this.labelChecking.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.labelChecking.Location = new System.Drawing.Point(27, 18);
             this.labelChecking.Name = "labelChecking";
-            this.labelChecking.Size = new System.Drawing.Size(55, 13);
+            this.labelChecking.Size = new System.Drawing.Size(64, 13);
             this.labelChecking.TabIndex = 4;
             this.labelChecking.Text = "Checking:";
             // 
@@ -212,7 +214,8 @@ namespace ForRest
             this.labelMeassage.Name = "labelMeassage";
             this.labelMeassage.Size = new System.Drawing.Size(436, 31);
             this.labelMeassage.TabIndex = 26;
-            this.labelMeassage.Text = "labelMessage";
+            this.labelMeassage.Text = "One or more of Microsoft GLEE libraries were not found.\r\nGLEE mode will not be ac" +
+                "cessible";
             this.labelMeassage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelMeassage.Visible = false;
             // 

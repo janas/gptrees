@@ -7,6 +7,8 @@ namespace ForRest
 {
     public partial class Loader : Form
     {
+        private bool _runApplication;
+
         public Loader()
         {
             InitializeComponent();
@@ -23,11 +25,14 @@ namespace ForRest
             if (File.Exists(providerDll))
             {
                 labelFound1.Visible = true;
+                labelMeassage.Visible = true;
+                _runApplication = true;
             }
             if (!File.Exists(providerDll))
             {
                 labelNotFound1.Visible = true;
                 labelError.Visible = true;
+                _runApplication = false;
             }
             if (File.Exists(gleeDll))
             {
@@ -56,23 +61,31 @@ namespace ForRest
             CloseApplication();
         }
 
-        private void ShowLabel()
-        {
-            labelMeassage.ResetText();
-            labelMeassage.Text = "One or more of Microsoft GLEE libraries were not found." + Environment.NewLine +
-                                 "GLEE mode will not be accessible";
-        }
-
         private void CloseApplication()
         {
             var timer = new System.Timers.Timer(5000);
-            timer.Elapsed += TimerElapsed;
+            switch (_runApplication)
+            {
+                case false:
+                    timer.Elapsed += TimerElapsedFalse;
+                    break;
+                case true:
+                    timer.Elapsed += TimerElapsedTrue;
+                    break;
+            }
             timer.Enabled = true;
         }
 
-        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        private void TimerElapsedFalse(object sender, ElapsedEventArgs e)
         {
-            Environment.Exit(0);
+            Invoke((MethodInvoker)(Close));
+            DialogResult=DialogResult.No;
+        }
+
+        private void TimerElapsedTrue(object sender, ElapsedEventArgs e)
+        {
+            Invoke((MethodInvoker) (Close));
+            DialogResult = DialogResult.Yes;
         }
     }
 }
