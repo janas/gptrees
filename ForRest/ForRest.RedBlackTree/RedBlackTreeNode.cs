@@ -1,17 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="RedBlackTreeNode.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ForRest.Provider.BLL;
+﻿using ForRest.Provider.BLL;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace ForRest.RedBlackTree
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// Red-Black tree node class implementing Node<T>.
     /// </summary>
     public class RedBlackTreeNode<T> : Node<T>
     {
@@ -19,22 +13,34 @@ namespace ForRest.RedBlackTree
         private int _maxHeight;
         private int _minHeight;
 
+        /// <summary>
+        /// Gets parent of the node.
+        /// </summary>
         public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (RedBlackTreeNode<T>)value; }
         }
 
+        /// <summary>
+        /// Gets maxHeight of the node.
+        /// </summary>
         public int MaxHeight
         {
             get { return _maxHeight; }
         }
 
+        /// <summary>
+        /// Gets minHeight of the node.
+        /// </summary>
         public int MinHeight
         {
             get { return _minHeight; }
         }
 
+        /// <summary>
+        /// Update maxHeight of the node.
+        /// </summary>
         public int UpdateMaxHeight()
         {
             int leftHeight = 0;
@@ -50,6 +56,9 @@ namespace ForRest.RedBlackTree
             return _maxHeight;
         }
 
+        /// <summary>
+        /// Update minHeight of the node.
+        /// </summary>
         public int UpdateMinHeight()
         {
             int leftHeight = 0;
@@ -65,6 +74,9 @@ namespace ForRest.RedBlackTree
             return _minHeight;
         }
 
+        /// <summary>
+        /// Balances node.
+        /// </summary>
         public bool Balance()
         {
             if (Left != null)
@@ -148,6 +160,9 @@ namespace ForRest.RedBlackTree
             return false;
         }
 
+        /// <summary>
+        /// Indicates whether node is red.
+        /// </summary>
         public bool IsRed
         {
             get
@@ -160,6 +175,9 @@ namespace ForRest.RedBlackTree
             }
         }
 
+        /// <summary>
+        /// Gets node info.
+        /// </summary>
         public override string NodeInfo
         {
             get
@@ -170,6 +188,9 @@ namespace ForRest.RedBlackTree
             }
         }
 
+        /// <summary>
+        /// Gets node color.
+        /// </summary>
         public override Color NodeColor
         {
             get
@@ -180,12 +201,19 @@ namespace ForRest.RedBlackTree
             }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public RedBlackTreeNode()
         {
             _maxHeight = 1;
             _maxHeight = 0;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">Values for the node.</param>
         public RedBlackTreeNode(List<T> data)
             : base(data, null)
         {
@@ -193,6 +221,12 @@ namespace ForRest.RedBlackTree
             _maxHeight = 0;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">Values for the node.</param>
+        /// <param name="left">Left child node.</param>
+        /// <param name="right">Right child node.</param>
         public RedBlackTreeNode(List<T> data, RedBlackTreeNode<T> left, RedBlackTreeNode<T> right)
         {
             Values = data;
@@ -204,6 +238,9 @@ namespace ForRest.RedBlackTree
             UpdateMinHeight();
         }
 
+        /// <summary>
+        /// Gets left child node.
+        /// </summary>
         public RedBlackTreeNode<T> Left
         {
             get
@@ -220,6 +257,9 @@ namespace ForRest.RedBlackTree
             }
         }
 
+        /// <summary>
+        /// Gets right child node.
+        /// </summary>
         public RedBlackTreeNode<T> Right
         {
             get

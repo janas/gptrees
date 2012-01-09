@@ -3,40 +3,52 @@ using System.Collections.Generic;
 
 namespace ForRest.RedBlackTree
 {
+    /// <summary>
+    /// Red-Black tree class implementing Tree<T>.
+    /// </summary>
     public class RedBlackTree<T> : Tree<T>
     {
         private RedBlackTreeNode<T> _root;
-        private int _count;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        /// <summary>
+        /// Basic constructor.
+        /// </summary>
         public RedBlackTree()
         {
             _root = null;
-            _count = 0;
         }
 
+        /// <summary>
+        /// Gets type of the tree.
+        /// </summary>
         public override string TreeType
         {
             get { return "Red-Black Tree"; }
         }
-
+        
+        /// <summary>
+        /// Gets root of the tree.
+        /// </summary>
         public override Node<T> Root
         {
             get { return _root; }
             set { _root = (RedBlackTreeNode<T>) value; }
         }
 
-        public int Count
-        {
-            get { return _count; }
-        }
-
+        /// <summary>
+        /// Clears nodes of the tree.
+        /// </summary>
         public override void Clear()
         {
             _root = null;
-            _count = 0;
         }
 
+        /// <summary>
+        /// Indicates whether tree contains element.
+        /// </summary>
+        /// <param name="data">Element to be searched.</param>
+        /// <returns></returns>
         public override List<int> Contains(T data)
         {
             var path = new List<int>();
@@ -60,6 +72,10 @@ namespace ForRest.RedBlackTree
             return null;
         }
 
+        /// <summary>
+        /// Adds element to the tree.
+        /// </summary>
+        /// <param name="data">Element to be added.</param>
         public override void Add(T data)
         {
             var dataList = new List<T>(1) { data };
@@ -80,7 +96,6 @@ namespace ForRest.RedBlackTree
                     current = current.Right;
                 }
             }
-            _count++;
             if (parent == null)
                 _root = node;
             else
@@ -99,6 +114,11 @@ namespace ForRest.RedBlackTree
                 _root = (RedBlackTreeNode<T>)_root.Parent;
         }
 
+        /// <summary>
+        /// Removes element from the tree.
+        /// </summary>
+        /// <param name="data">Element to be removed.</param>
+        /// <returns></returns>
         public override bool Remove(T data)
         {
             if (_root == null)
@@ -121,7 +141,6 @@ namespace ForRest.RedBlackTree
                     return false;
                 result = _comparer.Compare(current.Values[0], data);
             }
-            _count--;
 
             if (current.Right == null)
             {

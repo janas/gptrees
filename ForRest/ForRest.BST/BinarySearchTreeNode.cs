@@ -1,27 +1,27 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BinarySearchTreeNode.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ForRest.Provider.BLL;
+﻿using ForRest.Provider.BLL;
 using System.Collections.Generic;
 
 namespace ForRest.BST
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// BST tree node class implementing Node<T>.
     /// </summary>
     public class BinarySearchTreeNode<T> : Node<T>
     {
         private BinarySearchTreeNode<T> _parent;
 
+        /// <summary>
+        /// Gets parent of the node.
+        /// </summary>
         public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (BinarySearchTreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Gets node info.
+        /// </summary>
         public override string NodeInfo
         {
             get
@@ -36,15 +36,28 @@ namespace ForRest.BST
             }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public BinarySearchTreeNode()
         {
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">Values for the node.</param>
         public BinarySearchTreeNode(List<T> data)
             : base(data, null)
         {
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">Values for the node.</param>
+        /// <param name="left">Left child node.</param>
+        /// <param name="right">Right child node.</param>
         public BinarySearchTreeNode(List<T> data, BinarySearchTreeNode<T> left, BinarySearchTreeNode<T> right)
         {
             Values = data;
@@ -54,6 +67,9 @@ namespace ForRest.BST
             Neighbors = children;
         }
 
+        /// <summary>
+        /// Gets left child node.
+        /// </summary>
         public BinarySearchTreeNode<T> Left
         {
             get
@@ -70,6 +86,9 @@ namespace ForRest.BST
             }
         }
 
+        /// <summary>
+        /// Gets right child node.
+        /// </summary>
         public BinarySearchTreeNode<T> Right
         {
             get
