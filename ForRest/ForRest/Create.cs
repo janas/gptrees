@@ -213,12 +213,14 @@ namespace ForRest
                 toolTipHelperCreate.Show("No file loaded. Please load file first.", toolStrip,
                                          toolStripBtnOpen.Image.Width, toolStripBtnOpen.Image.Height/2, 3000);
             }
+            VerifyLayout();
         }
 
         private void BtnAddTreeClick(object sender, EventArgs e)
         {
             var addTree = new AddTree(_provider, false) {Owner = this};
             addTree.ShowDialog();
+            VerifyLayout();
         }
 
         private void BtnRemoveTreeClick(object sender, EventArgs e)
@@ -238,9 +240,10 @@ namespace ForRest
                 toolTipHelperCreate.Show("No tree is selected. Please select tree from list first.", comboBoxSelectTree,
                                          3000);
             }
+            VerifyLayout();
         }
 
-        private void ComboBoxSelectTreeSelectedIndexChanged(object sender, EventArgs e)
+        private void VerifyLayout()
         {
             ShowTree();
             if (comboBoxSelectTree.SelectedItem == null)
@@ -255,6 +258,11 @@ namespace ForRest
                 btnAddNode.Enabled = true;
                 btnRemoveNode.Enabled = true;
             }
+        }
+
+        private void ComboBoxSelectTreeSelectedIndexChanged(object sender, EventArgs e)
+        {
+            VerifyLayout();
         }
 
         private static TreeNode[] NextLevel(Node<string> node)
