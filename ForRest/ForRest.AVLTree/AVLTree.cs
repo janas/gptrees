@@ -62,7 +62,7 @@ namespace ForRest.AVLTree
 
         public override void Add(T data)
         {
-            var dataList = new List<T>(1) {data};
+            var dataList = new List<T>(1) { data };
             var node = new AVLTreeNode<T>(dataList);
             AVLTreeNode<T> current = _root, parent = null;
             int result;
@@ -92,11 +92,12 @@ namespace ForRest.AVLTree
                     parent.Right = node;
             }
             node.Parent = parent;
-            while (_root.Balance())
-            {
-            }
             while (_root.Parent != null)
-                _root = (AVLTreeNode<T>) _root.Parent;
+                _root = (AVLTreeNode<T>)_root.Parent;
+            _root.UpdateHeight();
+            _root.Balance();
+            while (_root.Parent != null)
+                _root = (AVLTreeNode<T>)_root.Parent;
         }
 
         public override bool Remove(T data)
@@ -179,7 +180,6 @@ namespace ForRest.AVLTree
             else
             {
                 AVLTreeNode<T> leftMost = current.Right, lmParent = current;
-                //AVLTreeNode<T> leftMost = current.Right.Left, lmParent = current.Right;
                 while (leftMost.Left != null)
                 {
                     lmParent = leftMost;
@@ -217,8 +217,14 @@ namespace ForRest.AVLTree
                 }
             }
             current.Parent = current.Left = current.Right = null;
-            while (_root.Balance())
+            if (_root != null)
             {
+                while (_root.Parent != null)
+                    _root = (AVLTreeNode<T>)_root.Parent;
+                _root.UpdateHeight();
+                _root.Balance();
+                while (_root.Parent != null)
+                    _root = (AVLTreeNode<T>)_root.Parent;
             }
             return true;
         }
