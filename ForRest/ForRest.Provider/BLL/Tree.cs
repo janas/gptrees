@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Tree.cs" company="">
+// <copyright file="Tree.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   TODO: Update summary.
+//   Generic abstract class implementing generic ITree interface.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ namespace ForRest.Provider.BLL
     using System.Collections.Generic;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Generic abstract class implementing generic ITree interface.
     /// </summary>
     /// <typeparam name="T">
     /// </typeparam>
@@ -42,6 +42,7 @@ namespace ForRest.Provider.BLL
         /// The data.
         /// </param>
         /// <returns>
+        /// Returns list of initigers as a path to searched node, null otherwise.
         /// </returns>
         public abstract List<int> Contains(T data);
 

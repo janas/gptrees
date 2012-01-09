@@ -1,11 +1,11 @@
-﻿// -------------------------------------------------------------------------------
-// <copyright file="_234TreeFactory.cs" company="Warsaw Univeristy of Technology">
-// All rights reserved.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ITreeFactory.cs" company="Warsaw University of Technology">
+//   
 // </copyright>
 // <summary>
-// Interface responsible for managing trees.
+//   Interace responsible for managing trees.
 // </summary>
-// -------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.Provider.BLL
 {

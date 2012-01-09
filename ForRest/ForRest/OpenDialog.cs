@@ -1,232 +1,362 @@
-﻿using System;
-using System.Drawing;
-using System.Threading;
-using System.Windows.Forms;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="OpenDialog.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The open dialog.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest
 {
+    using System;
+    using System.Drawing;
+    using System.Threading;
+    using System.Windows.Forms;
+
+    /// <summary>
+    /// The open dialog.
+    /// </summary>
     public partial class OpenDialog : Form
     {
-        private enum Separator
+        #region Constants and Fields
+
+        /// <summary>
+        /// The _multiselect.
+        /// </summary>
+        private readonly bool _multiselect;
+
+        /// <summary>
+        /// The _provider.
+        /// </summary>
+        private readonly Provider.Provider _provider = new Provider.Provider();
+
+        /// <summary>
+        /// The _dt type.
+        /// </summary>
+        private string _dtType;
+
+        /// <summary>
+        /// The _file path.
+        /// </summary>
+        private string _filePath;
+
+        /// <summary>
+        /// The _file paths.
+        /// </summary>
+        private string[] _filePaths;
+
+        /// <summary>
+        /// The _sep.
+        /// </summary>
+        private char _sep;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenDialog"/> class.
+        /// </summary>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public OpenDialog(Provider.Provider provider)
         {
-            Comma = 0,
-            Semicolon,
-            Colon
+            this.InitializeComponent();
+            this._provider = provider;
+            this._multiselect = false;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenDialog"/> class.
+        /// </summary>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="multiselect">
+        /// The multiselect.
+        /// </param>
+        public OpenDialog(Provider.Provider provider, bool multiselect)
+        {
+            this.InitializeComponent();
+            this._provider = provider;
+            this._multiselect = multiselect;
+        }
+
+        #endregion
+
+        #region Enums
+
+        /// <summary>
+        /// The data type.
+        /// </summary>
         private enum DataType
         {
-            Text = 0,
+            /// <summary>
+            /// The text.
+            /// </summary>
+            Text = 0, 
+
+            /// <summary>
+            /// The numeric.
+            /// </summary>
             Numeric
         }
 
-        private char _sep;
-        private string _dtType;
-        private string _filePath;
-        private string[] _filePaths;
-
-        private readonly bool _multiselect;
-        private readonly Provider.Provider _provider = new Provider.Provider();
-
-        public OpenDialog(Provider.Provider provider)
+        /// <summary>
+        /// The separator.
+        /// </summary>
+        private enum Separator
         {
-            InitializeComponent();
-            _provider = provider;
-            _multiselect = false;
+            /// <summary>
+            /// The comma.
+            /// </summary>
+            Comma = 0, 
+
+            /// <summary>
+            /// The semicolon.
+            /// </summary>
+            Semicolon, 
+
+            /// <summary>
+            /// The colon.
+            /// </summary>
+            Colon
         }
 
-        public OpenDialog(Provider.Provider provider, bool multiselect)
-        {
-            InitializeComponent();
-            _provider = provider;
-            _multiselect = multiselect;
-        }
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// The btn open click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void BtnOpenClick(object sender, EventArgs e)
         {
-            if (comboBoxDataType.SelectedItem != null && comboBoxSeparator.SelectedItem != null)
+            if (this.comboBoxDataType.SelectedItem != null && this.comboBoxSeparator.SelectedItem != null)
             {
-                if (_multiselect == false)
+                if (this._multiselect == false)
                 {
-                    openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
-                    openFileDialog.FilterIndex = 1;
-                    openFileDialog.FileName = "";
-                    DialogResult result = openFileDialog.ShowDialog();
+                    this.openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
+                    this.openFileDialog.FilterIndex = 1;
+                    this.openFileDialog.FileName = string.Empty;
+                    DialogResult result = this.openFileDialog.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        _filePath = openFileDialog.FileName;
-                        textBoxFile.Clear();
-                        textBoxFile.Text = _filePath;
-                        var separator = (Separator) comboBoxSeparator.SelectedIndex;
+                        this._filePath = this.openFileDialog.FileName;
+                        this.textBoxFile.Clear();
+                        this.textBoxFile.Text = this._filePath;
+                        var separator = (Separator)this.comboBoxSeparator.SelectedIndex;
                         switch (separator)
                         {
                             case Separator.Comma:
-                                _sep = ',';
+                                this._sep = ',';
                                 break;
                             case Separator.Colon:
-                                _sep = ':';
+                                this._sep = ':';
                                 break;
                             case Separator.Semicolon:
-                                _sep = ';';
+                                this._sep = ';';
                                 break;
                         }
-                        var dataType = (DataType) comboBoxDataType.SelectedIndex;
+
+                        var dataType = (DataType)this.comboBoxDataType.SelectedIndex;
                         switch (dataType)
                         {
                             case DataType.Numeric:
-                                _dtType = "Numeric";
+                                this._dtType = "Numeric";
                                 break;
                             case DataType.Text:
-                                _dtType = "Text";
+                                this._dtType = "Text";
                                 break;
                         }
                     }
+
                     if (result == DialogResult.Cancel)
                     {
-                        textBoxFile.Text = "Canceled by user!";
-                        labelError.ResetText();
-                        labelError.Text = "No file loaded!";
+                        this.textBoxFile.Text = "Canceled by user!";
+                        this.labelError.ResetText();
+                        this.labelError.Text = "No file loaded!";
                     }
                 }
                 else
                 {
-                    openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
-                    openFileDialog.Multiselect = true;
-                    openFileDialog.FilterIndex = 1;
-                    openFileDialog.FileName = "";
-                    DialogResult result = openFileDialog.ShowDialog();
+                    this.openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
+                    this.openFileDialog.Multiselect = true;
+                    this.openFileDialog.FilterIndex = 1;
+                    this.openFileDialog.FileName = string.Empty;
+                    DialogResult result = this.openFileDialog.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        _filePaths = openFileDialog.FileNames;
-                        textBoxFile.Clear();
-                        textBoxFile.Text = "Multiple files selected";
-                        var separator = (Separator) comboBoxSeparator.SelectedIndex;
+                        this._filePaths = this.openFileDialog.FileNames;
+                        this.textBoxFile.Clear();
+                        this.textBoxFile.Text = "Multiple files selected";
+                        var separator = (Separator)this.comboBoxSeparator.SelectedIndex;
                         switch (separator)
                         {
                             case Separator.Comma:
-                                _sep = ',';
+                                this._sep = ',';
                                 break;
                             case Separator.Colon:
-                                _sep = ':';
+                                this._sep = ':';
                                 break;
                             case Separator.Semicolon:
-                                _sep = ';';
+                                this._sep = ';';
                                 break;
                         }
-                        var dataType = (DataType) comboBoxDataType.SelectedIndex;
+
+                        var dataType = (DataType)this.comboBoxDataType.SelectedIndex;
                         switch (dataType)
                         {
                             case DataType.Numeric:
-                                _dtType = "Numeric";
+                                this._dtType = "Numeric";
                                 break;
                             case DataType.Text:
-                                _dtType = "Text";
+                                this._dtType = "Text";
                                 break;
                         }
                     }
+
                     if (result == DialogResult.Cancel)
                     {
-                        textBoxFile.Text = "Canceled by user!";
-                        labelError.ResetText();
-                        labelError.Text = "No file loaded!";
+                        this.textBoxFile.Text = "Canceled by user!";
+                        this.labelError.ResetText();
+                        this.labelError.Text = "No file loaded!";
                     }
                 }
             }
-            ProcessFile();
+
+            this.ProcessFile();
         }
 
+        /// <summary>
+        /// The process file.
+        /// </summary>
         private void ProcessFile()
         {
-            if (_multiselect == false)
+            if (this._multiselect == false)
             {
-                if (_dtType != null && _filePath != null)
+                if (this._dtType != null && this._filePath != null)
                 {
-                    if (_dtType.Equals("Text"))
+                    if (this._dtType.Equals("Text"))
                     {
-                        var owner = (MainForm) Owner;
+                        var owner = (MainForm)this.Owner;
                         owner.Mode = 0;
-                        _provider.TextData = _provider.LoadTextData(_filePath, _sep);
+                        this._provider.TextData = this._provider.LoadTextData(this._filePath, this._sep);
                     }
-                    else if (_dtType.Equals("Numeric"))
+                    else if (this._dtType.Equals("Numeric"))
                     {
-                        var owner = (MainForm) Owner;
+                        var owner = (MainForm)this.Owner;
                         owner.Mode = 1;
-                        _provider.NumericData = _provider.LoadNumericData(_filePath, _sep);
+                        this._provider.NumericData = this._provider.LoadNumericData(this._filePath, this._sep);
                     }
-                    if (_provider.TextData.Count > 0 || _provider.NumericData.Count > 0)
+
+                    if (this._provider.TextData.Count > 0 || this._provider.NumericData.Count > 0)
                     {
-                        pictureBoxLoadStatus.BackColor = Color.Green;
-                        labelError.ResetText();
-                        labelError.Text = "File processed successfully!";
+                        this.pictureBoxLoadStatus.BackColor = Color.Green;
+                        this.labelError.ResetText();
+                        this.labelError.Text = "File processed successfully!";
                         Application.DoEvents();
-                        btnOpen.Enabled = false;
+                        this.btnOpen.Enabled = false;
                         Thread.Sleep(1000);
-                        Close();
+                        this.Close();
                     }
                     else
-                        labelError.Text = "Invalid file selected!";
+                    {
+                        this.labelError.Text = "Invalid file selected!";
+                    }
                 }
                 else
                 {
-                    labelError.Text = "File is not processed!";
+                    this.labelError.Text = "File is not processed!";
                 }
             }
             else
             {
-                if (_dtType != null && _filePaths != null)
+                if (this._dtType != null && this._filePaths != null)
                 {
-                    if (_dtType.Equals("Text"))
+                    if (this._dtType.Equals("Text"))
                     {
-                        var owner = (BatchProcess) Owner;
+                        var owner = (BatchProcess)this.Owner;
                         owner.Mode = 0;
-                        foreach (var filePath in _filePaths)
+                        foreach (var filePath in this._filePaths)
                         {
-                            _provider.BatchTextData.Add(_provider.LoadTextData(filePath, _sep));
+                            this._provider.BatchTextData.Add(this._provider.LoadTextData(filePath, this._sep));
                         }
                     }
-                    else if (_dtType.Equals("Numeric"))
+                    else if (this._dtType.Equals("Numeric"))
                     {
-                        var owner = (BatchProcess) Owner;
+                        var owner = (BatchProcess)this.Owner;
                         owner.Mode = 1;
-                        foreach (var filePath in _filePaths)
+                        foreach (var filePath in this._filePaths)
                         {
-                            _provider.BatchNumericData.Add(_provider.LoadNumericData(filePath, _sep));
+                            this._provider.BatchNumericData.Add(this._provider.LoadNumericData(filePath, this._sep));
                         }
                     }
-                    if (_provider.BatchTextData.Count > 0 || _provider.BatchNumericData.Count > 0)
+
+                    if (this._provider.BatchTextData.Count > 0 || this._provider.BatchNumericData.Count > 0)
                     {
-                        pictureBoxLoadStatus.BackColor = Color.Green;
-                        labelError.ResetText();
-                        labelError.Text = "Files processed successfully!";
+                        this.pictureBoxLoadStatus.BackColor = Color.Green;
+                        this.labelError.ResetText();
+                        this.labelError.Text = "Files processed successfully!";
                         Application.DoEvents();
-                        btnOpen.Enabled = false;
+                        this.btnOpen.Enabled = false;
                         Thread.Sleep(1000);
-                        Close();
+                        this.Close();
                     }
                     else
-                        labelError.Text = "Invalid file selected!";
+                    {
+                        this.labelError.Text = "Invalid file selected!";
+                    }
                 }
                 else
                 {
-                    labelError.Text = "Files are not processed!";
+                    this.labelError.Text = "Files are not processed!";
                 }
             }
         }
 
-        private void comboBoxSeparator_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The combo box data type_ selected index changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void ComboBoxDataTypeSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxDataType.SelectedItem != null && comboBoxSeparator.SelectedItem != null)
+            if (this.comboBoxDataType.SelectedItem != null && this.comboBoxSeparator.SelectedItem != null)
             {
-                btnOpen.Enabled = true;
+                this.btnOpen.Enabled = true;
             }
         }
 
-        private void comboBoxDataType_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The combo box separator_ selected index changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void ComboBoxSeparatorSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxDataType.SelectedItem != null && comboBoxSeparator.SelectedItem != null)
+            if (this.comboBoxDataType.SelectedItem != null && this.comboBoxSeparator.SelectedItem != null)
             {
-                btnOpen.Enabled = true;
+                this.btnOpen.Enabled = true;
             }
         }
+
+        #endregion
     }
 }

@@ -1,19 +1,54 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ResultsSet.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The results set.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest
 {
+    using System;
+    using System.Drawing;
+    using System.Windows.Forms;
+
+    /// <summary>
+    /// The results set.
+    /// </summary>
     public partial class ResultsSet : Form
     {
+        #region Constants and Fields
+
+        /// <summary>
+        /// The _provider.
+        /// </summary>
         private readonly Provider.Provider _provider;
 
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultsSet"/> class.
+        /// </summary>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
         public ResultsSet(Provider.Provider provider)
         {
-            InitializeComponent();
-            _provider = provider;
-            dataGridViewResultsSet.ColumnHeadersBorderStyle = ProperColumnHeadersBorderStyle;
+            this.InitializeComponent();
+            this._provider = provider;
+            this.dataGridViewResultsSet.ColumnHeadersBorderStyle = ProperColumnHeadersBorderStyle;
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets ProperColumnHeadersBorderStyle.
+        /// </summary>
         private static DataGridViewHeaderBorderStyle ProperColumnHeadersBorderStyle
         {
             get
@@ -24,15 +59,29 @@ namespace ForRest
             }
         }
 
-        private void ResultsSetLoad(object sender, System.EventArgs e)
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The results set load.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void ResultsSetLoad(object sender, EventArgs e)
         {
-            dataGridViewResultsSet.DataSource = _provider.PerformanceSets;
-            //dataGridViewResultsSet.DataSource = _provider.BatchPerformanceSet;
-            dataGridViewResultsSet.Columns[0].HeaderText = "Tree name";
-            dataGridViewResultsSet.Columns[1].HeaderText = "Type of the tree";
-            dataGridViewResultsSet.Columns[2].HeaderText = "Number of nodes";
-            dataGridViewResultsSet.Columns[3].HeaderText = "Nodes type";
-            dataGridViewResultsSet.Columns[4].HeaderText = "Search time (in ms)";
+            this.dataGridViewResultsSet.DataSource = this._provider.PerformanceSets;
+            this.dataGridViewResultsSet.Columns[0].HeaderText = "Tree name";
+            this.dataGridViewResultsSet.Columns[1].HeaderText = "Type of the tree";
+            this.dataGridViewResultsSet.Columns[2].HeaderText = "Number of nodes";
+            this.dataGridViewResultsSet.Columns[3].HeaderText = "Nodes type";
+            this.dataGridViewResultsSet.Columns[4].HeaderText = "Search time (in ms)";
         }
+
+        #endregion
     }
 }

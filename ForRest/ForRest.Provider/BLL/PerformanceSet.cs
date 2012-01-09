@@ -1,16 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PerformanceSet.cs" company="">
+// <copyright file="PerformanceSet.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   TODO: Update summary.
+//   Class - container for performance results.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.Provider.BLL
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// Class - container for performance results.
     /// </summary>
     public class PerformanceSet
     {

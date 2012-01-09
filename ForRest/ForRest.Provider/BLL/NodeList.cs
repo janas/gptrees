@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NodeList.cs" company="">
+// <copyright file="NodeList.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   TODO: Update summary.
+//   Class responsible for holding nodes children.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ namespace ForRest.Provider.BLL
     using System.Collections.ObjectModel;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Class responsible for holding nodes children.
     /// </summary>
     /// <typeparam name="T">
     /// </typeparam>
@@ -30,25 +30,6 @@ namespace ForRest.Provider.BLL
             {
                 Items.Add(default(Node<T>));
             }
-        }
-
-        /// <summary>
-        /// The find by value.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        public Node<T> FindByValue(T value)
-        {
-            foreach (var node in Items)
-            {
-                if (node.Values.Contains(value))
-                    return node;
-            }
-
-            return null;
         }
     }
 }

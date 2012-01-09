@@ -87,7 +87,7 @@
             this.comboBoxDataType.Size = new System.Drawing.Size(102, 21);
             this.comboBoxDataType.TabIndex = 5;
             this.comboBoxDataType.Visible = false;
-            this.comboBoxDataType.SelectedIndexChanged += new System.EventHandler(this.comboBoxDataTypeSelectedIndexChanged);
+            this.comboBoxDataType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDataTypeSelectedIndexChanged);
             // 
             // labelDataType
             // 
@@ -136,7 +136,7 @@
             this.maskedTextBoxDegree.ValidatingType = typeof(int);
             this.maskedTextBoxDegree.Visible = false;
             this.maskedTextBoxDegree.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.MaskedTextBoxDegreeMaskInputRejected);
-            this.maskedTextBoxDegree.TextChanged += new System.EventHandler(this.maskedTextBoxDegreeTextChanged);
+            this.maskedTextBoxDegree.TextChanged += new System.EventHandler(this.MaskedTextBoxDegreeTextChanged);
             // 
             // backgroundWorkerAddTree
             // 

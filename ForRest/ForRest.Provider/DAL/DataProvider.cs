@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DataProvider.cs" company="">
+// <copyright file="DataProvider.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   TODO: Update summary.
+//   Class responsible for data files manipulation.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ namespace ForRest.Provider.DAL
     using BLL;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Class responsible for data files manipulation.
     /// </summary>
     public class DataProvider
     {

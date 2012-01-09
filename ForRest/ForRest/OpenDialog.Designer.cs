@@ -60,7 +60,7 @@
             this.comboBoxSeparator.Name = "comboBoxSeparator";
             this.comboBoxSeparator.Size = new System.Drawing.Size(100, 21);
             this.comboBoxSeparator.TabIndex = 0;
-            this.comboBoxSeparator.SelectedIndexChanged += new System.EventHandler(this.comboBoxSeparator_SelectedIndexChanged);
+            this.comboBoxSeparator.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSeparatorSelectedIndexChanged);
             // 
             // comboBoxDataType
             // 
@@ -73,7 +73,7 @@
             this.comboBoxDataType.Name = "comboBoxDataType";
             this.comboBoxDataType.Size = new System.Drawing.Size(100, 21);
             this.comboBoxDataType.TabIndex = 2;
-            this.comboBoxDataType.SelectedIndexChanged += new System.EventHandler(this.comboBoxDataType_SelectedIndexChanged);
+            this.comboBoxDataType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDataTypeSelectedIndexChanged);
             // 
             // textBoxFile
             // 

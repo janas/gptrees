@@ -1,16 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TreeObject.cs" company="">
+// <copyright file="TreeObject.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   The tree object.
+//   Class for holding trees (container).
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.Provider.BLL
 {
     /// <summary>
-    /// The tree object.
+    /// Class for holding trees (container).
     /// </summary>
     public class TreeObject
     {

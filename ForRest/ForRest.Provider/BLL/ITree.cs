@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ITree.cs" company="">
+// <copyright file="ITree.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   TODO: Update summary.
+//   Interface providing methods allowing manipulation on the tree such as Add, Contains and Remove.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ namespace ForRest.Provider.BLL
     using System.Collections.Generic;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Interface providing methods allowing manipulation on the tree such as Add, Contains and Remove.
     /// </summary>
     /// <typeparam name="T">
     /// </typeparam>

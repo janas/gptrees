@@ -1,310 +1,534 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MainForm.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The main form.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+
+    /// <summary>
+    /// The main form.
+    /// </summary>
     public partial class MainForm : Form
     {
-        private readonly Provider.Provider _provider = new Provider.Provider();
-        private int _createState;
-        private int _searchState;
-        private int _batchProcessState;
-        private Create _create;
-        private Search _search;
-        private BatchProcess _batchProcess;
-        private int _graphMode;
+        #region Constants and Fields
 
+        /// <summary>
+        /// The mode.
+        /// </summary>
         public int Mode;
 
+        /// <summary>
+        /// The _provider.
+        /// </summary>
+        private readonly Provider.Provider _provider = new Provider.Provider();
+
+        /// <summary>
+        /// The _batch process.
+        /// </summary>
+        private BatchProcess _batchProcess;
+
+        /// <summary>
+        /// The _batch process state.
+        /// </summary>
+        private int _batchProcessState;
+
+        /// <summary>
+        /// The _create.
+        /// </summary>
+        private Create _create;
+
+        /// <summary>
+        /// The _create state.
+        /// </summary>
+        private int _createState;
+
+        /// <summary>
+        /// The _graph mode.
+        /// </summary>
+        private int _graphMode;
+
+        /// <summary>
+        /// The _search.
+        /// </summary>
+        private Search _search;
+
+        /// <summary>
+        /// The _search state.
+        /// </summary>
+        private int _searchState;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainForm"/> class.
+        /// </summary>
+        /// <param name="isGleeEnabled">
+        /// The is glee enabled.
+        /// </param>
         public MainForm(bool isGleeEnabled)
         {
-            InitializeComponent();
-            _provider.CheckDirectoryExists(Application.ExecutablePath);
-            EnableGleeMode(isGleeEnabled);
+            this.InitializeComponent();
+            this._provider.CheckDirectoryExists(Application.ExecutablePath);
+            this.EnableGleeMode(isGleeEnabled);
         }
 
-        public void CreateClosing()
-        {
-            _createState = 0;
-            createToolStripMenuItem.Checked = false;
-        }
+        #endregion
 
-        public void SearchClosing()
-        {
-            _searchState = 0;
-            searchToolStripMenuItem.Checked = false;
-        }
+        #region Public Methods
 
+        /// <summary>
+        /// The batch process closing.
+        /// </summary>
         public void BatchProcessClosing()
         {
-            _batchProcessState = 0;
-            batchProcessToolStripMenuItem.Checked = false;
+            this._batchProcessState = 0;
+            this.batchProcessToolStripMenuItem.Checked = false;
         }
 
-        private void BtnCreateClick(object sender, EventArgs e)
+        /// <summary>
+        /// The create closing.
+        /// </summary>
+        public void CreateClosing()
         {
-            if (_createState == 0)
-            {
-                if (_create != null && !_create.IsDisposed) return;
-                _create = new Create(_provider, Mode, _graphMode)
-                              {MdiParent = this, WindowState = FormWindowState.Maximized};
-                _create.Show();
-                ActivateMdiChild(null);
-                ActivateMdiChild(_create);
-                _create.BringToFront();
-                _createState = 1;
-                createToolStripMenuItem.Checked = true;
-                if (_search != null && (_search != null || !_search.IsDisposed))
-                {
-                    _search.Close();
-                }
-                _searchState = 0;
-                searchToolStripMenuItem.Checked = false;
-                if (_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
-                {
-                    _batchProcess.Close();
-                }
-                _batchProcessState = 0;
-                batchProcessToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                _create.Close();
-                _createState = 0;
-                createToolStripMenuItem.Checked = false;
-            }
+            this._createState = 0;
+            this.createToolStripMenuItem.Checked = false;
         }
 
-        private void BtnSearchClick(object sender, EventArgs e)
+        /// <summary>
+        /// The search closing.
+        /// </summary>
+        public void SearchClosing()
         {
-            if (_searchState == 0)
-            {
-                if (_search != null && !_search.IsDisposed) return;
-                _search = new Search(_provider, _graphMode) {MdiParent = this, WindowState = FormWindowState.Maximized};
-                _search.Show();
-                ActivateMdiChild(null);
-                ActivateMdiChild(_search);
-                _search.BringToFront();
-                _searchState = 1;
-                searchToolStripMenuItem.Checked = true;
-                if (_create != null && (_create != null || !_create.IsDisposed))
-                {
-                    _create.Close();
-                }
-                _createState = 0;
-                createToolStripMenuItem.Checked = false;
-                if (_batchProcess != null && (_batchProcess != null || !_batchProcess.IsDisposed))
-                {
-                    _batchProcess.Close();
-                }
-                _batchProcessState = 0;
-                batchProcessToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                _search.Close();
-                _searchState = 0;
-                searchToolStripMenuItem.Checked = false;
-            }
+            this._searchState = 0;
+            this.searchToolStripMenuItem.Checked = false;
         }
 
-        private void BtnBatchProcessClick(object sender, EventArgs e)
-        {
-            if (_batchProcessState == 0)
-            {
-                if (_batchProcess != null && !_batchProcess.IsDisposed) return;
-                _batchProcess = new BatchProcess(_provider) {MdiParent = this, WindowState = FormWindowState.Maximized};
-                _batchProcess.Show();
-                ActivateMdiChild(null);
-                ActivateMdiChild(_batchProcess);
-                _batchProcess.BringToFront();
-                _batchProcessState = 1;
-                batchProcessToolStripMenuItem.Checked = true;
-                if (_create != null && (_create != null || !_create.IsDisposed))
-                {
-                    _create.Close();
-                }
-                _createState = 0;
-                createToolStripMenuItem.Checked = false;
-                if (_search != null && (_search != null || !_search.IsDisposed))
-                {
-                    _search.Close();
-                }
-                _searchState = 0;
-                searchToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                _batchProcess.Close();
-                _batchProcessState = 0;
-                batchProcessToolStripMenuItem.Checked = false;
-            }
-        }
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// The btn about click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void BtnAboutClick(object sender, EventArgs e)
         {
             var aboutBox = new AboutBox();
             aboutBox.ShowDialog();
         }
 
-        private void BtnOpenClick(object sender, EventArgs e)
+        /// <summary>
+        /// The btn batch process click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnBatchProcessClick(object sender, EventArgs e)
         {
-            var openDialog = new OpenDialog(_provider) {Owner = this};
-            openDialog.ShowDialog();
-            if (ActiveMdiChild == null || ActiveMdiChild.IsDisposed || ActiveMdiChild.Name != "Create") return;
-            var create = (Create) ActiveMdiChild;
-            create.Mode = Mode;
+            if (this._batchProcessState == 0)
+            {
+                if (this._batchProcess != null && !this._batchProcess.IsDisposed)
+                {
+                    return;
+                }
+
+                this._batchProcess = new BatchProcess(this._provider)
+                    {
+                       MdiParent = this, WindowState = FormWindowState.Maximized 
+                    };
+                this._batchProcess.Show();
+                this.ActivateMdiChild(null);
+                this.ActivateMdiChild(this._batchProcess);
+                this._batchProcess.BringToFront();
+                this._batchProcessState = 1;
+                this.batchProcessToolStripMenuItem.Checked = true;
+                if (this._create != null && (this._create != null || !this._create.IsDisposed))
+                {
+                    this._create.Close();
+                }
+
+                this._createState = 0;
+                this.createToolStripMenuItem.Checked = false;
+                if (this._search != null && (this._search != null || !this._search.IsDisposed))
+                {
+                    this._search.Close();
+                }
+
+                this._searchState = 0;
+                this.searchToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this._batchProcess.Close();
+                this._batchProcessState = 0;
+                this.batchProcessToolStripMenuItem.Checked = false;
+            }
         }
 
-        private void ExitToolStripMenuItemClick(object sender, EventArgs e)
+        /// <summary>
+        /// The btn create click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnCreateClick(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (this._createState == 0)
+            {
+                if (this._create != null && !this._create.IsDisposed)
+                {
+                    return;
+                }
+
+                this._create = new Create(this._provider, this.Mode, this._graphMode)
+                    {
+                       MdiParent = this, WindowState = FormWindowState.Maximized 
+                    };
+                this._create.Show();
+                this.ActivateMdiChild(null);
+                this.ActivateMdiChild(this._create);
+                this._create.BringToFront();
+                this._createState = 1;
+                this.createToolStripMenuItem.Checked = true;
+                if (this._search != null && (this._search != null || !this._search.IsDisposed))
+                {
+                    this._search.Close();
+                }
+
+                this._searchState = 0;
+                this.searchToolStripMenuItem.Checked = false;
+                if (this._batchProcess != null && (this._batchProcess != null || !this._batchProcess.IsDisposed))
+                {
+                    this._batchProcess.Close();
+                }
+
+                this._batchProcessState = 0;
+                this.batchProcessToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this._create.Close();
+                this._createState = 0;
+                this.createToolStripMenuItem.Checked = false;
+            }
         }
 
+        /// <summary>
+        /// The btn export click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnExportClick(object sender, EventArgs e)
+        {
+            if (this._provider.PerformanceSets.Count > 0)
+            {
+                this.saveFileDialog.Filter = "CSV Files (*.csv)|*.csv";
+                this.saveFileDialog.FilterIndex = 1;
+                this.saveFileDialog.FileName = "PerformanceResultSet";
+                this.saveFileDialog.DefaultExt = "csv";
+                DialogResult result = this.saveFileDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    this._provider.WriteResults(this._provider.PerformanceSets, this.saveFileDialog.FileName);
+                }
+            }
+            else
+            {
+                MessageBox.Show(
+                    "None tree has been processed. Can not save the results. Proceed with tree first!", 
+                    "Error!", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// The btn loaded modules click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void BtnLoadedModulesClick(object sender, EventArgs e)
         {
             string applicationPath = Application.ExecutablePath;
-            List<string[]> pluginList = _provider.GetPluginDescription(applicationPath);
+            List<string[]> pluginList = this._provider.GetPluginDescription(applicationPath);
             var loadedModules = new LoadedModules();
             loadedModules.GetData(pluginList);
             loadedModules.ShowDialog();
         }
 
-        private void BtnExportClick(object sender, EventArgs e)
+        /// <summary>
+        /// The btn open click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnOpenClick(object sender, EventArgs e)
         {
-            if (_provider.PerformanceSets.Count > 0)
+            var openDialog = new OpenDialog(this._provider) { Owner = this };
+            openDialog.ShowDialog();
+            if (this.ActiveMdiChild == null || this.ActiveMdiChild.IsDisposed || this.ActiveMdiChild.Name != "Create")
             {
-                saveFileDialog.Filter = "CSV Files (*.csv)|*.csv";
-                saveFileDialog.FilterIndex = 1;
-                saveFileDialog.FileName = "PerformanceResultSet";
-                saveFileDialog.DefaultExt = "csv";
-                DialogResult result = saveFileDialog.ShowDialog();
-                if (result == DialogResult.OK)
+                return;
+            }
+
+            var create = (Create)this.ActiveMdiChild;
+            create.Mode = this.Mode;
+        }
+
+        /// <summary>
+        /// The btn search click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnSearchClick(object sender, EventArgs e)
+        {
+            if (this._searchState == 0)
+            {
+                if (this._search != null && !this._search.IsDisposed)
                 {
-                    _provider.WriteResults(_provider.PerformanceSets, saveFileDialog.FileName);
+                    return;
                 }
+
+                this._search = new Search(this._provider, this._graphMode)
+                    {
+                       MdiParent = this, WindowState = FormWindowState.Maximized 
+                    };
+                this._search.Show();
+                this.ActivateMdiChild(null);
+                this.ActivateMdiChild(this._search);
+                this._search.BringToFront();
+                this._searchState = 1;
+                this.searchToolStripMenuItem.Checked = true;
+                if (this._create != null && (this._create != null || !this._create.IsDisposed))
+                {
+                    this._create.Close();
+                }
+
+                this._createState = 0;
+                this.createToolStripMenuItem.Checked = false;
+                if (this._batchProcess != null && (this._batchProcess != null || !this._batchProcess.IsDisposed))
+                {
+                    this._batchProcess.Close();
+                }
+
+                this._batchProcessState = 0;
+                this.batchProcessToolStripMenuItem.Checked = false;
             }
             else
             {
-                MessageBox.Show("None tree has been processed. Can not save the results. Proceed with tree first!",
-                                "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this._search.Close();
+                this._searchState = 0;
+                this.searchToolStripMenuItem.Checked = false;
             }
         }
 
-        private void TreeViewToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (_graphMode == 0)
-            {
-                treeViewToolStripMenuItem.Checked = true;
-                return;
-            }
-            if (treeViewToolStripMenuItem.Checked)
-            {
-                _graphMode = 0;
-                graphToolStripMenuItem.Checked = false;
-                gLEEGraphToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                treeViewToolStripMenuItem.Checked = true;
-                graphToolStripMenuItem.Checked = false;
-                gLEEGraphToolStripMenuItem.Checked = false;
-                _graphMode = 0;
-            }
-            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
-            {
-                var create = (Create) ActiveMdiChild;
-                create.GraphMode = _graphMode;
-                create.ChangeGraphMode();
-            }
-            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
-            {
-                var search = (Search) ActiveMdiChild;
-                search.GraphMode = _graphMode;
-                search.ChangeGraphMode();
-            }
-        }
-
-        private void GraphToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (_graphMode == 1)
-            {
-                graphToolStripMenuItem.Checked = true;
-                return;
-            }
-            if (graphToolStripMenuItem.Checked)
-            {
-                _graphMode = 1;
-                treeViewToolStripMenuItem.Checked = false;
-                gLEEGraphToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                graphToolStripMenuItem.Checked = true;
-                treeViewToolStripMenuItem.Checked = false;
-                gLEEGraphToolStripMenuItem.Checked = false;
-                _graphMode = 1;
-            }
-            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
-            {
-                var create = (Create) ActiveMdiChild;
-                create.GraphMode = _graphMode;
-                create.ChangeGraphMode();
-            }
-            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
-            {
-                var search = (Search) ActiveMdiChild;
-                search.GraphMode = _graphMode;
-                search.ChangeGraphMode();
-            }
-        }
-
-        private void GLeeGraphToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (_graphMode == 2)
-            {
-                gLEEGraphToolStripMenuItem.Checked = true;
-                return;
-            }
-            if (gLEEGraphToolStripMenuItem.Checked)
-            {
-                _graphMode = 2;
-                graphToolStripMenuItem.Checked = false;
-                treeViewToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                gLEEGraphToolStripMenuItem.Checked = true;
-                treeViewToolStripMenuItem.Checked = false;
-                graphToolStripMenuItem.Checked = false;
-                _graphMode = 2;
-            }
-            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Create")
-            {
-                var create = (Create) ActiveMdiChild;
-                create.GraphMode = _graphMode;
-                create.ChangeGraphMode();
-            }
-            if (ActiveMdiChild != null && !ActiveMdiChild.IsDisposed && ActiveMdiChild.Name == "Search")
-            {
-                var search = (Search) ActiveMdiChild;
-                search.GraphMode = _graphMode;
-                search.ChangeGraphMode();
-            }
-        }
-
+        /// <summary>
+        /// The enable glee mode.
+        /// </summary>
+        /// <param name="isGleeEnabled">
+        /// The is glee enabled.
+        /// </param>
         private void EnableGleeMode(bool isGleeEnabled)
         {
             switch (isGleeEnabled)
             {
                 case true:
-                    gLEEGraphToolStripMenuItem.Visible = true;
+                    this.gLEEGraphToolStripMenuItem.Visible = true;
                     break;
                 default:
-                    gLEEGraphToolStripMenuItem.Visible = false;
+                    this.gLEEGraphToolStripMenuItem.Visible = false;
                     break;
             }
         }
+
+        /// <summary>
+        /// The exit tool strip menu item click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void ExitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        /// <summary>
+        /// The g lee graph tool strip menu item click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void GLeeGraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this._graphMode == 2)
+            {
+                this.gLEEGraphToolStripMenuItem.Checked = true;
+                return;
+            }
+
+            if (this.gLEEGraphToolStripMenuItem.Checked)
+            {
+                this._graphMode = 2;
+                this.graphToolStripMenuItem.Checked = false;
+                this.treeViewToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this.gLEEGraphToolStripMenuItem.Checked = true;
+                this.treeViewToolStripMenuItem.Checked = false;
+                this.graphToolStripMenuItem.Checked = false;
+                this._graphMode = 2;
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
+            {
+                var create = (Create)this.ActiveMdiChild;
+                create.GraphMode = this._graphMode;
+                create.ChangeGraphMode();
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
+            {
+                var search = (Search)this.ActiveMdiChild;
+                search.GraphMode = this._graphMode;
+                search.ChangeGraphMode();
+            }
+        }
+
+        /// <summary>
+        /// The graph tool strip menu item click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void GraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this._graphMode == 1)
+            {
+                this.graphToolStripMenuItem.Checked = true;
+                return;
+            }
+
+            if (this.graphToolStripMenuItem.Checked)
+            {
+                this._graphMode = 1;
+                this.treeViewToolStripMenuItem.Checked = false;
+                this.gLEEGraphToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this.graphToolStripMenuItem.Checked = true;
+                this.treeViewToolStripMenuItem.Checked = false;
+                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this._graphMode = 1;
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
+            {
+                var create = (Create)this.ActiveMdiChild;
+                create.GraphMode = this._graphMode;
+                create.ChangeGraphMode();
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
+            {
+                var search = (Search)this.ActiveMdiChild;
+                search.GraphMode = this._graphMode;
+                search.ChangeGraphMode();
+            }
+        }
+
+        /// <summary>
+        /// The tree view tool strip menu item click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void TreeViewToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this._graphMode == 0)
+            {
+                this.treeViewToolStripMenuItem.Checked = true;
+                return;
+            }
+
+            if (this.treeViewToolStripMenuItem.Checked)
+            {
+                this._graphMode = 0;
+                this.graphToolStripMenuItem.Checked = false;
+                this.gLEEGraphToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this.treeViewToolStripMenuItem.Checked = true;
+                this.graphToolStripMenuItem.Checked = false;
+                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this._graphMode = 0;
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
+            {
+                var create = (Create)this.ActiveMdiChild;
+                create.GraphMode = this._graphMode;
+                create.ChangeGraphMode();
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
+            {
+                var search = (Search)this.ActiveMdiChild;
+                search.GraphMode = this._graphMode;
+                search.ChangeGraphMode();
+            }
+        }
+
+        #endregion
     }
 }

@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Node.cs" company="">
+// <copyright file="Node.cs" company="Warsaw University of Technology">
 //   
 // </copyright>
 // <summary>
-//   TODO: Update summary.
+//   Class representing the node of the generic tree.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ namespace ForRest.Provider.BLL
     using System.Drawing;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Class representing the node of the generic tree.
     /// </summary>
     /// <typeparam name="T">
     /// </typeparam>
