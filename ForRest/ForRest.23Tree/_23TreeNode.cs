@@ -1,17 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="_23TreeNode.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ForRest.Provider.BLL;
 
 namespace ForRest._23Tree
 {
-
     /// <summary>
-    /// TODO: Update summary.
+    /// 2-3 tree node class implementing Node<T>.
     /// </summary>
     public class _23TreeNode<T> : Node<T>
     {
@@ -19,12 +12,18 @@ namespace ForRest._23Tree
         private bool _isLeaf;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        /// <summary>
+        /// Gets parent of the node.
+        /// </summary>
         public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (_23TreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Gets node info.
+        /// </summary>
         public override string NodeInfo
         {
             get
@@ -46,7 +45,7 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Indicates whether _23TreeNode is a leaf
+        /// Indicates whether node is a leaf.
         /// </summary>
         public bool IsLeaf
         {
@@ -55,7 +54,7 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Indicates whether _23TreeNode has at least maximal nuber of values
+        /// Indicates whether node has at least maximal number of values.
         /// </summary>
         public bool IsFull
         {
@@ -68,7 +67,7 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Indicates whether _23TreeNode has at most minimal nuber of values
+        /// Indicates whether node has at most minimal number of values.
         /// </summary>
         public bool IsHalf
         {
@@ -81,7 +80,7 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Indicates whether _23TreeNode has less than minimal nuber of values
+        /// Indicates whether node has less than minimal number of values.
         /// </summary>
         public bool IsDeficient
         {
@@ -94,10 +93,10 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="parent">Parent node</param>
-        /// <param name="data">Values for the node</param>
+        /// <param name="parent">Parent node.</param>
+        /// <param name="data">Values for the node.</param>
         public _23TreeNode(_23TreeNode<T> parent, List<T> data)
             : base(data, null)
         {
@@ -108,11 +107,11 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="parent">Parent node</param>
-        /// <param name="data">Values for the node</param>
-        /// <param name="children">Child nodes</param>
+        /// <param name="parent">Parent node.</param>
+        /// <param name="data">Values for the node.</param>
+        /// <param name="children">Child nodes.</param>
         public _23TreeNode(_23TreeNode<T> parent, List<T> data, NodeList<T> children)
         {
             _parent = parent;
@@ -126,19 +125,19 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Returns i-th child node
+        /// Returns i-th child node.
         /// </summary>
-        /// <param name="i">Index of the child node</param>
-        /// <returns>Child node of index i</returns>
+        /// <param name="i">Index of the child node.</param>
+        /// <returns>Child node of index i.</returns>
         public _23TreeNode<T> ChildAt(int i)
         {
             return (_23TreeNode<T>) Neighbors[i];
         }
 
         /// <summary>
-        /// Adds input node values and child nodes 
+        /// Adds input node values and child nodes .
         /// </summary>
-        /// <param name="node">Input node</param>
+        /// <param name="node">Input node.</param>
         public _23TreeNode<T> Add(_23TreeNode<T> node)
         {
             if (node.Values.Count != 1 || node.Neighbors.Count != 2)
@@ -191,9 +190,9 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Adds input item to list of values
+        /// Adds input item to list of values.
         /// </summary>
-        /// <param name="data">Input item</param>
+        /// <param name="data">Input item.</param>
         public _23TreeNode<T> Add(T data)
         {
             for (int i = 0; i < Values.Count; i++)
@@ -215,7 +214,7 @@ namespace ForRest._23Tree
         }
 
         /// <summary>
-        /// Splits node 
+        /// Splits node.
         /// </summary>
         public _23TreeNode<T> Split()
         {
@@ -255,6 +254,10 @@ namespace ForRest._23Tree
             return centerNode;
         }
 
+        /// <summary>
+        /// Splits node regarding input element.
+        /// </summary>
+        /// <param name="data">Element to be inserted.</param>
         public _23TreeNode<T> Split(T data)
         {
             T centerData;
@@ -301,6 +304,9 @@ namespace ForRest._23Tree
             return centerNode;
         }
 
+        /// <summary>
+        /// Merge node.
+        /// </summary>
         public _23TreeNode<T> Merge()
         {
             _23TreeNode<T> left = null;
@@ -405,6 +411,11 @@ namespace ForRest._23Tree
             return this;
         }
 
+        /// <summary>
+        /// Deletes element in i-th position.
+        /// </summary>
+        /// <param name="data">Element to be deleted.</param>
+        /// <param name="index">Position index.</param>
         public _23TreeNode<T> Delete(T data, int index)
         {
             if (IsLeaf)

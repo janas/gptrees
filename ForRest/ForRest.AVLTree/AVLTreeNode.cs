@@ -1,34 +1,36 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AVLTreeNode.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ForRest.Provider.BLL;
+﻿using ForRest.Provider.BLL;
 using System.Collections.Generic;
 
 namespace ForRest.AVLTree
 {
-
     /// <summary>
-    /// TODO: Update summary.
+    /// AVL tree node class implementing Node<T>.
     /// </summary>
     public class AVLTreeNode<T> : Node<T>
     {
         private AVLTreeNode<T> _parent;
         private int _height;
 
+        /// <summary>
+        /// Gets parent of the node.
+        /// </summary>
         public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (AVLTreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Gets height of the node.
+        /// </summary>
         public int Height
         {
             get { return _height; }
         }
 
+        /// <summary>
+        /// Update height of the node.
+        /// </summary>
         public int UpdateHeight()
         {
             int leftHeight = 0;
@@ -44,6 +46,9 @@ namespace ForRest.AVLTree
             return _height;
         }
 
+        /// <summary>
+        /// Balances node.
+        /// </summary>
         public bool Balance()
         {
             if (Left != null)
@@ -110,6 +115,9 @@ namespace ForRest.AVLTree
             return false;
         }
 
+        /// <summary>
+        /// Gets node info.
+        /// </summary>
         public override string NodeInfo
         {
             get
@@ -125,17 +133,30 @@ namespace ForRest.AVLTree
             }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public AVLTreeNode()
         {
             _height = 1;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">Values for the node.</param>
         public AVLTreeNode(List<T> data)
             : base(data, null)
         {
             _height = 1;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">Values for the node.</param>
+        /// <param name="left">Left child node.</param>
+        /// <param name="right">Right child node.</param>
         public AVLTreeNode(List<T> data, AVLTreeNode<T> left, AVLTreeNode<T> right)
         {
             Values = data;
@@ -149,6 +170,9 @@ namespace ForRest.AVLTree
                 _height = right.Height + 1;
         }
 
+        /// <summary>
+        /// Gets left child node.
+        /// </summary>
         public AVLTreeNode<T> Left
         {
             get
@@ -165,6 +189,9 @@ namespace ForRest.AVLTree
             }
         }
 
+        /// <summary>
+        /// Gets right child node.
+        /// </summary>
         public AVLTreeNode<T> Right
         {
             get

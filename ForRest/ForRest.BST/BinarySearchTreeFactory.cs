@@ -1,17 +1,19 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BinarySearchTreeFactory.cs" company="">
-// TODO: Update copyright text.
+﻿// -------------------------------------------------------------------------------
+// <copyright file="_234TreeFactory.cs" company="Warsaw Univeristy of Technology">
+// All rights reserved.
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+// Class responsible for managing BST tree.
+// </summary>
+// -------------------------------------------------------------------------------
 
 using System;
 using ForRest.Provider.BLL;
 
 namespace ForRest.BST
 {
-
     /// <summary>
-    /// TODO: Update summary.
+    /// Class responsible for managing BST tree implementing ITreeFactory.
     /// </summary>
     public class BinarySearchTreeFactory : ITreeFactory
     {

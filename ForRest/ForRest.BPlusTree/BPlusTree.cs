@@ -3,39 +3,63 @@ using System.Collections.Generic;
 
 namespace ForRest.BPlusTree
 {
+    /// <summary>
+    /// B+ tree class implementing Tree<T>.
+    /// </summary>
     public class BPlusTree<T> : Tree<T>
     {
         private BPlusTreeNode<T> _root;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
         private readonly int _m;
 
+        /// <summary>
+        /// Basic constructor.
+        /// </summary>
+        /// <param name="degree">Degree in Bayer&McCreight1972 notation.</param>
         public BPlusTree(int degree)
         {
             _root = null;
             _m = degree;
         }
 
+        /// <summary>
+        /// Gets type of the tree.
+        /// </summary>
         public override string TreeType
         {
             get { return "B Plus Tree"; }
         }
 
+        /// <summary>
+        /// Gets degree of the tree.
+        /// </summary>
         public int M
         {
             get { return _m; }
         }
 
+        /// <summary>
+        /// Gets root of the tree.
+        /// </summary>
         public override Node<T> Root
         {
             get { return _root; }
             set { _root = (BPlusTreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Clears nodes of the tree.
+        /// </summary>
         public override void Clear()
         {
             _root = null;
         }
 
+        /// <summary>
+        /// Indicates whether tree contains element.
+        /// </summary>
+        /// <param name="data">Element to be searched.</param>
+        /// <returns></returns>
         public override List<int> Contains(T data)
         {
             var path = new List<int>();
@@ -68,6 +92,12 @@ namespace ForRest.BPlusTree
             return null;
         }
 
+        /// <summary>
+        /// Inserts data into given node.
+        /// </summary>
+        /// <param name="node">Node in which element will be added.</param>
+        /// <param name="data">Element to be added.</param>
+        /// <returns></returns>
         private BPlusTreeNode<T> Insert(BPlusTreeNode<T> node, T data)
         {
             if (!node.IsLeaf)
@@ -97,6 +127,10 @@ namespace ForRest.BPlusTree
             return (BPlusTreeNode<T>) node.Parent;
         }
 
+        /// <summary>
+        /// Adds element to the tree.
+        /// </summary>
+        /// <param name="data">Element to be added.</param>
         public override void Add(T data)
         {
             if (_root == null)
@@ -114,6 +148,12 @@ namespace ForRest.BPlusTree
             }
         }
 
+        /// <summary>
+        /// Deletes data from given node.
+        /// </summary>
+        /// <param name="node">Node from which element will be removed.</param>
+        /// <param name="data">Element to be removed.</param>
+        /// <returns></returns>
         private BPlusTreeNode<T> Delete(BPlusTreeNode<T> node, T data)
         {
             while (node != null)
@@ -140,6 +180,11 @@ namespace ForRest.BPlusTree
             return null;
         }
 
+        /// <summary>
+        /// Removes element from the tree.
+        /// </summary>
+        /// <param name="data">Element to be removed.</param>
+        /// <returns></returns>
         public override bool Remove(T data)
         {
             BPlusTreeNode<T> node = Delete(_root, data);

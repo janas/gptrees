@@ -3,21 +3,34 @@ using System.Collections.Generic;
 
 namespace ForRest.SplayTree
 {
+    /// <summary>
+    /// Splay tree class implementing Tree<T>.
+    /// </summary>
     public class SplayTree<T> : Tree<T>
     {
         private SplayTreeNode<T> _root;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        /// <summary>
+        /// Basic constructor.
+        /// </summary>
         public SplayTree()
         {
             _root = null;
         }
 
+        /// <summary>
+        /// Gets type of the tree.
+        /// </summary>
         public override string TreeType
         {
             get { return "Splay Tree"; }
         }
 
+        /// <summary>
+        /// Performs Splay operation on input node.
+        /// </summary>
+        /// <param name="node">Node to be splayed.</param>
         public void Splay(SplayTreeNode<T> node)
         {
             if (_root == null || node == null)
@@ -63,17 +76,28 @@ namespace ForRest.SplayTree
                 _root.UpdateHeight();
         }
 
+        /// <summary>
+        /// Gets root of the tree.
+        /// </summary>
         public override Node<T> Root
         {
             get { return _root; }
             set { _root = (SplayTreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Clears nodes of the tree.
+        /// </summary>
         public override void Clear()
         {
             _root = null;
         }
 
+        /// <summary>
+        /// Indicates whether tree contains element.
+        /// </summary>
+        /// <param name="data">Element to be searched.</param>
+        /// <returns></returns>
         public override List<int> Contains(T data)
         {
             List<int> path = new List<int>();
@@ -109,6 +133,10 @@ namespace ForRest.SplayTree
             return null;
         }
 
+        /// <summary>
+        /// Adds element to the tree.
+        /// </summary>
+        /// <param name="data">Element to be added.</param>
         public override void Add(T data)
         {
             var dataList = new List<T>(1) {data};
@@ -143,6 +171,11 @@ namespace ForRest.SplayTree
             Splay(node);
         }
 
+        /// <summary>
+        /// Removes element from the tree.
+        /// </summary>
+        /// <param name="data">Element to be removed.</param>
+        /// <returns></returns>
         public override bool Remove(T data)
         {
             if (_root == null)

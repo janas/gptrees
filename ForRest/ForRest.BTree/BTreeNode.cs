@@ -1,16 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BTreeNode.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ForRest.Provider.BLL;
 
 namespace ForRest.BTree
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// B tree node class implementing Node<T>.
     /// </summary>
     public class BTreeNode<T> : Node<T>
     {
@@ -19,12 +13,18 @@ namespace ForRest.BTree
         private readonly int _m;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        /// <summary>
+        /// Gets parent of the node.
+        /// </summary>
         public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (BTreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Gets node info.
+        /// </summary>
         public override string NodeInfo
         {
             get
@@ -45,16 +45,8 @@ namespace ForRest.BTree
             }
         }
 
-        /*public void UpdateNodesInfo()
-        {
-            UpdateNodeInfo();
-            if (Neighbors != null)
-                foreach (Node<T> n in Neighbors)
-                    ((BTreeNode<T>)n).UpdateNodesInfo();
-        }*/
-
         /// <summary>
-        /// Indicates whether BTreeNode is a leaf
+        /// Indicates whether node is a leaf.
         /// </summary>
         public bool IsLeaf
         {
@@ -63,7 +55,7 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has maximal nuber of values
+        /// Indicates whether node has at least maximal number of values.
         /// </summary>
         public bool IsFull
         {
@@ -76,7 +68,7 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has at most minimal nuber of values
+        /// Indicates whether node has at most minimal number of values.
         /// </summary>
         public bool IsHalf
         {
@@ -89,7 +81,7 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has less than minimal nuber of values
+        /// Indicates whether node has less than minimal number of values.
         /// </summary>
         public bool IsDeficient
         {
@@ -102,11 +94,10 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="degree">Degree of BTree in Knuth's notation</param>
-        /// <param name="parent">Parent node</param>
-        /// <param name="data">Values for the node</param>
+        /// <param name="parent">Parent node.</param>
+        /// <param name="data">Values for the node.</param>
         public BTreeNode(int degree, BTreeNode<T> parent, List<T> data)
             : base(data, null)
         {
@@ -119,12 +110,11 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="degree">Degree of BTree in Knuth's notation</param>
-        /// <param name="parent">Parent node</param>
-        /// <param name="data">Values for the node</param>
-        /// <param name="children">Child nodes</param>
+        /// <param name="parent">Parent node.</param>
+        /// <param name="data">Values for the node.</param>
+        /// <param name="children">Child nodes.</param>
         public BTreeNode(int degree, BTreeNode<T> parent, List<T> data, NodeList<T> children)
         {
             _parent = parent;
@@ -139,19 +129,19 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Returns i-th child node
+        /// Returns i-th child node.
         /// </summary>
-        /// <param name="i">Index of the child node</param>
-        /// <returns>Child node of index i</returns>
+        /// <param name="i">Index of the child node.</param>
+        /// <returns>Child node of index i.</returns>
         public BTreeNode<T> ChildAt(int i)
         {
             return (BTreeNode<T>) Neighbors[i];
         }
 
         /// <summary>
-        /// Adds input node values and child nodes 
+        /// Adds input node values and child nodes .
         /// </summary>
-        /// <param name="node">Input node</param>
+        /// <param name="node">Input node.</param>
         public BTreeNode<T> Add(BTreeNode<T> node)
         {
             if (node.Values.Count != 1 || node.Neighbors.Count != 2)
@@ -202,9 +192,9 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Adds input item to list of values
+        /// Adds input item to list of values.
         /// </summary>
-        /// <param name="data">Input item</param>
+        /// <param name="data">Input item.</param>
         public BTreeNode<T> Add(T data)
         {
             for (int i = 0; i < Values.Count; i++)
@@ -225,7 +215,7 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Splits node 
+        /// Splits node.
         /// </summary>
         public BTreeNode<T> Split()
         {
@@ -266,9 +256,9 @@ namespace ForRest.BTree
         }
 
         /// <summary>
-        /// Splits node 
+        /// Splits node regarding input element.
         /// </summary>
-        /// <param name="data">Input item forcing the split</param>
+        /// <param name="data">Element to be inserted.</param>
         public BTreeNode<T> Split(T data)
         {
             var leftData = new List<T>();
@@ -341,6 +331,9 @@ namespace ForRest.BTree
             return centerNode;
         }
 
+        /// <summary>
+        /// Merge node.
+        /// </summary>
         public BTreeNode<T> Merge()
         {
             BTreeNode<T> left = null;
@@ -445,6 +438,11 @@ namespace ForRest.BTree
             return this;
         }
 
+        /// <summary>
+        /// Deletes element in i-th position.
+        /// </summary>
+        /// <param name="data">Element to be deleted.</param>
+        /// <param name="index">Position index.</param>
         public BTreeNode<T> Delete(T data, int index)
         {
             if (IsLeaf)

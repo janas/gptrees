@@ -1,17 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BPlusTreeNode.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ForRest.Provider.BLL;
 
 namespace ForRest.BPlusTree
 {
-
     /// <summary>
-    /// TODO: Update summary.
+    /// B+ tree node class implementing Node<T>.
     /// </summary>
     public class BPlusTreeNode<T> : Node<T>
     {
@@ -20,12 +13,18 @@ namespace ForRest.BPlusTree
         private readonly int _m;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        /// <summary>
+        /// Gets parent of the node.
+        /// </summary>
         public override Node<T> Parent
         {
             get { return _parent; }
             set { _parent = (BPlusTreeNode<T>) value; }
         }
 
+        /// <summary>
+        /// Gets node info.
+        /// </summary>
         public override string NodeInfo
         {
             get
@@ -47,7 +46,7 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode is a leaf
+        /// Indicates whether node is a leaf.
         /// </summary>
         public bool IsLeaf
         {
@@ -56,7 +55,7 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has maximal nuber of values
+        /// Indicates whether node has at least maximal number of values.
         /// </summary>
         public bool IsFull
         {
@@ -69,7 +68,7 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has at least minimal nuber of values
+        /// Indicates whether node has at most minimal number of values.
         /// </summary>
         public bool IsHalf
         {
@@ -82,7 +81,7 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Indicates whether BTreeNode has less than minimal nuber of values
+        /// Indicates whether node has less than minimal number of values.
         /// </summary>
         public bool IsDeficient
         {
@@ -95,11 +94,10 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="degree">Degree of BTree in Knuth's notation</param>
-        /// <param name="parent">Parent node</param>
-        /// <param name="data">Values for the node</param>
+        /// <param name="parent">Parent node.</param>
+        /// <param name="data">Values for the node.</param>
         public BPlusTreeNode(int degree, BPlusTreeNode<T> parent, List<T> data)
             : base(data, null)
         {
@@ -112,12 +110,11 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
-        /// <param name="degree">Degree of BTree in Knuth's notation</param>
-        /// <param name="parent">Parent node</param>
-        /// <param name="data">Values for the node</param>
-        /// <param name="children">Child nodes</param>
+        /// <param name="parent">Parent node.</param>
+        /// <param name="data">Values for the node.</param>
+        /// <param name="children">Child nodes.</param>
         public BPlusTreeNode(int degree, BPlusTreeNode<T> parent, List<T> data, NodeList<T> children)
         {
             _parent = parent;
@@ -132,19 +129,19 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Returns i-th child node
+        /// Returns i-th child node.
         /// </summary>
-        /// <param name="i">Index of the child node</param>
-        /// <returns>Child node of index i</returns>
+        /// <param name="i">Index of the child node.</param>
+        /// <returns>Child node of index i.</returns>
         public BPlusTreeNode<T> ChildAt(int i)
         {
             return (BPlusTreeNode<T>) Neighbors[i];
         }
 
         /// <summary>
-        /// Adds input node values and child nodes 
+        /// Adds input node values and child nodes .
         /// </summary>
-        /// <param name="node">Input node</param>
+        /// <param name="node">Input node.</param>
         public BPlusTreeNode<T> Add(BPlusTreeNode<T> node)
         {
             if (node.Values.Count != 1 || node.Neighbors.Count != 2)
@@ -197,9 +194,9 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Adds input item to list of values
+        /// Adds input item to list of values.
         /// </summary>
-        /// <param name="data">Input item</param>
+        /// <param name="data">Input item.</param>
         public BPlusTreeNode<T> Add(T data)
         {
             for (int i = 0; i < Values.Count; i++)
@@ -220,7 +217,7 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Splits node 
+        /// Splits node.
         /// </summary>
         public BPlusTreeNode<T> Split()
         {
@@ -273,9 +270,9 @@ namespace ForRest.BPlusTree
         }
 
         /// <summary>
-        /// Splits node 
+        /// Splits node regarding input element.
         /// </summary>
-        /// <param name="data">Input item forcing the split</param>
+        /// <param name="data">Element to be inserted.</param>
         public BPlusTreeNode<T> Split(T data)
         {
             var leftData = new List<T>();
@@ -340,6 +337,9 @@ namespace ForRest.BPlusTree
             return centerNode;
         }
 
+        /// <summary>
+        /// Merge node.
+        /// </summary>
         public BPlusTreeNode<T> Merge()
         {
             BPlusTreeNode<T> left = null;
@@ -444,6 +444,11 @@ namespace ForRest.BPlusTree
             return this;
         }
 
+        /// <summary>
+        /// Deletes element in i-th position.
+        /// </summary>
+        /// <param name="data">Element to be deleted.</param>
+        /// <param name="index">Position index.</param>
         public BPlusTreeNode<T> Delete(T data, int index)
         {
             if (IsLeaf)
