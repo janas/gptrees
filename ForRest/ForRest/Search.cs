@@ -17,7 +17,8 @@ namespace ForRest
         private readonly Provider.Provider _provider;
         private TreeView _treeViewCreate;
         private Panel _graphPanel;
-        private GViewer _graphViewer;
+        private GViewer _gleeGraphViewer;
+        private Graph _gleeGraph;
         private readonly Color _graphPanelMarkColor = Color.Green;
         private const int GraphPanelMarkLineWidth = 2;
 
@@ -62,9 +63,9 @@ namespace ForRest
                     {
                         Controls.Remove(_graphPanel);
                     }
-                    if (_graphViewer != null)
+                    if (_gleeGraphViewer != null)
                     {
-                        Controls.Remove(_graphViewer);
+                        Controls.Remove(_gleeGraphViewer);
                     }
                     InitializeTreeView();
                     break;
@@ -73,9 +74,9 @@ namespace ForRest
                     {
                         Controls.Remove(_treeViewCreate);
                     }
-                    if (_graphViewer != null)
+                    if (_gleeGraphViewer != null)
                     {
-                        Controls.Remove(_graphViewer);
+                        Controls.Remove(_gleeGraphViewer);
                     }
                     InitializeGraph();
                     break;
@@ -106,9 +107,24 @@ namespace ForRest
                     DrawGraph(ref result);
                     break;
                 case 2:
-                    DrawGleeGraph();
+                    DrawGleeGraph(ref result);
                     break;
             }
+        }
+
+        #region TREE VIEW
+        private void InitializeTreeView()
+        {
+            _treeViewCreate = new TreeView
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                          | AnchorStyles.Left)
+                         | AnchorStyles.Right,
+                Location = new Point(195, 16),
+                Name = "treeViewCreate",
+                Size = new Size(Width - 220, Height - 65),
+            };
+            Controls.Add(_treeViewCreate);
         }
 
         private void ShowTreeView()
@@ -150,6 +166,77 @@ namespace ForRest
             }
         }
 
+        private static TreeNode[] NextLevel(Node<string> node)
+        {
+            if (node == null)
+                return null;
+            NodeList<string> nodeList = node.GetNeighborsList();
+            if (nodeList == null)
+                return null;
+            var resultList = new List<TreeNode>();
+            foreach (Node<string> n in nodeList)
+            {
+                if (n == null)
+                    continue;
+                var print = n.NodeInfo;
+                for (int i = 0; i < n.Values.Count; i++)
+                    print += n.Values[i] + " ";
+                TreeNode[] whatever = NextLevel(n);
+                if (whatever == null)
+                    resultList.Add(new TreeNode(print));
+                else
+                    resultList.Add(new TreeNode(print, whatever));
+            }
+            resultList.RemoveAll(item => item == null);
+            var result = new TreeNode[resultList.Count];
+            resultList.CopyTo(result);
+            return result;
+        }
+
+        private static TreeNode[] NextLevel(Node<double> node)
+        {
+            if (node == null)
+                return null;
+            NodeList<double> nodeList = node.GetNeighborsList();
+            if (nodeList == null)
+                return null;
+            var resultList = new List<TreeNode>();
+            foreach (Node<double> n in nodeList)
+            {
+                if (n == null)
+                    continue;
+                var print = n.NodeInfo;
+                for (int i = 0; i < n.Values.Count; i++)
+                    print += n.Values[i].ToString() + " ";
+                TreeNode[] whatever = NextLevel(n);
+                if (whatever == null)
+                    resultList.Add(new TreeNode(print));
+                else
+                    resultList.Add(new TreeNode(print, whatever));
+            }
+            resultList.RemoveAll(item => item == null);
+            var result = new TreeNode[resultList.Count];
+            resultList.CopyTo(result);
+            return result;
+        }
+        #endregion
+
+        #region GRAPH
+        private void InitializeGraph()
+        {
+            _graphPanel = new Panel
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                          | AnchorStyles.Left)
+                         | AnchorStyles.Right,
+                Location = new Point(195, 16),
+                Name = "graphPanel",
+                Size = new Size(Width - 220, Height - 65),
+                AutoScroll = true
+            };
+            Controls.Add(_graphPanel);
+        }
+
         private void DrawGraph(ref List<int> result)
         {
             _graphPanel.Invoke((MethodInvoker) (() => _graphPanel.Controls.Clear()));
@@ -178,16 +265,6 @@ namespace ForRest
                 var rootRectangle = new Rectangle(5, 5, _graphPanel.Width - 27, 24);
                 NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
             }
-        }
-
-        private void DrawGleeGraph()
-        {
-            if (comboBoxSelectTree.SelectedItem == null) return;
-            var treeObject = (TreeObject) comboBoxSelectTree.SelectedItem;
-            var graphName = treeObject.Name;
-            var graph = new Graph(graphName);
-            graph.AddNode("123").Attr.Label = "search test";
-            _graphViewer.Graph = graph;
         }
 
         private void NextControls(Rectangle rectangle, int levelBlank, Node<double> node,
@@ -229,11 +306,11 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
+                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
                 int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
-                             /notNullChildren;
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 bool allEdgesMarked = false;
@@ -244,8 +321,8 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
@@ -253,11 +330,11 @@ namespace ForRest
                     if (node.Values.Count > nodeValuesCount)
                         nodeValuesCount = node.Values.Count;
                     var from = new Point(
-                        ucn.Location.X + j*
-                        (ucn.Width/nodeValuesCount),
+                        ucn.Location.X + j *
+                        (ucn.Width / nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width/2,
+                        r.Location.X + r.Width / 2,
                         r.Location.Y);
                     int drawChild = -1;
                     if (node.Parent != null && node.Parent.Neighbors != null)
@@ -267,7 +344,7 @@ namespace ForRest
                                 && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
                             {
                                 to = new Point(
-                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width*3/2 + levelBlank,
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
                                     ucn.GetMyArea().Location.Y);
                                 drawChild = l + 1;
                             }
@@ -298,7 +375,7 @@ namespace ForRest
                         allEdgesMarked = true;
                     }
                     else
-                        uce = new UserControlEdge(ltr, node.Neighbors[j].NodeColor);
+                        uce = new UserControlEdge(ltr);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
@@ -365,11 +442,11 @@ namespace ForRest
                         notNullChildren++;
                 int blank = 0;
                 if (notNullChildren > 1)
-                    blank = ucn.GetMyArea().Width/(10*(notNullChildren - 1));
+                    blank = ucn.GetMyArea().Width / (10 * (notNullChildren - 1));
                 int rWidth = ucn.GetMyArea().Width;
                 if (notNullChildren > 0)
-                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1)*blank)
-                             /notNullChildren;
+                    rWidth = (ucn.GetMyArea().Width - (notNullChildren - 1) * blank)
+                             / notNullChildren;
                 if (rWidth < 3)
                     rWidth = 3;
                 bool allEdgesMarked = false;
@@ -380,8 +457,8 @@ namespace ForRest
                         continue;
                     }
                     var r = new Rectangle(
-                        ucn.GetMyArea().X + notNullChildrenIndex*(rWidth + blank),
-                        ucn.GetMyArea().Y + ucn.GetMyArea().Height*2,
+                        ucn.GetMyArea().X + notNullChildrenIndex * (rWidth + blank),
+                        ucn.GetMyArea().Y + ucn.GetMyArea().Height * 2,
                         rWidth,
                         ucn.GetMyArea().Height);
                     // Drawing edge
@@ -389,11 +466,11 @@ namespace ForRest
                     if (node.Values.Count > nodeValuesCount)
                         nodeValuesCount = node.Values.Count;
                     var from = new Point(
-                        ucn.Location.X + j*
-                        (ucn.Width/nodeValuesCount),
+                        ucn.Location.X + j *
+                        (ucn.Width / nodeValuesCount),
                         ucn.Location.Y + ucn.Height);
                     var to = new Point(
-                        r.Location.X + r.Width/2,
+                        r.Location.X + r.Width / 2,
                         r.Location.Y);
                     int drawChild = -1;
                     if (node.Parent != null && node.Parent.Neighbors != null)
@@ -403,7 +480,7 @@ namespace ForRest
                                 && node.Neighbors[j] == node.Parent.Neighbors[l + 1])
                             {
                                 to = new Point(
-                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width*3/2 + levelBlank,
+                                    ucn.GetMyArea().Location.X + ucn.GetMyArea().Width * 3 / 2 + levelBlank,
                                     ucn.GetMyArea().Location.Y);
                                 drawChild = l + 1;
                             }
@@ -434,7 +511,7 @@ namespace ForRest
                         allEdgesMarked = true;
                     }
                     else
-                        uce = new UserControlEdge(ltr, node.Neighbors[j].NodeColor);
+                        uce = new UserControlEdge(ltr);
                     uce.Location = e.Location;
                     uce.Size = e.Size;
                     _graphPanel.Controls.Add(uce);
@@ -461,115 +538,242 @@ namespace ForRest
             }
             _graphPanel.Controls.Add(ucn);
         }
+        #endregion
 
-        private void InitializeTreeView()
-        {
-            _treeViewCreate = new TreeView
-                                  {
-                                      Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
-                                                | AnchorStyles.Left)
-                                               | AnchorStyles.Right,
-                                      Location = new Point(195, 16),
-                                      Name = "treeViewCreate",
-                                      Size = new Size(Width - 220, Height - 65),
-                                  };
-            Controls.Add(_treeViewCreate);
-        }
-
-        private void InitializeGraph()
-        {
-            _graphPanel = new Panel
-                              {
-                                  Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
-                                            | AnchorStyles.Left)
-                                           | AnchorStyles.Right,
-                                  Location = new Point(195, 16),
-                                  Name = "graphPanel",
-                                  Size = new Size(Width - 220, Height - 65),
-                                  AutoScroll = true
-                              };
-            Controls.Add(_graphPanel);
-        }
-
+        #region GLEE GRAPH
         private void InitializeGleeGraph()
         {
-            _graphViewer = new GViewer
-                               {
-                                   Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
-                                             | AnchorStyles.Left)
-                                            | AnchorStyles.Right,
-                                   AsyncLayout = false,
-                                   AutoScroll = true,
-                                   BackwardEnabled = false,
-                                   ForwardEnabled = false,
-                                   Graph = null,
-                                   Location = new Point(195, 16),
-                                   MouseHitDistance = 0.05D,
-                                   Name = "graphViewer",
-                                   NavigationVisible = true,
-                                   PanButtonPressed = false,
-                                   SaveButtonVisible = true,
-                                   Size = new Size(Width - 220, Height - 65),
-                                   ZoomF = 1D,
-                                   ZoomFraction = 0.5D,
-                                   ZoomWindowThreshold = 0.05D
-                               };
-            Controls.Add(_graphViewer);
+            _gleeGraphViewer = new GViewer
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                          | AnchorStyles.Left)
+                         | AnchorStyles.Right,
+                AsyncLayout = false,
+                AutoScroll = true,
+                BackwardEnabled = false,
+                ForwardEnabled = false,
+                Graph = null,
+                Location = new Point(195, 16),
+                MouseHitDistance = 0.05D,
+                Name = "graphViewer",
+                NavigationVisible = true,
+                PanButtonPressed = false,
+                SaveButtonVisible = true,
+                Size = new Size(Width - 220, Height - 65),
+                ZoomF = 1D,
+                ZoomFraction = 0.5D,
+                ZoomWindowThreshold = 0.05D
+            };
+            Controls.Add(_gleeGraphViewer);
         }
 
-        private static TreeNode[] NextLevel(Node<string> node)
+        private void DrawGleeGraph(ref List<int> result)
         {
-            if (node == null)
-                return null;
-            NodeList<string> nodeList = node.GetNeighborsList();
-            if (nodeList == null)
-                return null;
-            var resultList = new List<TreeNode>();
-            foreach (Node<string> n in nodeList)
+            if (comboBoxSelectTree.SelectedItem == null) return;
+            var treeObject = (TreeObject)comboBoxSelectTree.SelectedItem;
+            string graphName = treeObject.Name;
+            _gleeGraph = new Graph(graphName);
+            if (treeObject.Type.Equals("text"))
             {
-                if (n == null)
-                    continue;
-                var print = n.NodeInfo;
-                for (int i = 0; i < n.Values.Count; i++)
-                    print += n.Values[i] + " ";
-                TreeNode[] whatever = NextLevel(n);
-                if (whatever == null)
-                    resultList.Add(new TreeNode(print));
+                ITree<string> iTree = treeObject.TextTree;
+                Node<string> iTreeRoot = iTree.Root;
+                if (iTreeRoot == null || iTreeRoot.Values == null)
+                    return;
+                Node root = _gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
+                string rootText = "";
+                for (int i = 0; i < iTreeRoot.Values.Count; i++)
+                {
+                    if (i > 0)
+                        rootText += " | ";
+                    rootText += iTreeRoot.Values[i];
+                }
+                root.Attr.Label = rootText;
+                if (result != null)
+                {
+                    root.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                        _graphPanelMarkColor.A, _graphPanelMarkColor.R,
+                        _graphPanelMarkColor.G, _graphPanelMarkColor.B);
+                    root.Attr.LineWidth = GraphPanelMarkLineWidth;
+                }
                 else
-                    resultList.Add(new TreeNode(print, whatever));
+                    root.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                        iTreeRoot.NodeColor.A, iTreeRoot.NodeColor.R,
+                        iTreeRoot.NodeColor.G, iTreeRoot.NodeColor.B);
+                NextGleeNodes(iTreeRoot, ref result);
             }
-            resultList.RemoveAll(item => item == null);
-            var result = new TreeNode[resultList.Count];
-            resultList.CopyTo(result);
-            return result;
+            else if (treeObject.Type.Equals("numeric"))
+            {
+                ITree<double> iTree = treeObject.NumericTree;
+                Node<double> iTreeRoot = iTree.Root;
+                if (iTreeRoot == null || iTreeRoot.Values == null)
+                    return;
+                Node root = _gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
+                string rootText = "";
+                for (int i = 0; i < iTreeRoot.Values.Count; i++)
+                {
+                    if (i > 0)
+                        rootText += " | ";
+                    rootText += iTreeRoot.Values[i].ToString();
+                }
+                root.Attr.Label = rootText;
+                if (result != null)
+                {
+                    root.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                        _graphPanelMarkColor.A, _graphPanelMarkColor.R,
+                        _graphPanelMarkColor.G, _graphPanelMarkColor.B);
+                    root.Attr.LineWidth = GraphPanelMarkLineWidth;
+                }
+                else
+                    root.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                        iTreeRoot.NodeColor.A, iTreeRoot.NodeColor.R,
+                        iTreeRoot.NodeColor.G, iTreeRoot.NodeColor.B);
+                NextGleeNodes(iTreeRoot, ref result);
+            }
+            _gleeGraphViewer.Graph = _gleeGraph;
         }
 
-        private static TreeNode[] NextLevel(Node<double> node)
+        private void NextGleeNodes(Node<double> node, ref List<int> result)
         {
-            if (node == null)
-                return null;
-            NodeList<double> nodeList = node.GetNeighborsList();
-            if (nodeList == null)
-                return null;
-            var resultList = new List<TreeNode>();
-            foreach (Node<double> n in nodeList)
+            if (node == null || node.Values == null)
+                return;
+            string parentHashCode = node.GetHashCode().ToString();
+            if (node.Neighbors != null && node.Neighbors.Count > 0)
             {
-                if (n == null)
-                    continue;
-                var print = n.NodeInfo;
-                for (int i = 0; i < n.Values.Count; i++)
-                    print += n.Values[i].ToString() + " ";
-                TreeNode[] whatever = NextLevel(n);
-                if (whatever == null)
-                    resultList.Add(new TreeNode(print));
-                else
-                    resultList.Add(new TreeNode(print, whatever));
+                var adoptedChildren = new List<int>();
+                for (int j = 0; j < node.Neighbors.Count; j++)
+                {
+                    // Draw children
+                    if (node.Neighbors[j] == null)
+                        continue;
+                    string childHashCode = node.Neighbors[j].GetHashCode().ToString();
+                    Node child = _gleeGraph.FindNode(childHashCode);
+                    if (child == null)
+                    {
+                        string childText = "";
+                        for (int i = 0; i < node.Neighbors[j].Values.Count; i++)
+                        {
+                            if (i > 0)
+                                childText += " | ";
+                            childText += node.Neighbors[j].Values[i].ToString();
+                        }
+                        child = _gleeGraph.AddNode(childHashCode);
+                        child.Attr.Label = childText;
+                        if (result != null && result.Count > 0 && result[0] == j)
+                        {
+                            child.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                                _graphPanelMarkColor.A, _graphPanelMarkColor.R,
+                                _graphPanelMarkColor.G, _graphPanelMarkColor.B);
+                            child.Attr.LineWidth = GraphPanelMarkLineWidth;
+                        }
+                        else
+                            child.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                                node.Neighbors[j].NodeColor.A, node.Neighbors[j].NodeColor.R,
+                                node.Neighbors[j].NodeColor.G, node.Neighbors[j].NodeColor.B);
+                    }
+                    else
+                        adoptedChildren.Add(j);
+                    // Draw edge
+                    Edge edge = _gleeGraph.AddEdge(parentHashCode, childHashCode);
+                    if (result != null && result.Count > 0 && result[0] == j)
+                    {
+                        edge.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                                _graphPanelMarkColor.A, _graphPanelMarkColor.R,
+                                _graphPanelMarkColor.G, _graphPanelMarkColor.B);
+                        edge.Attr.LineWidth = GraphPanelMarkLineWidth;
+                    }
+                }
+                bool pathMarked = false;
+                for (int k = 0; k < node.Neighbors.Count; k++)
+                {
+                    if (!adoptedChildren.Contains(k))
+                    {
+                        if (result != null && result.Count > 0 && result[0] == k && !pathMarked)
+                        {
+                            pathMarked = true;
+                            result.RemoveAt(0);
+                            NextGleeNodes(node.Neighbors[k], ref result);
+                        }
+                        else
+                        {
+                            List<int> nullResult = null;
+                            NextGleeNodes(node.Neighbors[k], ref nullResult);
+                        }
+                    }
+                }
             }
-            resultList.RemoveAll(item => item == null);
-            var result = new TreeNode[resultList.Count];
-            resultList.CopyTo(result);
-            return result;
         }
+
+        private void NextGleeNodes(Node<string> node, ref List<int> result)
+        {
+            if (node == null || node.Values == null)
+                return;
+            string parentHashCode = node.GetHashCode().ToString();
+            if (node.Neighbors != null && node.Neighbors.Count > 0)
+            {
+                var adoptedChildren = new List<int>();
+                for (int j = 0; j < node.Neighbors.Count; j++)
+                {
+                    // Draw children
+                    if (node.Neighbors[j] == null)
+                        continue;
+                    string childHashCode = node.Neighbors[j].GetHashCode().ToString();
+                    Node child = _gleeGraph.FindNode(childHashCode);
+                    if (child == null)
+                    {
+                        string childText = "";
+                        for (int i = 0; i < node.Neighbors[j].Values.Count; i++)
+                        {
+                            if (i > 0)
+                                childText += " | ";
+                            childText += node.Neighbors[j].Values[i];
+                        }
+                        child = _gleeGraph.AddNode(childHashCode);
+                        child.Attr.Label = childText;
+                        if (result != null && result.Count > 0 && result[0] == j)
+                        {
+                            child.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                                _graphPanelMarkColor.A, _graphPanelMarkColor.R,
+                                _graphPanelMarkColor.G, _graphPanelMarkColor.B);
+                            child.Attr.LineWidth = GraphPanelMarkLineWidth;
+                        }
+                        else
+                            child.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                                node.Neighbors[j].NodeColor.A, node.Neighbors[j].NodeColor.R,
+                                node.Neighbors[j].NodeColor.G, node.Neighbors[j].NodeColor.B);
+                    }
+                    else
+                        adoptedChildren.Add(j);
+                    // Draw edge
+                    Edge edge = _gleeGraph.AddEdge(parentHashCode, childHashCode);
+                    if (result != null && result.Count > 0 && result[0] == j)
+                    {
+                        edge.Attr.Color = new Microsoft.Glee.Drawing.Color(
+                                _graphPanelMarkColor.A, _graphPanelMarkColor.R,
+                                _graphPanelMarkColor.G, _graphPanelMarkColor.B);
+                        edge.Attr.LineWidth = GraphPanelMarkLineWidth;
+                    }
+                }
+                bool pathMarked = false;
+                for (int k = 0; k < node.Neighbors.Count; k++)
+                {
+                    if (!adoptedChildren.Contains(k))
+                    {
+                        if (result != null && result.Count > 0 && result[0] == k && !pathMarked)
+                        {
+                            pathMarked = true;
+                            result.RemoveAt(0);
+                            NextGleeNodes(node.Neighbors[k], ref result);
+                        }
+                        else
+                        {
+                            List<int> nullResult = null;
+                            NextGleeNodes(node.Neighbors[k], ref nullResult);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
 
         private void BtnSearchClick(object sender, EventArgs e)
         {
