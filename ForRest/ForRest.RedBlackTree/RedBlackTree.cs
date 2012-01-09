@@ -62,7 +62,7 @@ namespace ForRest.RedBlackTree
 
         public override void Add(T data)
         {
-            var dataList = new List<T>(1) {data};
+            var dataList = new List<T>(1) { data };
             var node = new RedBlackTreeNode<T>(dataList);
             RedBlackTreeNode<T> current = _root, parent = null;
             int result;
@@ -92,11 +92,11 @@ namespace ForRest.RedBlackTree
                     parent.Right = node;
             }
             node.Parent = parent;
-            while (_root.Balance())
-            {
-            }
             while (_root.Parent != null)
-                _root = (RedBlackTreeNode<T>) _root.Parent;
+                _root = (RedBlackTreeNode<T>)_root.Parent;
+            _root.Balance();
+            while (_root.Parent != null)
+                _root = (RedBlackTreeNode<T>)_root.Parent;
         }
 
         public override bool Remove(T data)
@@ -216,8 +216,13 @@ namespace ForRest.RedBlackTree
                 }
             }
             current.Parent = current.Left = current.Right = null;
-            while (_root.Balance())
+            if (_root != null)
             {
+                while (_root.Parent != null)
+                    _root = (RedBlackTreeNode<T>)_root.Parent;
+                _root.Balance();
+                while (_root.Parent != null)
+                    _root = (RedBlackTreeNode<T>)_root.Parent;
             }
             return true;
         }
