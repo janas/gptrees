@@ -3,40 +3,52 @@ using System.Collections.Generic;
 
 namespace ForRest.AVLTree
 {
+    /// <summary>
+    /// AVL tree class implementing Tree<T>.
+    /// </summary>
     public class AVLTree<T> : Tree<T>
     {
         private AVLTreeNode<T> _root;
-        private int _count;
         private readonly IComparer<T> _comparer = Comparer<T>.Default;
 
+        /// <summary>
+        /// Basic constructor.
+        /// </summary>
         public AVLTree()
         {
             _root = null;
-            _count = 0;
         }
 
+        /// <summary>
+        /// Gets type of the tree.
+        /// </summary>
         public override string TreeType
         {
             get { return "AVL Tree"; }
         }
-
+        
+        /// <summary>
+        /// Gets root of the tree.
+        /// </summary>
         public override Node<T> Root
         {
             get { return _root; }
             set { _root = (AVLTreeNode<T>) value; }
         }
 
-        public int Count
-        {
-            get { return _count; }
-        }
-
+        /// <summary>
+        /// Clears nodes of the tree.
+        /// </summary>
         public override void Clear()
         {
             _root = null;
-            _count = 0;
         }
-
+        
+        /// <summary>
+        /// Indicates whether tree contains element.
+        /// </summary>
+        /// <param name="data">Element to be searched.</param>
+        /// <returns></returns>
         public override List<int> Contains(T data)
         {
             var path = new List<int>();
@@ -60,6 +72,10 @@ namespace ForRest.AVLTree
             return null;
         }
 
+        /// <summary>
+        /// Adds element to the tree.
+        /// </summary>
+        /// <param name="data">Element to be added.</param>
         public override void Add(T data)
         {
             var dataList = new List<T>(1) { data };
@@ -80,7 +96,6 @@ namespace ForRest.AVLTree
                     current = current.Right;
                 }
             }
-            _count++;
             if (parent == null)
                 _root = node;
             else
@@ -99,7 +114,12 @@ namespace ForRest.AVLTree
             while (_root.Parent != null)
                 _root = (AVLTreeNode<T>)_root.Parent;
         }
-
+        
+        /// <summary>
+        /// Removes element from the tree.
+        /// </summary>
+        /// <param name="data">Element to be removed.</param>
+        /// <returns></returns>
         public override bool Remove(T data)
         {
             if (_root == null)
@@ -122,7 +142,6 @@ namespace ForRest.AVLTree
                     return false;
                 result = _comparer.Compare(current.Values[0], data);
             }
-            _count--;
 
             if (current.Right == null)
             {
