@@ -633,7 +633,8 @@ namespace ForRest
                 {
                     var peroformanceSet = new PerformanceSet();
                     labelTime.Invoke((MethodInvoker) (() => labelTime.ResetText()));
-                    labelTime.Invoke((MethodInvoker) (() => labelTime.Text = watch.ElapsedMilliseconds + " ms/Error"));
+                    labelTime.Invoke((MethodInvoker) (() => labelTime.Text = watch.ElapsedMilliseconds + 
+                        " ms - Item not found "));
                     peroformanceSet.TreeName = treeObject.Name;
                     peroformanceSet.SearchTime = watch.ElapsedMilliseconds + "/Not Found";
                     peroformanceSet.TypeOfNodes = "String";
@@ -670,7 +671,8 @@ namespace ForRest
                         var peroformanceSet = new PerformanceSet();
                         labelTime.Invoke((MethodInvoker) (() => labelTime.ResetText()));
                         labelTime.Invoke(
-                            (MethodInvoker) (() => labelTime.Text = watch.ElapsedMilliseconds + " ms/Error"));
+                            (MethodInvoker)(() => labelTime.Text = watch.ElapsedMilliseconds +
+                        " ms - Item not found "));
                         peroformanceSet.TreeName = treeObject.Name;
                         peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture) +
                                                      "/Not Found";

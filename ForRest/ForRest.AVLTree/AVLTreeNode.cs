@@ -46,6 +46,10 @@ namespace ForRest.AVLTree
 
         public bool Balance()
         {
+            if (Left != null)
+                Left.Balance();
+            if (Right != null)
+                Right.Balance();
             UpdateHeight();
             int leftHeight = 0;
             int rightHeight = 0;
@@ -59,7 +63,7 @@ namespace ForRest.AVLTree
                 AVLTreeNode<T> z = this;
                 AVLTreeNode<T> y = Left;
                 AVLTreeNode<T> b = Left.Right;
-                bool zIsleftNode = z.Parent != null && ((AVLTreeNode<T>) z.Parent).Left == this;
+                bool zIsleftNode = z.Parent != null && ((AVLTreeNode<T>)z.Parent).Left == this;
                 z.Left = b;
                 if (b != null)
                     b.Parent = z;
@@ -70,9 +74,9 @@ namespace ForRest.AVLTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
-                            ((AVLTreeNode<T>) y.Parent).Left = y;
+                            ((AVLTreeNode<T>)y.Parent).Left = y;
                         else
-                            ((AVLTreeNode<T>) y.Parent).Right = y;
+                            ((AVLTreeNode<T>)y.Parent).Right = y;
                     }
                 }
                 z.Parent = y;
@@ -84,7 +88,7 @@ namespace ForRest.AVLTree
                 AVLTreeNode<T> z = this;
                 AVLTreeNode<T> y = Right;
                 AVLTreeNode<T> b = Right.Left;
-                bool zIsleftNode = z.Parent != null && ((AVLTreeNode<T>) z.Parent).Left == this;
+                bool zIsleftNode = z.Parent != null && ((AVLTreeNode<T>)z.Parent).Left == this;
                 z.Right = b;
                 if (b != null)
                     b.Parent = z;
@@ -95,18 +99,15 @@ namespace ForRest.AVLTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
-                            ((AVLTreeNode<T>) y.Parent).Left = y;
+                            ((AVLTreeNode<T>)y.Parent).Left = y;
                         else
-                            ((AVLTreeNode<T>) y.Parent).Right = y;
+                            ((AVLTreeNode<T>)y.Parent).Right = y;
                     }
                 }
                 z.Parent = y;
                 return true;
             }
-            bool balanced = Left != null && Left.Balance();
-            if (Right != null && Right.Balance())
-                balanced = true;
-            return balanced;
+            return false;
         }
 
         public override string NodeInfo
