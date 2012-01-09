@@ -1,77 +1,247 @@
-﻿using ForRest.Provider.BLL;
-using System.Collections.Generic;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SplayTreeNode.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The splay tree node.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.SplayTree
 {
+    using System.Collections.Generic;
+
+    using ForRest.Provider.BLL;
+
     /// <summary>
-    /// Splay tree node class implementing Node<T>.
+    /// The splay tree node.
     /// </summary>
+    /// <typeparam name="T">
+    /// </typeparam>
     public class SplayTreeNode<T> : Node<T>
     {
-        private SplayTreeNode<T> _parent;
+        #region Constants and Fields
+
+        /// <summary>
+        /// The _height.
+        /// </summary>
         private int _height;
 
         /// <summary>
-        /// Gets parent of the node.
+        /// The _parent.
+        /// </summary>
+        private SplayTreeNode<T> _parent;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplayTreeNode{T}"/> class. 
+        ///   Constructor.
+        /// </summary>
+        public SplayTreeNode()
+        {
+            this._height = 1;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplayTreeNode{T}"/> class. 
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">
+        /// Values for the node. 
+        /// </param>
+        public SplayTreeNode(List<T> data)
+            : base(data, null)
+        {
+            this._height = 1;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplayTreeNode{T}"/> class. 
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">
+        /// Values for the node. 
+        /// </param>
+        /// <param name="left">
+        /// Left child node. 
+        /// </param>
+        /// <param name="right">
+        /// Right child node. 
+        /// </param>
+        public SplayTreeNode(List<T> data, SplayTreeNode<T> left, SplayTreeNode<T> right)
+        {
+            this.Values = data;
+            NodeList<T> children = new NodeList<T>(2);
+            children[0] = left;
+            children[1] = right;
+            this.Neighbors = children;
+            if (left.Height > right.Height)
+            {
+                this._height = left.Height + 1;
+            }
+            else
+            {
+                this._height = right.Height + 1;
+            }
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets height of the node.
+        /// </summary>
+        public int Height
+        {
+            get
+            {
+                return this._height;
+            }
+        }
+
+        /// <summary>
+        ///   Gets left child node.
+        /// </summary>
+        public SplayTreeNode<T> Left
+        {
+            get
+            {
+                if (this.Neighbors == null)
+                {
+                    return null;
+                }
+
+                return (SplayTreeNode<T>)this.Neighbors[0];
+            }
+
+            set
+            {
+                if (this.Neighbors == null)
+                {
+                    this.Neighbors = new NodeList<T>(2);
+                }
+
+                this.Neighbors[0] = value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets node info.
+        /// </summary>
+        public override string NodeInfo
+        {
+            get
+            {
+                string result = string.Empty;
+
+                // result += "h=" + _height.ToString() + " ";
+                if (this._parent == null)
+                {
+                    return result;
+                }
+
+                result += "<";
+                for (int i = 0; i < this._parent.Values.Count; i++)
+                {
+                    result += this._parent.Values[i].ToString();
+                }
+
+                result += "> ";
+                return result;
+            }
+        }
+
+        /// <summary>
+        ///   Gets parent of the node.
         /// </summary>
         public override Node<T> Parent
         {
-            get { return _parent; }
-            set { _parent = (SplayTreeNode<T>)value; }
-        }
-
-        /// <summary>
-        /// Gets height of the node.
-        /// </summary>
-        public int Height {
             get
-            { return _height; }
+            {
+                return this._parent;
+            }
+
+            set
+            {
+                this._parent = (SplayTreeNode<T>)value;
+            }
         }
 
         /// <summary>
-        /// Update height of the node.
+        ///   Gets right child node.
         /// </summary>
-        public int UpdateHeight()
+        public SplayTreeNode<T> Right
         {
-            int leftHeight = 0;
-            int rightHeight = 0;
-            if (Left != null)
-                leftHeight = Left.UpdateHeight();
-            if (Right != null)
-                rightHeight = Right.UpdateHeight();
-            if (rightHeight > leftHeight)
-                _height = rightHeight + 1;
-            else
-                _height = leftHeight + 1;
-            return _height;
+            get
+            {
+                if (this.Neighbors == null)
+                {
+                    return null;
+                }
+
+                return (SplayTreeNode<T>)this.Neighbors[1];
+            }
+
+            set
+            {
+                if (this.Neighbors == null)
+                {
+                    this.Neighbors = new NodeList<T>(2);
+                }
+
+                this.Neighbors[1] = value;
+            }
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Balances node.
         /// </summary>
+        /// <returns>
+        /// The balance.
+        /// </returns>
         public bool Balance()
         {
-            UpdateHeight();
+            this.UpdateHeight();
             int leftHeight = 0;
             int rightHeight = 0;
-            if (Left != null)
-                leftHeight = Left.Height;
-            if (Right != null)
-                rightHeight = Right.Height;
+            if (this.Left != null)
+            {
+                leftHeight = this.Left.Height;
+            }
+
+            if (this.Right != null)
+            {
+                rightHeight = this.Right.Height;
+            }
+
             if (leftHeight - rightHeight > 1)
             {
                 // right rotation
                 SplayTreeNode<T> z = this;
-                SplayTreeNode<T> y = Left;
-                SplayTreeNode<T> a = Left.Left;
-                SplayTreeNode<T> b = Left.Right;
-                SplayTreeNode<T> c = Right;
+                SplayTreeNode<T> y = this.Left;
+                SplayTreeNode<T> a = this.Left.Left;
+                SplayTreeNode<T> b = this.Left.Right;
+                SplayTreeNode<T> c = this.Right;
                 bool zIsleftNode = false;
                 if (z.Parent != null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                {
                     zIsleftNode = true;
+                }
+
                 z.Left = b;
                 if (b != null)
+                {
                     b.Parent = z;
+                }
+
                 y.Right = z;
                 if (y != null)
                 {
@@ -79,11 +249,16 @@ namespace ForRest.SplayTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
+                        {
                             ((SplayTreeNode<T>)y.Parent).Left = y;
+                        }
                         else
+                        {
                             ((SplayTreeNode<T>)y.Parent).Right = y;
+                        }
                     }
                 }
+
                 z.Parent = y;
                 return true;
             }
@@ -91,16 +266,22 @@ namespace ForRest.SplayTree
             {
                 // left rotation
                 SplayTreeNode<T> z = this;
-                SplayTreeNode<T> y = Right;
-                SplayTreeNode<T> a = Left;
-                SplayTreeNode<T> b = Right.Left;
-                SplayTreeNode<T> c = Right.Right;
+                SplayTreeNode<T> y = this.Right;
+                SplayTreeNode<T> a = this.Left;
+                SplayTreeNode<T> b = this.Right.Left;
+                SplayTreeNode<T> c = this.Right.Right;
                 bool zIsleftNode = false;
                 if (z.Parent != null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                {
                     zIsleftNode = true;
+                }
+
                 z.Right = b;
                 if (b != null)
+                {
                     b.Parent = z;
+                }
+
                 y.Left = z;
                 if (y != null)
                 {
@@ -108,42 +289,62 @@ namespace ForRest.SplayTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
+                        {
                             ((SplayTreeNode<T>)y.Parent).Left = y;
+                        }
                         else
+                        {
                             ((SplayTreeNode<T>)y.Parent).Right = y;
+                        }
                     }
                 }
+
                 z.Parent = y;
                 return true;
             }
+
             bool balanced = false;
-            if (Left != null && Left.Balance())
+            if (this.Left != null && this.Left.Balance())
+            {
                 balanced = true;
-            if (Right != null && Right.Balance())
+            }
+
+            if (this.Right != null && this.Right.Balance())
+            {
                 balanced = true;
+            }
+
             return balanced;
         }
 
         /// <summary>
         /// Performs left or right rotation.
         /// </summary>
-        /// <param name="leftBalance">Indicates whether perform left rotation.</param>
+        /// <param name="leftBalance">
+        /// Indicates whether perform left rotation. 
+        /// </param>
         public void Balance(bool leftBalance)
         {
             if (leftBalance)
             {
                 // right rotation
                 SplayTreeNode<T> z = this;
-                SplayTreeNode<T> y = Left;
-                SplayTreeNode<T> a = Left.Left;
-                SplayTreeNode<T> b = Left.Right;
-                SplayTreeNode<T> c = Right;
+                SplayTreeNode<T> y = this.Left;
+                SplayTreeNode<T> a = this.Left.Left;
+                SplayTreeNode<T> b = this.Left.Right;
+                SplayTreeNode<T> c = this.Right;
                 bool zIsleftNode = false;
-                if (z.Parent!=null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                if (z.Parent != null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                {
                     zIsleftNode = true;
+                }
+
                 z.Left = b;
                 if (b != null)
+                {
                     b.Parent = z;
+                }
+
                 y.Right = z;
                 if (y != null)
                 {
@@ -151,27 +352,38 @@ namespace ForRest.SplayTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
+                        {
                             ((SplayTreeNode<T>)y.Parent).Left = y;
+                        }
                         else
+                        {
                             ((SplayTreeNode<T>)y.Parent).Right = y;
+                        }
                     }
                 }
+
                 z.Parent = y;
             }
             else
             {
                 // left rotation
                 SplayTreeNode<T> z = this;
-                SplayTreeNode<T> y = Right;
-                SplayTreeNode<T> a = Left;
-                SplayTreeNode<T> b = Right.Left;
-                SplayTreeNode<T> c = Right.Right;
+                SplayTreeNode<T> y = this.Right;
+                SplayTreeNode<T> a = this.Left;
+                SplayTreeNode<T> b = this.Right.Left;
+                SplayTreeNode<T> c = this.Right.Right;
                 bool zIsleftNode = false;
                 if (z.Parent != null && ((SplayTreeNode<T>)z.Parent).Left == this)
+                {
                     zIsleftNode = true;
+                }
+
                 z.Right = b;
                 if (b != null)
+                {
                     b.Parent = z;
+                }
+
                 y.Left = z;
                 if (y != null)
                 {
@@ -179,106 +391,52 @@ namespace ForRest.SplayTree
                     if (y.Parent != null)
                     {
                         if (zIsleftNode)
+                        {
                             ((SplayTreeNode<T>)y.Parent).Left = y;
+                        }
                         else
+                        {
                             ((SplayTreeNode<T>)y.Parent).Right = y;
+                        }
                     }
                 }
+
                 z.Parent = y;
             }
         }
 
         /// <summary>
-        /// Gets node info.
+        /// Update height of the node.
         /// </summary>
-        public override string NodeInfo
+        /// <returns>
+        /// The update height.
+        /// </returns>
+        public int UpdateHeight()
         {
-            get
+            int leftHeight = 0;
+            int rightHeight = 0;
+            if (this.Left != null)
             {
-                string result = "";
-                //result += "h=" + _height.ToString() + " ";
-                if (_parent == null)
-                    return result;
-                result += "<";
-                for (int i = 0; i < _parent.Values.Count; i++)
-                    result += _parent.Values[i].ToString();
-                result += "> ";
-                return result;
+                leftHeight = this.Left.UpdateHeight();
             }
-        }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public SplayTreeNode()
-        {
-            _height = 1;
-        }
+            if (this.Right != null)
+            {
+                rightHeight = this.Right.UpdateHeight();
+            }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="data">Values for the node.</param>
-        public SplayTreeNode(List<T> data) : base(data, null)
-        {
-            _height = 1;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="data">Values for the node.</param>
-        /// <param name="left">Left child node.</param>
-        /// <param name="right">Right child node.</param>
-        public SplayTreeNode(List<T> data, SplayTreeNode<T> left, SplayTreeNode<T> right)
-        {
-            Values = data;
-            NodeList<T> children = new NodeList<T>(2);
-            children[0] = left;
-            children[1] = right;
-            Neighbors = children;
-            if (left.Height > right.Height)
-                _height = left.Height + 1;
+            if (rightHeight > leftHeight)
+            {
+                this._height = rightHeight + 1;
+            }
             else
-                _height = right.Height + 1;
+            {
+                this._height = leftHeight + 1;
+            }
+
+            return this._height;
         }
 
-        /// <summary>
-        /// Gets left child node.
-        /// </summary>
-        public SplayTreeNode<T> Left
-        {
-            get
-            {
-                if (Neighbors == null)
-                    return null;
-                return (SplayTreeNode<T>) Neighbors[0];
-            }
-            set
-            {
-                if (Neighbors == null)
-                    Neighbors = new NodeList<T>(2);
-                Neighbors[0] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets right child node.
-        /// </summary>
-        public SplayTreeNode<T> Right
-        {
-            get
-            {
-                if (Neighbors == null)
-                    return null;
-                return (SplayTreeNode<T>) Neighbors[1];
-            }
-            set
-            {
-                if (Neighbors == null)
-                    Neighbors = new NodeList<T>(2);
-                Neighbors[1] = value;
-            }
-        }
+        #endregion
     }
 }

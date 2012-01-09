@@ -1,78 +1,103 @@
-﻿// -------------------------------------------------------------------------------
-// <copyright file="_234TreeFactory.cs" company="Warsaw Univeristy of Technology">
-// All rights reserved.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BPlusTreeFactory.cs" company="Warsaw University of Technology">
+//   
 // </copyright>
 // <summary>
-// Class responsible for managing B+ tree.
+//   Class responsible for managing B+ tree.
 // </summary>
-// -------------------------------------------------------------------------------
-
-using System;
-using ForRest.Provider.BLL;
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.BPlusTree
 {
+    using System;
+
+    using ForRest.Provider.BLL;
+
     /// <summary>
     /// Class responsible for managing B+ tree implementing ITreeFactory.
     /// </summary>
     public class BPlusTreeFactory : ITreeFactory
     {
+        #region Public Properties
+
         /// <summary>
-        /// Gets tree name.
+        ///   Gets tree name.
         /// </summary>
         public string Name
         {
-            get { return "B+ Tree"; }
+            get
+            {
+                return "B+ Tree";
+            }
         }
 
         /// <summary>
-        /// Indicates whether tree needs degree.
+        ///   Indicates whether tree needs degree.
         /// </summary>
         public bool NeedDegree
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
-        /// <summary>
-        /// Gets plugin name.
-        /// </summary>
-        /// <returns></returns>
-        public string GetPluginName()
-        {
-            return "B+ Tree Plugin";
-        }
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Gets plugin description.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The get plugin description.
+        /// </returns>
         public string GetPluginDescription()
         {
             return "Plugin that implements B+ Tree Algorithms";
         }
 
         /// <summary>
-        /// Create instance of tree.
+        /// Gets plugin name.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public ITree<T> GetTree<T>()
+        /// <returns>
+        /// The get plugin name.
+        /// </returns>
+        public string GetPluginName()
         {
-            //default degree if not specified explicitly
-            return GetTree<T>(2);
+            return "B+ Tree Plugin";
         }
 
         /// <summary>
-        /// Create instance of tree with specific degree.
+        /// Create instance of tree.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="degree">Degree in Bayer&McCreight1972 notation.</param>
-        /// <returns></returns>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// </returns>
+        public ITree<T> GetTree<T>()
+        {
+            // default degree if not specified explicitly
+            return this.GetTree<T>(2);
+        }
+
+        /// <summary>
+        /// The get tree.
+        /// </summary>
+        /// <param name="degree">
+        /// The degree.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// </returns>
         public ITree<T> GetTree<T>(int degree)
         {
-            object obj = Activator.CreateInstance(typeof (BPlusTree<>).MakeGenericType(typeof (T)), degree);
-            var t = (ITree<T>) obj;
+            object obj = Activator.CreateInstance(typeof(BPlusTree<>).MakeGenericType(typeof(T)), degree);
+            var t = (ITree<T>)obj;
             return t;
         }
+
+        #endregion
     }
 }

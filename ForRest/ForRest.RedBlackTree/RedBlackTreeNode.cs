@@ -1,117 +1,298 @@
-﻿using ForRest.Provider.BLL;
-using System.Collections.Generic;
-using System.Drawing;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="RedBlackTreeNode.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The red black tree node.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.RedBlackTree
 {
+    using System.Collections.Generic;
+    using System.Drawing;
+
+    using ForRest.Provider.BLL;
+
     /// <summary>
-    /// Red-Black tree node class implementing Node<T>.
+    /// The red black tree node.
     /// </summary>
+    /// <typeparam name="T">
+    /// </typeparam>
     public class RedBlackTreeNode<T> : Node<T>
     {
-        private RedBlackTreeNode<T> _parent;
+        #region Constants and Fields
+
+        /// <summary>
+        /// The _max height.
+        /// </summary>
         private int _maxHeight;
+
+        /// <summary>
+        /// The _min height.
+        /// </summary>
         private int _minHeight;
 
         /// <summary>
-        /// Gets parent of the node.
+        /// The _parent.
         /// </summary>
-        public override Node<T> Parent
+        private RedBlackTreeNode<T> _parent;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackTreeNode{T}"/> class. 
+        ///   Constructor.
+        /// </summary>
+        public RedBlackTreeNode()
         {
-            get { return _parent; }
-            set { _parent = (RedBlackTreeNode<T>)value; }
+            this._maxHeight = 1;
+            this._maxHeight = 0;
         }
 
         /// <summary>
-        /// Gets maxHeight of the node.
+        /// Initializes a new instance of the <see cref="RedBlackTreeNode{T}"/> class. 
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">
+        /// Values for the node. 
+        /// </param>
+        public RedBlackTreeNode(List<T> data)
+            : base(data, null)
+        {
+            this._maxHeight = 1;
+            this._maxHeight = 0;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RedBlackTreeNode{T}"/> class. 
+        /// Constructor.
+        /// </summary>
+        /// <param name="data">
+        /// Values for the node. 
+        /// </param>
+        /// <param name="left">
+        /// Left child node. 
+        /// </param>
+        /// <param name="right">
+        /// Right child node. 
+        /// </param>
+        public RedBlackTreeNode(List<T> data, RedBlackTreeNode<T> left, RedBlackTreeNode<T> right)
+        {
+            this.Values = data;
+            var children = new NodeList<T>(2);
+            children[0] = left;
+            children[1] = right;
+            this.Neighbors = children;
+            this.UpdateMaxHeight();
+            this.UpdateMinHeight();
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///   Indicates whether node is red.
+        /// </summary>
+        public bool IsRed
+        {
+            get
+            {
+                if (this._parent == null)
+                {
+                    return false;
+                }
+
+                if (this._parent.IsRed)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        ///   Gets left child node.
+        /// </summary>
+        public RedBlackTreeNode<T> Left
+        {
+            get
+            {
+                if (this.Neighbors == null)
+                {
+                    return null;
+                }
+
+                return (RedBlackTreeNode<T>)this.Neighbors[0];
+            }
+
+            set
+            {
+                if (this.Neighbors == null)
+                {
+                    this.Neighbors = new NodeList<T>(2);
+                }
+
+                this.Neighbors[0] = value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets maxHeight of the node.
         /// </summary>
         public int MaxHeight
         {
-            get { return _maxHeight; }
+            get
+            {
+                return this._maxHeight;
+            }
         }
 
         /// <summary>
-        /// Gets minHeight of the node.
+        ///   Gets minHeight of the node.
         /// </summary>
         public int MinHeight
         {
-            get { return _minHeight; }
+            get
+            {
+                return this._minHeight;
+            }
         }
 
         /// <summary>
-        /// Update maxHeight of the node.
+        ///   Gets node color.
         /// </summary>
-        public int UpdateMaxHeight()
+        public override Color NodeColor
         {
-            int leftHeight = 0;
-            int rightHeight = 0;
-            if (Left != null)
-                leftHeight = Left.UpdateMaxHeight();
-            if (Right != null)
-                rightHeight = Right.UpdateMaxHeight();
-            if (rightHeight > leftHeight)
-                _maxHeight = rightHeight + 1;
-            else
-                _maxHeight = leftHeight + 1;
-            return _maxHeight;
+            get
+            {
+                if (this.IsRed)
+                {
+                    return Color.Red;
+                }
+
+                return Color.Black;
+            }
         }
 
         /// <summary>
-        /// Update minHeight of the node.
+        ///   Gets node info.
         /// </summary>
-        public int UpdateMinHeight()
+        public override string NodeInfo
         {
-            int leftHeight = 0;
-            int rightHeight = 0;
-            if (Left != null)
-                leftHeight = Left.UpdateMinHeight();
-            if (Right != null)
-                rightHeight = Right.UpdateMinHeight();
-            if (rightHeight > leftHeight)
-                _minHeight = leftHeight + 1;
-            else
-                _minHeight = rightHeight + 1;
-            return _minHeight;
+            get
+            {
+                if (this.IsRed)
+                {
+                    return "<Red>";
+                }
+
+                return "<Black>";
+            }
         }
+
+        /// <summary>
+        ///   Gets parent of the node.
+        /// </summary>
+        public override Node<T> Parent
+        {
+            get
+            {
+                return this._parent;
+            }
+
+            set
+            {
+                this._parent = (RedBlackTreeNode<T>)value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets right child node.
+        /// </summary>
+        public RedBlackTreeNode<T> Right
+        {
+            get
+            {
+                if (this.Neighbors == null)
+                {
+                    return null;
+                }
+
+                return (RedBlackTreeNode<T>)this.Neighbors[1];
+            }
+
+            set
+            {
+                if (this.Neighbors == null)
+                {
+                    this.Neighbors = new NodeList<T>(2);
+                }
+
+                this.Neighbors[1] = value;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Balances node.
         /// </summary>
+        /// <returns>
+        /// The balance.
+        /// </returns>
         public bool Balance()
         {
-            if (Left != null)
-                Left.Balance();
-            if (Right != null)
-                Right.Balance();
-            UpdateMaxHeight();
-            UpdateMinHeight();
+            if (this.Left != null)
+            {
+                this.Left.Balance();
+            }
+
+            if (this.Right != null)
+            {
+                this.Right.Balance();
+            }
+
+            this.UpdateMaxHeight();
+            this.UpdateMinHeight();
             int maxLeftHeight = 0;
             int maxRightHeight = 0;
             int minLeftHeight = 0;
             int minRightHeight = 0;
-            if (Left != null)
+            if (this.Left != null)
             {
-                maxLeftHeight = Left.MaxHeight;
-                minLeftHeight = Left.MinHeight;
+                maxLeftHeight = this.Left.MaxHeight;
+                minLeftHeight = this.Left.MinHeight;
             }
-            if (Right != null)
+
+            if (this.Right != null)
             {
-                maxRightHeight = Right.MaxHeight;
-                minRightHeight = Right.MinHeight;
+                maxRightHeight = this.Right.MaxHeight;
+                minRightHeight = this.Right.MinHeight;
             }
+
             int leftMinusRight = maxLeftHeight - minRightHeight - 1;
             if (leftMinusRight > 0)
             {
-                //for (int i = 0; i < leftMinusRight; i++)
                 {
+                    // for (int i = 0; i < leftMinusRight; i++)
                     // right rotation
                     RedBlackTreeNode<T> z = this;
-                    RedBlackTreeNode<T> y = Left;
-                    RedBlackTreeNode<T> b = Left.Right;
+                    RedBlackTreeNode<T> y = this.Left;
+                    RedBlackTreeNode<T> b = this.Left.Right;
                     bool zIsleftNode = z.Parent != null && ((RedBlackTreeNode<T>)z.Parent).Left == this;
                     z.Left = b;
                     if (b != null)
+                    {
                         b.Parent = z;
+                    }
+
                     y.Right = z;
                     if (y != null)
                     {
@@ -119,28 +300,38 @@ namespace ForRest.RedBlackTree
                         if (y.Parent != null)
                         {
                             if (zIsleftNode)
+                            {
                                 ((RedBlackTreeNode<T>)y.Parent).Left = y;
+                            }
                             else
+                            {
                                 ((RedBlackTreeNode<T>)y.Parent).Right = y;
+                            }
                         }
                     }
+
                     z.Parent = y;
                 }
+
                 return true;
             }
+
             int rightMinusLeft = maxRightHeight - minLeftHeight - 1;
             if (rightMinusLeft > 0)
             {
-                //for (int j = 0; j < rightMinusLeft; j++)
                 {
+                    // for (int j = 0; j < rightMinusLeft; j++)
                     // left rotation
                     RedBlackTreeNode<T> z = this;
-                    RedBlackTreeNode<T> y = Right;
-                    RedBlackTreeNode<T> b = Right.Left;
+                    RedBlackTreeNode<T> y = this.Right;
+                    RedBlackTreeNode<T> b = this.Right.Left;
                     bool zIsleftNode = z.Parent != null && ((RedBlackTreeNode<T>)z.Parent).Left == this;
                     z.Right = b;
                     if (b != null)
+                    {
                         b.Parent = z;
+                    }
+
                     y.Left = z;
                     if (y != null)
                     {
@@ -148,132 +339,89 @@ namespace ForRest.RedBlackTree
                         if (y.Parent != null)
                         {
                             if (zIsleftNode)
+                            {
                                 ((RedBlackTreeNode<T>)y.Parent).Left = y;
+                            }
                             else
+                            {
                                 ((RedBlackTreeNode<T>)y.Parent).Right = y;
+                            }
                         }
                     }
+
                     z.Parent = y;
                 }
+
                 return true;
             }
+
             return false;
         }
 
         /// <summary>
-        /// Indicates whether node is red.
+        /// Update maxHeight of the node.
         /// </summary>
-        public bool IsRed
+        /// <returns>
+        /// The update max height.
+        /// </returns>
+        public int UpdateMaxHeight()
         {
-            get
+            int leftHeight = 0;
+            int rightHeight = 0;
+            if (this.Left != null)
             {
-                if (_parent == null)
-                    return false;
-                if (_parent.IsRed)
-                    return false;
-                return true;
+                leftHeight = this.Left.UpdateMaxHeight();
             }
+
+            if (this.Right != null)
+            {
+                rightHeight = this.Right.UpdateMaxHeight();
+            }
+
+            if (rightHeight > leftHeight)
+            {
+                this._maxHeight = rightHeight + 1;
+            }
+            else
+            {
+                this._maxHeight = leftHeight + 1;
+            }
+
+            return this._maxHeight;
         }
 
         /// <summary>
-        /// Gets node info.
+        /// Update minHeight of the node.
         /// </summary>
-        public override string NodeInfo
+        /// <returns>
+        /// The update min height.
+        /// </returns>
+        public int UpdateMinHeight()
         {
-            get
+            int leftHeight = 0;
+            int rightHeight = 0;
+            if (this.Left != null)
             {
-                if (IsRed)
-                    return "<Red>";
-                return "<Black>";
+                leftHeight = this.Left.UpdateMinHeight();
             }
+
+            if (this.Right != null)
+            {
+                rightHeight = this.Right.UpdateMinHeight();
+            }
+
+            if (rightHeight > leftHeight)
+            {
+                this._minHeight = leftHeight + 1;
+            }
+            else
+            {
+                this._minHeight = rightHeight + 1;
+            }
+
+            return this._minHeight;
         }
 
-        /// <summary>
-        /// Gets node color.
-        /// </summary>
-        public override Color NodeColor
-        {
-            get
-            {
-                if (IsRed)
-                    return Color.Red;
-                return Color.Black;
-            }
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public RedBlackTreeNode()
-        {
-            _maxHeight = 1;
-            _maxHeight = 0;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="data">Values for the node.</param>
-        public RedBlackTreeNode(List<T> data)
-            : base(data, null)
-        {
-            _maxHeight = 1;
-            _maxHeight = 0;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="data">Values for the node.</param>
-        /// <param name="left">Left child node.</param>
-        /// <param name="right">Right child node.</param>
-        public RedBlackTreeNode(List<T> data, RedBlackTreeNode<T> left, RedBlackTreeNode<T> right)
-        {
-            Values = data;
-            var children = new NodeList<T>(2);
-            children[0] = left;
-            children[1] = right;
-            Neighbors = children;
-            UpdateMaxHeight();
-            UpdateMinHeight();
-        }
-
-        /// <summary>
-        /// Gets left child node.
-        /// </summary>
-        public RedBlackTreeNode<T> Left
-        {
-            get
-            {
-                if (Neighbors == null)
-                    return null;
-                return (RedBlackTreeNode<T>)Neighbors[0];
-            }
-            set
-            {
-                if (Neighbors == null)
-                    Neighbors = new NodeList<T>(2);
-                Neighbors[0] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets right child node.
-        /// </summary>
-        public RedBlackTreeNode<T> Right
-        {
-            get
-            {
-                if (Neighbors == null)
-                    return null;
-                return (RedBlackTreeNode<T>)Neighbors[1];
-            }
-            set
-            {
-                if (Neighbors == null)
-                    Neighbors = new NodeList<T>(2);
-                Neighbors[1] = value;
-            }
-        }
+        #endregion
     }
 }

@@ -1,77 +1,102 @@
-﻿// -------------------------------------------------------------------------------
-// <copyright file="_234TreeFactory.cs" company="Warsaw Univeristy of Technology">
-// All rights reserved.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AVLTreeFactory.cs" company="Warsaw University of Technology">
+//   
 // </copyright>
 // <summary>
-// Class responsible for managing AVL tree.
+//   Class responsible for managing AVL tree.
 // </summary>
-// -------------------------------------------------------------------------------
-
-using System;
-using ForRest.Provider.BLL;
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.AVLTree
 {
+    using System;
+
+    using ForRest.Provider.BLL;
+
     /// <summary>
     /// Class responsible for managing AVL tree implementing ITreeFactory.
     /// </summary>
     public class AVLTreeFactory : ITreeFactory
     {
+        #region Public Properties
+
         /// <summary>
-        /// Gets tree name.
+        ///   Gets tree name.
         /// </summary>
         public string Name
         {
-            get { return "AVL Tree"; }
+            get
+            {
+                return "AVL Tree";
+            }
         }
 
         /// <summary>
-        /// Indicates whether tree needs degree.
+        ///   Indicates whether tree needs degree.
         /// </summary>
         public bool NeedDegree
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
-        /// <summary>
-        /// Gets plugin name.
-        /// </summary>
-        /// <returns></returns>
-        public string GetPluginName()
-        {
-            return "AVL Tree Plugin";
-        }
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Gets plugin description.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The get plugin description.
+        /// </returns>
         public string GetPluginDescription()
         {
             return "Plugin that implements AVL Tree Algorithms";
         }
 
         /// <summary>
+        /// Gets plugin name.
+        /// </summary>
+        /// <returns>
+        /// The get plugin name.
+        /// </returns>
+        public string GetPluginName()
+        {
+            return "AVL Tree Plugin";
+        }
+
+        /// <summary>
         /// Create instance of tree.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// </returns>
         public ITree<T> GetTree<T>()
         {
-            object obj = Activator.CreateInstance(typeof (AVLTree<>).MakeGenericType(typeof (T)));
-            var t = (ITree<T>) obj;
+            object obj = Activator.CreateInstance(typeof(AVLTree<>).MakeGenericType(typeof(T)));
+            var t = (ITree<T>)obj;
             return t;
         }
 
         /// <summary>
-        /// Create instance of tree with specific degree.
+        /// The get tree.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="degree">Degree in Bayer&McCreight1972 notation.</param>
-        /// <returns></returns>
+        /// <param name="degree">
+        /// The degree.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// </returns>
         public ITree<T> GetTree<T>(int degree)
         {
-            return GetTree<T>();
+            return this.GetTree<T>();
         }
+
+        #endregion
     }
 }

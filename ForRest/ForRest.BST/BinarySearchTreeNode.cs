@@ -1,108 +1,173 @@
-﻿using ForRest.Provider.BLL;
-using System.Collections.Generic;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BinarySearchTreeNode.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The binary search tree node.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.BST
 {
+    using System.Collections.Generic;
+
+    using ForRest.Provider.BLL;
+
     /// <summary>
-    /// BST tree node class implementing Node<T>.
+    /// The binary search tree node.
     /// </summary>
+    /// <typeparam name="T">
+    /// </typeparam>
     public class BinarySearchTreeNode<T> : Node<T>
     {
+        #region Constants and Fields
+
+        /// <summary>
+        /// The _parent.
+        /// </summary>
         private BinarySearchTreeNode<T> _parent;
 
-        /// <summary>
-        /// Gets parent of the node.
-        /// </summary>
-        public override Node<T> Parent
-        {
-            get { return _parent; }
-            set { _parent = (BinarySearchTreeNode<T>) value; }
-        }
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Gets node info.
-        /// </summary>
-        public override string NodeInfo
-        {
-            get
-            {
-                if (_parent == null)
-                    return "";
-                string result = "<";
-                for (int i = 0; i < _parent.Values.Count; i++)
-                    result += _parent.Values[i].ToString();
-                result += "> ";
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="BinarySearchTreeNode{T}"/> class. 
+        ///   Constructor.
         /// </summary>
         public BinarySearchTreeNode()
         {
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BinarySearchTreeNode{T}"/> class. 
         /// Constructor.
         /// </summary>
-        /// <param name="data">Values for the node.</param>
+        /// <param name="data">
+        /// Values for the node. 
+        /// </param>
         public BinarySearchTreeNode(List<T> data)
             : base(data, null)
         {
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BinarySearchTreeNode{T}"/> class. 
         /// Constructor.
         /// </summary>
-        /// <param name="data">Values for the node.</param>
-        /// <param name="left">Left child node.</param>
-        /// <param name="right">Right child node.</param>
+        /// <param name="data">
+        /// Values for the node. 
+        /// </param>
+        /// <param name="left">
+        /// Left child node. 
+        /// </param>
+        /// <param name="right">
+        /// Right child node. 
+        /// </param>
         public BinarySearchTreeNode(List<T> data, BinarySearchTreeNode<T> left, BinarySearchTreeNode<T> right)
         {
-            Values = data;
+            this.Values = data;
             var children = new NodeList<T>(2);
             children[0] = left;
             children[1] = right;
-            Neighbors = children;
+            this.Neighbors = children;
         }
 
+        #endregion
+
+        #region Public Properties
+
         /// <summary>
-        /// Gets left child node.
+        ///   Gets left child node.
         /// </summary>
         public BinarySearchTreeNode<T> Left
         {
             get
             {
-                if (Neighbors == null)
+                if (this.Neighbors == null)
+                {
                     return null;
-                return (BinarySearchTreeNode<T>) Neighbors[0];
+                }
+
+                return (BinarySearchTreeNode<T>)this.Neighbors[0];
             }
+
             set
             {
-                if (Neighbors == null)
-                    Neighbors = new NodeList<T>(2);
-                Neighbors[0] = value;
+                if (this.Neighbors == null)
+                {
+                    this.Neighbors = new NodeList<T>(2);
+                }
+
+                this.Neighbors[0] = value;
             }
         }
 
         /// <summary>
-        /// Gets right child node.
+        ///   Gets node info.
+        /// </summary>
+        public override string NodeInfo
+        {
+            get
+            {
+                if (this._parent == null)
+                {
+                    return string.Empty;
+                }
+
+                string result = "<";
+                for (int i = 0; i < this._parent.Values.Count; i++)
+                {
+                    result += this._parent.Values[i].ToString();
+                }
+
+                result += "> ";
+                return result;
+            }
+        }
+
+        /// <summary>
+        ///   Gets parent of the node.
+        /// </summary>
+        public override Node<T> Parent
+        {
+            get
+            {
+                return this._parent;
+            }
+
+            set
+            {
+                this._parent = (BinarySearchTreeNode<T>)value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets right child node.
         /// </summary>
         public BinarySearchTreeNode<T> Right
         {
             get
             {
-                if (Neighbors == null)
+                if (this.Neighbors == null)
+                {
                     return null;
-                return (BinarySearchTreeNode<T>) Neighbors[1];
+                }
+
+                return (BinarySearchTreeNode<T>)this.Neighbors[1];
             }
+
             set
             {
-                if (Neighbors == null)
-                    Neighbors = new NodeList<T>(2);
-                Neighbors[1] = value;
+                if (this.Neighbors == null)
+                {
+                    this.Neighbors = new NodeList<T>(2);
+                }
+
+                this.Neighbors[1] = value;
             }
         }
+
+        #endregion
     }
 }
