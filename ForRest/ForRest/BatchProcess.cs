@@ -768,24 +768,29 @@ namespace ForRest
         /// </summary>
         private void VerifyLayout()
         {
-            this.textBoxLog.AppendText("\n" + this.listBoxSearchItems.Items.Count + "\n");
-            if (this.listBoxSearchItems.Enabled && this.listBoxSearchItems.Items.Count > 0)
+            bool existBatchTextTree = false;
+            bool existBatchNumericTree = false;
+            foreach (var batchTree in _provider.BatchTreeObject)
             {
-                if (this.comboBoxDataType.SelectedItem.Equals("Text")
-                    && this._provider.BatchTreeObject.Exists(item => item.Type.Equals("Text")))
+                if (batchTree.Type.Equals("text"))
                 {
-                    this.btnBatchSearch.Enabled = true;
-                    return;
+                    existBatchTextTree = true;
                 }
-
-                if (this.comboBoxDataType.SelectedItem.Equals("Numeric")
-                    && this._provider.BatchTreeObject.Exists(item => item.Type.Equals("Numeric")))
+                if (batchTree.Type.Equals("numeric"))
                 {
-                    this.btnBatchSearch.Enabled = true;
-                    return;
+                    existBatchNumericTree = true;
+                }
+                if (existBatchTextTree && existBatchNumericTree)
+                {
+                    break;
                 }
             }
-
+            if (this.listBoxSearchItems.Enabled && this.listBoxSearchItems.Items.Count > 0
+                && (existBatchTextTree || existBatchNumericTree))
+            {
+                this.btnBatchSearch.Enabled = true;
+                return;
+            }
             this.btnBatchSearch.Enabled = false;
         }
 
