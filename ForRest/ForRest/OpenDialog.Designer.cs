@@ -106,7 +106,7 @@
             // labelDataType
             // 
             this.labelDataType.AutoSize = true;
-            this.labelDataType.Location = new System.Drawing.Point(16, 46);
+            this.labelDataType.Location = new System.Drawing.Point(15, 46);
             this.labelDataType.Name = "labelDataType";
             this.labelDataType.Size = new System.Drawing.Size(93, 13);
             this.labelDataType.TabIndex = 6;
