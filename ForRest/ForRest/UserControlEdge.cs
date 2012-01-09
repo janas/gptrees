@@ -20,11 +20,11 @@ namespace ForRest
             }
         }
 
-        public UserControlEdge(bool ltr, Color color)
+        public UserControlEdge(bool ltr)
         {
             InitializeComponent();
             _leftToRight = ltr;
-            _color = color;
+            _color = Color.Black;
             _lineWidth = 1;
         }
 
