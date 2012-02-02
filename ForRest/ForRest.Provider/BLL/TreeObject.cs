@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TreeObject.cs" company="Warsaw University of Technology">
-//   
+//
 // </copyright>
 // <summary>
-//   Class for holding trees (container).
+// Class for holding trees (container).
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
