@@ -21,11 +21,6 @@ namespace ForRest
         #region Constants and Fields
 
         /// <summary>
-        /// The mode.
-        /// </summary>
-        public int Mode;
-
-        /// <summary>
         /// The provider.
         /// </summary>
         private readonly Provider.Provider provider = new Provider.Provider();
@@ -81,6 +76,15 @@ namespace ForRest
             this.provider.CheckDirectoryExists(Application.ExecutablePath);
             this.EnableGleeMode(isGleeEnabled);
         }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets Mode.
+        /// </summary>
+        public int Mode { get; set; }
 
         #endregion
 
@@ -366,7 +370,7 @@ namespace ForRest
         /// </param>
         private void EnableGleeMode(bool isGleeEnabled)
         {
-            this.gLEEGraphToolStripMenuItem.Visible = isGleeEnabled;
+            this.gleeGraphToolStripMenuItem.Visible = isGleeEnabled;
         }
 
         /// <summary>
@@ -405,14 +409,14 @@ namespace ForRest
                 this.graphMode = 0;
                 this.treeViewToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
-                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.gleeGraphToolStripMenuItem.Checked = false;
             }
             else
             {
                 this.noGraphToolStripMenuItem.Checked = true;
                 this.treeViewToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
-                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.gleeGraphToolStripMenuItem.Checked = false;
                 this.graphMode = 0;
             }
 
@@ -453,14 +457,14 @@ namespace ForRest
                 this.graphMode = 1;
                 this.noGraphToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
-                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.gleeGraphToolStripMenuItem.Checked = false;
             }
             else
             {
                 this.treeViewToolStripMenuItem.Checked = true;
                 this.noGraphToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
-                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.gleeGraphToolStripMenuItem.Checked = false;
                 this.graphMode = 1;
             }
 
@@ -501,14 +505,14 @@ namespace ForRest
                 this.graphMode = 2;
                 this.noGraphToolStripMenuItem.Checked = false;
                 this.treeViewToolStripMenuItem.Checked = false;
-                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.gleeGraphToolStripMenuItem.Checked = false;
             }
             else
             {
                 this.graphToolStripMenuItem.Checked = true;
                 this.noGraphToolStripMenuItem.Checked = false;
                 this.treeViewToolStripMenuItem.Checked = false;
-                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.gleeGraphToolStripMenuItem.Checked = false;
                 this.graphMode = 2;
             }
 
@@ -540,11 +544,11 @@ namespace ForRest
         {
             if (this.graphMode == 3)
             {
-                this.gLEEGraphToolStripMenuItem.Checked = true;
+                this.gleeGraphToolStripMenuItem.Checked = true;
                 return;
             }
 
-            if (this.gLEEGraphToolStripMenuItem.Checked)
+            if (this.gleeGraphToolStripMenuItem.Checked)
             {
                 this.graphMode = 3;
                 this.noGraphToolStripMenuItem.Checked = false;
@@ -553,7 +557,7 @@ namespace ForRest
             }
             else
             {
-                this.gLEEGraphToolStripMenuItem.Checked = true;
+                this.gleeGraphToolStripMenuItem.Checked = true;
                 this.noGraphToolStripMenuItem.Checked = false;
                 this.treeViewToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;

@@ -124,12 +124,12 @@ namespace ForRest._234Tree
         public override SearchResult Contains(T data)
         {
             SearchResult searchResult;
-            searchResult.searchPath = new List<int>();
-            searchResult.nodesVisited = 0;
+            searchResult.SearchPath = new List<int>();
+            searchResult.NodesVisited = 0;
             _234TreeNode<T> current = this._root;
             while (current != null)
             {
-                searchResult.nodesVisited++;
+                searchResult.NodesVisited++;
                 for (int i = 0; i < current.Values.Count; i++)
                 {
                     int result = this._comparer.Compare(current.Values[i], data);
@@ -142,11 +142,11 @@ namespace ForRest._234Tree
                     {
                         if (current.Neighbors == null)
                         {
-                            searchResult.searchPath = null;
+                            searchResult.SearchPath = null;
                             return searchResult;
                         }
                         current = (_234TreeNode<T>)current.Neighbors[i];
-                        searchResult.searchPath.Add(i);
+                        searchResult.SearchPath.Add(i);
                         break;
                     }
 
@@ -154,17 +154,17 @@ namespace ForRest._234Tree
                     {
                         if (current.Neighbors == null)
                         {
-                            searchResult.searchPath = null;
+                            searchResult.SearchPath = null;
                             return searchResult;
                         }
 
                         current = (_234TreeNode<T>)current.Neighbors[i + 1];
-                        searchResult.searchPath.Add(i + 1);
+                        searchResult.SearchPath.Add(i + 1);
                         break;
                     }
                 }
             }
-            searchResult.searchPath = null;
+            searchResult.SearchPath = null;
             return searchResult;
         }
 

@@ -147,21 +147,21 @@ namespace ForRest.SplayTree
         public override SearchResult Contains(T data)
         {
             SearchResult searchResult;
-            searchResult.searchPath = new List<int>();
-            searchResult.nodesVisited = 0;
+            searchResult.SearchPath = new List<int>();
+            searchResult.NodesVisited = 0;
             SplayTreeNode<T> lastVisited = null;
             SplayTreeNode<T> current = this._root;
             while (current != null)
             {
-                searchResult.nodesVisited++;
+                searchResult.NodesVisited++;
                 int result = this._comparer.Compare(current.Values[0], data);
                 if (result == 0)
                 {
                     this.Splay(current);
-                    if (searchResult.searchPath != null)
+                    if (searchResult.SearchPath != null)
                     {
-                        searchResult.searchPath.Clear();
-                        searchResult.searchPath = new List<int>();
+                        searchResult.SearchPath.Clear();
+                        searchResult.SearchPath = new List<int>();
                     }
 
                     return searchResult;
@@ -171,18 +171,18 @@ namespace ForRest.SplayTree
                 {
                     lastVisited = current;
                     current = current.Left;
-                    searchResult.searchPath.Add(0);
+                    searchResult.SearchPath.Add(0);
                 }
                 else
                 {
                     lastVisited = current;
                     current = current.Right;
-                    searchResult.searchPath.Add(1);
+                    searchResult.SearchPath.Add(1);
                 }
             }
 
             this.Splay(lastVisited);
-            searchResult.searchPath = null;
+            searchResult.SearchPath = null;
 
             return searchResult;
         }

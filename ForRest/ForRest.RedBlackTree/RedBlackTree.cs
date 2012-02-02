@@ -156,12 +156,12 @@ namespace ForRest.RedBlackTree
         public override SearchResult Contains(T data)
         {
             SearchResult searchResult;
-            searchResult.searchPath = new List<int>();
-            searchResult.nodesVisited = 0;
+            searchResult.SearchPath = new List<int>();
+            searchResult.NodesVisited = 0;
             RedBlackTreeNode<T> current = this._root;
             while (current != null)
             {
-                searchResult.nodesVisited++;
+                searchResult.NodesVisited++;
                 int result = this._comparer.Compare(current.Values[0], data);
                 if (result == 0)
                 {
@@ -171,15 +171,15 @@ namespace ForRest.RedBlackTree
                 if (result > 0)
                 {
                     current = current.Left;
-                    searchResult.searchPath.Add(0);
+                    searchResult.SearchPath.Add(0);
                 }
                 else
                 {
                     current = current.Right;
-                    searchResult.searchPath.Add(1);
+                    searchResult.SearchPath.Add(1);
                 }
             }
-            searchResult.searchPath = null;
+            searchResult.SearchPath = null;
             return searchResult;
         }
 

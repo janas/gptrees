@@ -1,13 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SearchResult.cs" company="Warsaw University of Technology">
+//   
+// </copyright>
+// <summary>
+//   The search result.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace ForRest.Provider.BLL
 {
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// The search result.
+    /// </summary>
     public struct SearchResult
     {
-        public int nodesVisited;
-        public List<int> searchPath;
+        #region Constants and Fields
+
+        /// <summary>
+        /// The nodes visited.
+        /// </summary>
+        public int NodesVisited;
+
+        /// <summary>
+        /// The search path.
+        /// </summary>
+        public List<int> SearchPath;
+
+        #endregion
     }
 }

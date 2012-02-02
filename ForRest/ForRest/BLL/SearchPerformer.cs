@@ -80,9 +80,6 @@ namespace ForRest.BLL
         /// </typeparam>
         public void GenericBatchSearch<T>(List<T> searchItems, string type)
         {
-            Stopwatch watch = null;
-            SearchResult searchResult;
-
             this.counter = 1;
             this.denominator = this.provider.BatchTreeObject.Count * searchItems.Count;
 
@@ -95,6 +92,8 @@ namespace ForRest.BLL
 
                 foreach (var item in searchItems)
                 {
+                    Stopwatch watch;
+                    SearchResult searchResult;
                     if (type.Equals("text"))
                     {
                         watch = new Stopwatch();
@@ -102,7 +101,7 @@ namespace ForRest.BLL
                         searchResult = treeObject.TextTree.Contains(item as string);
                         watch.Stop();
                     }
-                    else //if (type.Equals("numeric"))
+                    else
                     {
                         watch = new Stopwatch();
                         watch.Start();
@@ -111,7 +110,7 @@ namespace ForRest.BLL
                     }
 
                     PerformanceSet performanceSet;
-                    if (searchResult.searchPath != null)
+                    if (searchResult.SearchPath != null)
                     {
                         performanceSet = new PerformanceSet
                             {
@@ -119,13 +118,15 @@ namespace ForRest.BLL
                                 SearchTime = watch.ElapsedMilliseconds.ToString(), 
                                 TypeOfNodes = this.CheckNodeType(type), 
                                 TypeOfTree = this.GetTreeType(treeObject), 
-                                NoOfNodes = searchResult.nodesVisited.ToString()
+                                NoOfNodes = searchResult.NodesVisited.ToString()
                             };
                         this.provider.BatchPerformanceSet.Add(performanceSet);
                         var currentDateTime = DateTime.Now.TimeOfDay.ToString();
                         var progress = "[" + currentDateTime.Substring(0, 13) + "]" + "\tGroup tree name: "
-                                       + treeObject.Name + " Value: " + item + " Found in " + watch.ElapsedMilliseconds
-                                       + " ms for tree type: " + this.GetTreeType(treeObject) + Environment.NewLine;
+                                       + treeObject.Name + Environment.NewLine + "\t\tValue: " + item
+                                       + Environment.NewLine + "\t\tFound in " + watch.ElapsedMilliseconds
+                                       + " ms for tree type: " + this.GetTreeType(treeObject) + Environment.NewLine + "\t\tNodes visited: "
+                                       + searchResult.NodesVisited + Environment.NewLine;
                         var percent = (100 * this.counter) / this.denominator;
                         this.backgroundWorker.ReportProgress(percent, progress);
                     }
@@ -137,14 +138,15 @@ namespace ForRest.BLL
                                 SearchTime = watch.ElapsedMilliseconds + "/Not Found", 
                                 TypeOfNodes = this.CheckNodeType(type), 
                                 TypeOfTree = this.GetTreeType(treeObject), 
-                                NoOfNodes = searchResult.nodesVisited.ToString()
+                                NoOfNodes = searchResult.NodesVisited.ToString()
                             };
                         this.provider.BatchPerformanceSet.Add(performanceSet);
                         var currentDateTime = DateTime.Now.TimeOfDay.ToString();
                         var progress = "[" + currentDateTime.Substring(0, 13) + "]" + "\tGroup tree name: "
-                                       + treeObject.Name + " Value: " + item + " Not found in "
-                                       + watch.ElapsedMilliseconds + " ms for tree type: "
-                                       + this.GetTreeType(treeObject) + Environment.NewLine;
+                                       + treeObject.Name + Environment.NewLine + "\t\tValue: " + item
+                                       + Environment.NewLine + "\t\tNot found in " + watch.ElapsedMilliseconds
+                                       + " ms for tree type: " + this.GetTreeType(treeObject) + Environment.NewLine + "\t\tNodes visited: "
+                                       + searchResult.NodesVisited + Environment.NewLine;
                         var percent = (100 * this.counter) / this.denominator;
                         this.backgroundWorker.ReportProgress(percent, progress);
                     }
@@ -175,7 +177,7 @@ namespace ForRest.BLL
             PerformanceSet performanceSet;
             SearchResult searchResult;
             string type;
-            string[] progress = new string[2];
+            var progress = new string[2];
 
             if (typeof(T) == typeof(string))
             {
@@ -194,7 +196,7 @@ namespace ForRest.BLL
                 type = "numeric";
             }
             
-            if (searchResult.searchPath != null)
+            if (searchResult.SearchPath != null)
             {
                 performanceSet = new PerformanceSet
                 {
@@ -202,11 +204,11 @@ namespace ForRest.BLL
                     SearchTime = watch.ElapsedMilliseconds.ToString(),
                     TypeOfNodes = this.CheckNodeType(type),
                     TypeOfTree = this.GetTreeType(treeObject),
-                    NoOfNodes = searchResult.nodesVisited.ToString()
+                    NoOfNodes = searchResult.NodesVisited.ToString()
                 };
                 this.provider.PerformanceSets.Add(performanceSet);
                 progress[0] = watch.ElapsedMilliseconds + " ms";
-                progress[1] = searchResult.nodesVisited.ToString();
+                progress[1] = searchResult.NodesVisited.ToString();
                 this.backgroundWorker.ReportProgress(0, progress);
             }
             else
@@ -217,11 +219,11 @@ namespace ForRest.BLL
                     SearchTime = watch.ElapsedMilliseconds + "/Not Found",
                     TypeOfNodes = this.CheckNodeType(type),
                     TypeOfTree = this.GetTreeType(treeObject),
-                    NoOfNodes = searchResult.nodesVisited.ToString()
+                    NoOfNodes = searchResult.NodesVisited.ToString()
                 };
                 this.provider.PerformanceSets.Add(performanceSet);
                 progress[0] = watch.ElapsedMilliseconds + " ms/NF";
-                progress[1] = searchResult.nodesVisited.ToString();
+                progress[1] = searchResult.NodesVisited.ToString();
                 this.backgroundWorker.ReportProgress(0, progress);
             }
 

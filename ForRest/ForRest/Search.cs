@@ -407,8 +407,8 @@ namespace ForRest
         private void BackgroundWorkerSearchDoWork(object sender, DoWorkEventArgs e)
         {
             SearchResult searchResult;
-            searchResult.nodesVisited = -1;
-            searchResult.searchPath = null;
+            searchResult.NodesVisited = -1;
+            searchResult.SearchPath = null;
             var treeObject = e.Argument as TreeObject;
             var searchPerformer = new SearchPerformer(this.provider, this.backgroundWorkerSearch);
             if (treeObject != null && (treeObject.Type.Equals("text") && this.textBoxSearchFor.Text != null))
@@ -459,7 +459,7 @@ namespace ForRest
             object sender, RunWorkerCompletedEventArgs e)
         {
             var result = (SearchResult)e.Result;
-            this.ShowTree(ref result.searchPath);
+            this.ShowTree(ref result.SearchPath);
             this.btnSearch.Enabled = true;
         }
 

@@ -78,7 +78,7 @@ namespace UnitTesting
             target.Add(2);
             target.Add(data);
             SearchResult actual = target.Contains(data);
-            Assert.IsNotNull(actual.searchPath);
+            Assert.IsNotNull(actual.SearchPath);
         }
 
         [TestMethod()]
@@ -117,7 +117,7 @@ namespace UnitTesting
             target.Add(2);
             target.Add(data);
             SearchResult actual = target.Contains(data);
-            Assert.IsNotNull(actual.searchPath);
+            Assert.IsNotNull(actual.SearchPath);
         }
 
         [TestMethod()]
@@ -138,7 +138,7 @@ namespace UnitTesting
             target.Add(data);
             target.Remove(data);
             SearchResult actual = target.Contains(data);
-            Assert.IsNotNull(actual.searchPath);
+            Assert.IsNotNull(actual.SearchPath);
         }
 
         [TestMethod()]
@@ -158,7 +158,7 @@ namespace UnitTesting
             target.Add(2);
             target.Add(data);
             SearchResult actual = target.Contains(data);
-            Assert.IsNotNull(actual.searchPath);
+            Assert.IsNotNull(actual.SearchPath);
         }
 
         [TestMethod()]
@@ -197,7 +197,7 @@ namespace UnitTesting
             target.Add(2);
             target.Add(data);
             SearchResult actual = target.Contains(data);
-            Assert.IsNotNull(actual.searchPath);
+            Assert.IsNotNull(actual.SearchPath);
         }
 
         [TestMethod()]
@@ -218,7 +218,7 @@ namespace UnitTesting
             target.Add(data);
             target.Remove(data);
             SearchResult actual = target.Contains(data);
-            Assert.IsNotNull(actual.searchPath);
+            Assert.IsNotNull(actual.SearchPath);
         }
 
         [TestMethod()]

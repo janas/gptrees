@@ -100,7 +100,7 @@ namespace ForRest
             var currentDateTime = DateTime.Now.TimeOfDay.ToString();
             this.textBoxLog.AppendText(
                 "[" + currentDateTime.Substring(0, 13) + "]" + "\t" + noOfTrees + " tree(s) created, type of "
-                + treeType + ", group tree name " + groupTreeName + "." + Environment.NewLine);
+                + treeType + ", group tree name: " + groupTreeName + "." + Environment.NewLine);
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace ForRest
         {
             var threadId = Thread.CurrentThread.ManagedThreadId;
             var currentDateTime = DateTime.Now.TimeOfDay.ToString();
-            backgroundWorkerBatchProcess.ReportProgress(
+            this.backgroundWorkerBatchProcess.ReportProgress(
                 0,
                 "[" + currentDateTime.Substring(0, 13) + "]" + "\tThread ID " + threadId + " started." + Environment.NewLine);
             var type = e.Argument as string;
@@ -169,7 +169,7 @@ namespace ForRest
             this.textBoxLog.AppendText(
                 "[" + currentDateTime.Substring(0, 13) + "]" + "\tThread ID " + e.Result + " is done." + Environment.NewLine);
             
-            if (!backgroundWorkerBatchProcess.IsBusy)
+            if (!this.backgroundWorkerBatchProcess.IsBusy)
             {
                 this.EnableExportButton();
                 this.listBoxSearchItems.Enabled = true;
@@ -228,7 +228,7 @@ namespace ForRest
             {
                 this.listBoxSearchItems.Enabled = false;
                 this.btnBatchSearch.Enabled = false;
-                this.backgroundWorkerBatchProcess.RunWorkerAsync(comboBoxDataType.SelectedItem.ToString());
+                this.backgroundWorkerBatchProcess.RunWorkerAsync(this.comboBoxDataType.SelectedItem.ToString());
                 Application.DoEvents();
             }
         }
