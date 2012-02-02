@@ -181,6 +181,7 @@
             this.Controls.Add(this.labelTreeType);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.comboBoxAvailableTrees);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
