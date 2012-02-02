@@ -21,9 +21,9 @@ namespace ForRest
         #region Constants and Fields
 
         /// <summary>
-        /// The _plugins list.
+        /// The plugins list.
         /// </summary>
-        private List<string[]> _pluginsList;
+        private List<string[]> pluginsList;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace ForRest
         /// </param>
         public void GetData(List<string[]> itemsList)
         {
-            this._pluginsList = itemsList;
+            this.pluginsList = itemsList;
         }
 
         #endregion
@@ -73,9 +73,9 @@ namespace ForRest
                 return;
             }
 
-            this.textBoxPluginDescription.AppendText(this._pluginsList[this.listBoxPluginName.SelectedIndex][1]);
+            this.textBoxPluginDescription.AppendText(this.pluginsList[this.listBoxPluginName.SelectedIndex][1]);
             this.textBoxPluginDescription.AppendText("\r\n\r\nAdvanced Information\r\n");
-            this.textBoxPluginDescription.AppendText(this._pluginsList[this.listBoxPluginName.SelectedIndex][2]);
+            this.textBoxPluginDescription.AppendText(this.pluginsList[this.listBoxPluginName.SelectedIndex][2]);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace ForRest
         private void LoadPluginListBox()
         {
             this.listBoxPluginName.Items.Clear();
-            foreach (string[] t in this._pluginsList)
+            foreach (string[] t in this.pluginsList)
             {
                 this.listBoxPluginName.Items.Add(t[0]);
             }

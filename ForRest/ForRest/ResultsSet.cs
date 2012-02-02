@@ -21,9 +21,9 @@ namespace ForRest
         #region Constants and Fields
 
         /// <summary>
-        /// The _provider.
+        /// The provider.
         /// </summary>
-        private readonly Provider.Provider _provider;
+        private readonly Provider.Provider provider;
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace ForRest
         public ResultsSet(Provider.Provider provider)
         {
             this.InitializeComponent();
-            this._provider = provider;
+            this.provider = provider;
             this.dataGridViewResultsSet.ColumnHeadersBorderStyle = ProperColumnHeadersBorderStyle;
         }
 
@@ -74,7 +74,7 @@ namespace ForRest
         /// </param>
         private void ResultsSetLoad(object sender, EventArgs e)
         {
-            this.dataGridViewResultsSet.DataSource = this._provider.PerformanceSets;
+            this.dataGridViewResultsSet.DataSource = this.provider.PerformanceSets;
             this.dataGridViewResultsSet.Columns[0].HeaderText = "Tree name";
             this.dataGridViewResultsSet.Columns[1].HeaderText = "Type of the tree";
             this.dataGridViewResultsSet.Columns[2].HeaderText = "Number of nodes";

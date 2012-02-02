@@ -22,34 +22,34 @@ namespace ForRest
         #region Constants and Fields
 
         /// <summary>
-        /// The _multiselect.
+        /// The multiselect.
         /// </summary>
-        private readonly bool _multiselect;
+        private readonly bool multiselect;
 
         /// <summary>
-        /// The _provider.
+        /// The provider.
         /// </summary>
-        private readonly Provider.Provider _provider = new Provider.Provider();
+        private readonly Provider.Provider provider = new Provider.Provider();
 
         /// <summary>
-        /// The _dt type.
+        /// The data type.
         /// </summary>
-        private string _dtType;
+        private string dtType;
 
         /// <summary>
-        /// The _file path.
+        /// The file path.
         /// </summary>
-        private string _filePath;
+        private string filePath;
 
         /// <summary>
-        /// The _file paths.
+        /// The file paths.
         /// </summary>
-        private string[] _filePaths;
+        private string[] filePaths;
 
         /// <summary>
-        /// The _sep.
+        /// The sep.
         /// </summary>
-        private char _sep;
+        private char sep;
 
         #endregion
 
@@ -64,8 +64,8 @@ namespace ForRest
         public OpenDialog(Provider.Provider provider)
         {
             this.InitializeComponent();
-            this._provider = provider;
-            this._multiselect = false;
+            this.provider = provider;
+            this.multiselect = false;
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace ForRest
         public OpenDialog(Provider.Provider provider, bool multiselect)
         {
             this.InitializeComponent();
-            this._provider = provider;
-            this._multiselect = multiselect;
+            this.provider = provider;
+            this.multiselect = multiselect;
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace ForRest
             /// <summary>
             /// The text.
             /// </summary>
-            Text = 0, 
+            Text = 0,
 
             /// <summary>
             /// The numeric.
@@ -112,12 +112,12 @@ namespace ForRest
             /// <summary>
             /// The comma.
             /// </summary>
-            Comma = 0, 
+            Comma = 0,
 
             /// <summary>
             /// The semicolon.
             /// </summary>
-            Semicolon, 
+            Semicolon,
 
             /// <summary>
             /// The colon.
@@ -142,7 +142,7 @@ namespace ForRest
         {
             if (this.comboBoxDataType.SelectedItem != null && this.comboBoxSeparator.SelectedItem != null)
             {
-                if (this._multiselect == false)
+                if (this.multiselect == false)
                 {
                     this.openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
                     this.openFileDialog.FilterIndex = 1;
@@ -150,20 +150,20 @@ namespace ForRest
                     DialogResult result = this.openFileDialog.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        this._filePath = this.openFileDialog.FileName;
+                        this.filePath = this.openFileDialog.FileName;
                         this.textBoxFile.Clear();
-                        this.textBoxFile.Text = this._filePath;
+                        this.textBoxFile.Text = this.filePath;
                         var separator = (Separator)this.comboBoxSeparator.SelectedIndex;
                         switch (separator)
                         {
                             case Separator.Comma:
-                                this._sep = ',';
+                                this.sep = ',';
                                 break;
                             case Separator.Colon:
-                                this._sep = ':';
+                                this.sep = ':';
                                 break;
                             case Separator.Semicolon:
-                                this._sep = ';';
+                                this.sep = ';';
                                 break;
                         }
 
@@ -171,10 +171,10 @@ namespace ForRest
                         switch (dataType)
                         {
                             case DataType.Numeric:
-                                this._dtType = "Numeric";
+                                this.dtType = "Numeric";
                                 break;
                             case DataType.Text:
-                                this._dtType = "Text";
+                                this.dtType = "Text";
                                 break;
                         }
                     }
@@ -195,20 +195,20 @@ namespace ForRest
                     DialogResult result = this.openFileDialog.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        this._filePaths = this.openFileDialog.FileNames;
+                        this.filePaths = this.openFileDialog.FileNames;
                         this.textBoxFile.Clear();
                         this.textBoxFile.Text = "Multiple files selected";
                         var separator = (Separator)this.comboBoxSeparator.SelectedIndex;
                         switch (separator)
                         {
                             case Separator.Comma:
-                                this._sep = ',';
+                                this.sep = ',';
                                 break;
                             case Separator.Colon:
-                                this._sep = ':';
+                                this.sep = ':';
                                 break;
                             case Separator.Semicolon:
-                                this._sep = ';';
+                                this.sep = ';';
                                 break;
                         }
 
@@ -216,10 +216,10 @@ namespace ForRest
                         switch (dataType)
                         {
                             case DataType.Numeric:
-                                this._dtType = "Numeric";
+                                this.dtType = "Numeric";
                                 break;
                             case DataType.Text:
-                                this._dtType = "Text";
+                                this.dtType = "Text";
                                 break;
                         }
                     }
@@ -241,24 +241,24 @@ namespace ForRest
         /// </summary>
         private void ProcessFile()
         {
-            if (this._multiselect == false)
+            if (this.multiselect == false)
             {
-                if (this._dtType != null && this._filePath != null)
+                if (this.dtType != null && this.filePath != null)
                 {
-                    if (this._dtType.Equals("Text"))
+                    if (this.dtType.Equals("Text"))
                     {
                         var owner = (MainForm)this.Owner;
                         owner.Mode = 0;
-                        this._provider.TextData = this._provider.LoadTextData(this._filePath, this._sep);
+                        this.provider.TextData = this.provider.LoadTextData(this.filePath, this.sep);
                     }
-                    else if (this._dtType.Equals("Numeric"))
+                    else if (this.dtType.Equals("Numeric"))
                     {
                         var owner = (MainForm)this.Owner;
                         owner.Mode = 1;
-                        this._provider.NumericData = this._provider.LoadNumericData(this._filePath, this._sep);
+                        this.provider.NumericData = this.provider.LoadNumericData(this.filePath, this.sep);
                     }
 
-                    if (this._provider.TextData.Count > 0 || this._provider.NumericData.Count > 0)
+                    if (this.provider.TextData.Count > 0 || this.provider.NumericData.Count > 0)
                     {
                         this.pictureBoxLoadStatus.BackColor = Color.Green;
                         this.labelError.ResetText();
@@ -280,28 +280,28 @@ namespace ForRest
             }
             else
             {
-                if (this._dtType != null && this._filePaths != null)
+                if (this.dtType != null && this.filePaths != null)
                 {
-                    if (this._dtType.Equals("Text"))
+                    if (this.dtType.Equals("Text"))
                     {
                         var owner = (BatchProcess)this.Owner;
                         owner.Mode = 0;
-                        foreach (var filePath in this._filePaths)
+                        foreach (var path in this.filePaths)
                         {
-                            this._provider.BatchTextData.Add(this._provider.LoadTextData(filePath, this._sep));
+                            this.provider.BatchTextData.Add(this.provider.LoadTextData(path, this.sep));
                         }
                     }
-                    else if (this._dtType.Equals("Numeric"))
+                    else if (this.dtType.Equals("Numeric"))
                     {
                         var owner = (BatchProcess)this.Owner;
                         owner.Mode = 1;
-                        foreach (var filePath in this._filePaths)
+                        foreach (var path in this.filePaths)
                         {
-                            this._provider.BatchNumericData.Add(this._provider.LoadNumericData(filePath, this._sep));
+                            this.provider.BatchNumericData.Add(this.provider.LoadNumericData(path, this.sep));
                         }
                     }
 
-                    if (this._provider.BatchTextData.Count > 0 || this._provider.BatchNumericData.Count > 0)
+                    if (this.provider.BatchTextData.Count > 0 || this.provider.BatchNumericData.Count > 0)
                     {
                         this.pictureBoxLoadStatus.BackColor = Color.Green;
                         this.labelError.ResetText();

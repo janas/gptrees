@@ -26,7 +26,7 @@ namespace ForRest
         /// <summary>
         /// The _run application.
         /// </summary>
-        private bool _runApplication;
+        private bool runApplication;
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace ForRest
         private void CloseApplication()
         {
             var timer = new Timer(5000);
-            switch (this._runApplication)
+            switch (this.runApplication)
             {
                 case false:
                     timer.Elapsed += this.TimerElapsedFalse;
@@ -84,14 +84,14 @@ namespace ForRest
             {
                 this.labelFound1.Visible = true;
                 this.labelMeassage.Visible = true;
-                this._runApplication = true;
+                this.runApplication = true;
             }
 
             if (!File.Exists(providerDll))
             {
                 this.labelNotFound1.Visible = true;
                 this.labelError.Visible = true;
-                this._runApplication = false;
+                this.runApplication = false;
             }
 
             if (File.Exists(gleeDll))
