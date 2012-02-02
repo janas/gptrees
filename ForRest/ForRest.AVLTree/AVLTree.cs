@@ -154,31 +154,34 @@ namespace ForRest.AVLTree
         /// </param>
         /// <returns>
         /// </returns>
-        public override List<int> Contains(T data)
+        public override SearchResult Contains(T data)
         {
-            var path = new List<int>();
+            SearchResult searchResult;
+            searchResult.searchPath = new List<int>();
+            searchResult.nodesVisited = 0;
             AVLTreeNode<T> current = this._root;
             while (current != null)
             {
+                searchResult.nodesVisited++;
                 int result = this._comparer.Compare(current.Values[0], data);
                 if (result == 0)
                 {
-                    return path;
+                    return searchResult;
                 }
 
                 if (result > 0)
                 {
                     current = current.Left;
-                    path.Add(0);
+                    searchResult.searchPath.Add(0);
                 }
                 else
                 {
                     current = current.Right;
-                    path.Add(1);
+                    searchResult.searchPath.Add(1);
                 }
             }
-
-            return null;
+            searchResult.searchPath = null;
+            return searchResult;
         }
 
         /// <summary>

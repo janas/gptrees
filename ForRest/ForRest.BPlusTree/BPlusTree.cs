@@ -116,7 +116,7 @@ namespace ForRest.BPlusTree
             else
             {
                 BPlusTreeNode<T> node = this.Insert(this._root, data);
-                while (node.Parent != null)
+                while (node != null && node.Parent != null)
                 {
                     node = (BPlusTreeNode<T>)node.Parent;
                 }
@@ -141,29 +141,34 @@ namespace ForRest.BPlusTree
         /// </param>
         /// <returns>
         /// </returns>
-        public override List<int> Contains(T data)
+        public override SearchResult Contains(T data)
         {
-            var path = new List<int>();
+            SearchResult searchResult;
+            searchResult.searchPath = new List<int>();
+            searchResult.nodesVisited = 0;
             BPlusTreeNode<T> current = this._root;
             while (current != null)
             {
+                searchResult.nodesVisited++;
                 for (int i = 0; i < current.Values.Count; i++)
                 {
                     int result = this._comparer.Compare(current.Values[i], data);
                     if (result == 0)
                     {
-                        return path;
+                        return searchResult;
                     }
 
                     if (result > 0)
                     {
                         if (current.Neighbors == null)
                         {
-                            return null;
+                            searchResult.searchPath = null;
+
+                            return searchResult;
                         }
 
                         current = (BPlusTreeNode<T>)current.Neighbors[i];
-                        path.Add(i);
+                        searchResult.searchPath.Add(i);
                         break;
                     }
 
@@ -171,17 +176,20 @@ namespace ForRest.BPlusTree
                     {
                         if (current.Neighbors == null)
                         {
-                            return null;
+                            searchResult.searchPath = null;
+
+                            return searchResult;
                         }
 
                         current = (BPlusTreeNode<T>)current.Neighbors[i + 1];
-                        path.Add(i + 1);
+                        searchResult.searchPath.Add(i + 1);
                         break;
                     }
                 }
             }
+            searchResult.searchPath = null;
 
-            return null;
+            return searchResult;
         }
 
         /// <summary>

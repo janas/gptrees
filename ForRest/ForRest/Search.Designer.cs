@@ -82,15 +82,15 @@
             this.labelNodes.Size = new System.Drawing.Size(36, 13);
             this.labelNodes.TabIndex = 2;
             this.labelNodes.Text = "nodes";
-            this.labelNodes.Visible = false;
             // 
             // labelTime
             // 
             this.labelTime.AutoSize = true;
-            this.labelTime.Location = new System.Drawing.Point(6, 54);
+            this.labelTime.Location = new System.Drawing.Point(86, 26);
             this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(0, 13);
+            this.labelTime.Size = new System.Drawing.Size(26, 13);
             this.labelTime.TabIndex = 2;
+            this.labelTime.Text = "time";
             // 
             // labelNodesVisited
             // 
@@ -100,7 +100,6 @@
             this.labelNodesVisited.Size = new System.Drawing.Size(75, 13);
             this.labelNodesVisited.TabIndex = 2;
             this.labelNodesVisited.Text = "Nodes Visited:";
-            this.labelNodesVisited.Visible = false;
             // 
             // labelTimeElapsed
             // 

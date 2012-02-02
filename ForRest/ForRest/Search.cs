@@ -101,6 +101,9 @@ namespace ForRest
                     this.InitializeGleeGraph();
                     break;
             }
+
+            this.labelTime.ResetText();
+            this.labelNodes.ResetText();
         }
 
         #endregion
@@ -403,12 +406,14 @@ namespace ForRest
         /// </param>
         private void BackgroundWorkerSearchDoWork(object sender, DoWorkEventArgs e)
         {
-            List<int> result = null;
+            SearchResult searchResult;
+            searchResult.nodesVisited = -1;
+            searchResult.searchPath = null;
             var treeObject = e.Argument as TreeObject;
             var searchPerformer = new SearchPerformer(this.provider, this.backgroundWorkerSearch);
             if (treeObject != null && (treeObject.Type.Equals("text") && this.textBoxSearchFor.Text != null))
             {
-                result = searchPerformer.GenericSearch(treeObject, textBoxSearchFor.Text);
+                searchResult = searchPerformer.GenericSearch(treeObject, textBoxSearchFor.Text);
             }
             else if (treeObject != null && (treeObject.Type.Equals("numeric") && this.textBoxSearchFor.Text != null))
             {
@@ -416,11 +421,11 @@ namespace ForRest
                 if (double.TryParse(
                     this.textBoxSearchFor.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
                 {
-                    result = searchPerformer.GenericSearch(treeObject, numericValue);
+                    searchResult = searchPerformer.GenericSearch(treeObject, numericValue);
                 }
             }
 
-            e.Result = result;
+            e.Result = searchResult;
         }
 
         /// <summary>
@@ -434,9 +439,11 @@ namespace ForRest
         /// </param>
         private void BackgroundWorkerSearchProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            var progress = (string)e.UserState;
+            var progress = (string[])e.UserState;
             labelTime.ResetText();
-            labelTime.Text = progress;
+            labelTime.Text = progress[0];
+            labelNodes.ResetText();
+            labelNodes.Text = progress[1];
         }
 
         /// <summary>
@@ -451,8 +458,8 @@ namespace ForRest
         private void BackgroundWorkerSearchRunWorkerCompleted(
             object sender, RunWorkerCompletedEventArgs e)
         {
-            var result = e.Result as List<int>;
-            this.ShowTree(ref result);
+            var result = (SearchResult)e.Result;
+            this.ShowTree(ref result.searchPath);
             this.btnSearch.Enabled = true;
         }
 

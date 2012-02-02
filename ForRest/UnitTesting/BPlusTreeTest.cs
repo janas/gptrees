@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
+using ForRest.Provider.BLL;
+
 namespace UnitTesting
 {
     
@@ -80,9 +82,8 @@ namespace UnitTesting
             target.Add(5);
             target.Add(6);
             target.Add(data);
-            List<int> actual;
-            actual = target.Contains(data);
-            Assert.IsNotNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -130,9 +131,8 @@ namespace UnitTesting
             target.Add(5);
             target.Add(6);
             target.Add(data);
-            List<int> actual;
-            actual = target.Contains(data);
-            Assert.IsNotNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -155,8 +155,8 @@ namespace UnitTesting
             target.Add(4);
             target.Add(5);
             target.Remove(data);
-            List<int> actual = target.Contains(data);
-            Assert.IsNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]

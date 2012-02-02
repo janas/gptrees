@@ -80,8 +80,8 @@ namespace ForRest.BLL
         /// </typeparam>
         public void GenericBatchSearch<T>(List<T> searchItems, string type)
         {
-            List<int> result = null;
             Stopwatch watch = null;
+            SearchResult searchResult;
 
             this.counter = 1;
             this.denominator = this.provider.BatchTreeObject.Count * searchItems.Count;
@@ -99,19 +99,19 @@ namespace ForRest.BLL
                     {
                         watch = new Stopwatch();
                         watch.Start();
-                        result = treeObject.TextTree.Contains(item as string);
+                        searchResult = treeObject.TextTree.Contains(item as string);
                         watch.Stop();
                     }
-                    else if (type.Equals("numeric"))
+                    else //if (type.Equals("numeric"))
                     {
                         watch = new Stopwatch();
                         watch.Start();
-                        result = treeObject.NumericTree.Contains((double)(object)item);
+                        searchResult = treeObject.NumericTree.Contains((double)(object)item);
                         watch.Stop();
                     }
 
                     PerformanceSet performanceSet;
-                    if (result != null)
+                    if (searchResult.searchPath != null)
                     {
                         performanceSet = new PerformanceSet
                             {
@@ -119,7 +119,7 @@ namespace ForRest.BLL
                                 SearchTime = watch.ElapsedMilliseconds.ToString(), 
                                 TypeOfNodes = this.CheckNodeType(type), 
                                 TypeOfTree = this.GetTreeType(treeObject), 
-                                NoOfNodes = "notImplemented"
+                                NoOfNodes = searchResult.nodesVisited.ToString()
                             };
                         this.provider.BatchPerformanceSet.Add(performanceSet);
                         var currentDateTime = DateTime.Now.TimeOfDay.ToString();
@@ -137,7 +137,7 @@ namespace ForRest.BLL
                                 SearchTime = watch.ElapsedMilliseconds + "/Not Found", 
                                 TypeOfNodes = this.CheckNodeType(type), 
                                 TypeOfTree = this.GetTreeType(treeObject), 
-                                NoOfNodes = "notImplemented"
+                                NoOfNodes = searchResult.nodesVisited.ToString()
                             };
                         this.provider.BatchPerformanceSet.Add(performanceSet);
                         var currentDateTime = DateTime.Now.TimeOfDay.ToString();
@@ -169,18 +169,19 @@ namespace ForRest.BLL
         /// <returns>
         /// Returns list of type int containing path to node, null if not found.
         /// </returns>
-        public List<int> GenericSearch<T>(TreeObject treeObject, T searchItem)
+        public SearchResult GenericSearch<T>(TreeObject treeObject, T searchItem)
         {
-            List<int> result;
             Stopwatch watch;
             PerformanceSet performanceSet;
+            SearchResult searchResult;
             string type;
+            string[] progress = new string[2];
 
             if (typeof(T) == typeof(string))
             {
                 watch = new Stopwatch();
                 watch.Start();
-                result = treeObject.TextTree.Contains(searchItem as string);
+                searchResult = treeObject.TextTree.Contains(searchItem as string);
                 watch.Stop();
                 type = "text";
             }
@@ -188,12 +189,12 @@ namespace ForRest.BLL
             {
                 watch = new Stopwatch();
                 watch.Start();
-                result = treeObject.NumericTree.Contains((double)(object)searchItem);
+                searchResult = treeObject.NumericTree.Contains((double)(object)searchItem);
                 watch.Stop();
                 type = "numeric";
             }
             
-            if (result != null)
+            if (searchResult.searchPath != null)
             {
                 performanceSet = new PerformanceSet
                 {
@@ -201,10 +202,11 @@ namespace ForRest.BLL
                     SearchTime = watch.ElapsedMilliseconds.ToString(),
                     TypeOfNodes = this.CheckNodeType(type),
                     TypeOfTree = this.GetTreeType(treeObject),
-                    NoOfNodes = "notImplemented"
+                    NoOfNodes = searchResult.nodesVisited.ToString()
                 };
                 this.provider.PerformanceSets.Add(performanceSet);
-                var progress = watch.ElapsedMilliseconds + " ms";
+                progress[0] = watch.ElapsedMilliseconds + " ms";
+                progress[1] = searchResult.nodesVisited.ToString();
                 this.backgroundWorker.ReportProgress(0, progress);
             }
             else
@@ -215,14 +217,15 @@ namespace ForRest.BLL
                     SearchTime = watch.ElapsedMilliseconds + "/Not Found",
                     TypeOfNodes = this.CheckNodeType(type),
                     TypeOfTree = this.GetTreeType(treeObject),
-                    NoOfNodes = "notImplemented"
+                    NoOfNodes = searchResult.nodesVisited.ToString()
                 };
                 this.provider.PerformanceSets.Add(performanceSet);
-                var progress = watch.ElapsedMilliseconds + " ms - Item not found";
+                progress[0] = watch.ElapsedMilliseconds + " ms/NF";
+                progress[1] = searchResult.nodesVisited.ToString();
                 this.backgroundWorker.ReportProgress(0, progress);
             }
 
-            return result;
+            return searchResult;
         }
 
         #endregion
