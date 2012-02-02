@@ -12,11 +12,11 @@ namespace ForRest
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Globalization;
     using System.Windows.Forms;
 
+    using ForRest.BLL;
     using ForRest.Provider.BLL;
 
     using Microsoft.Glee.Drawing;
@@ -38,34 +38,34 @@ namespace ForRest
         private const int GraphPanelMarkLineWidth = 2;
 
         /// <summary>
-        /// The _graph panel mark color.
+        /// The graph panel mark color.
         /// </summary>
-        private readonly Color _graphPanelMarkColor = Color.Green;
+        private readonly Color graphPanelMarkColor = Color.Green;
 
         /// <summary>
-        /// The _provider.
+        /// The provider.
         /// </summary>
-        private readonly Provider.Provider _provider;
+        private readonly Provider.Provider provider;
 
         /// <summary>
-        /// The _glee graph.
+        /// The glee graph.
         /// </summary>
-        private Graph _gleeGraph;
+        private Graph gleeGraph;
 
         /// <summary>
-        /// The _glee graph viewer.
+        /// The glee graph viewer.
         /// </summary>
-        private GViewer _gleeGraphViewer;
+        private GViewer gleeGraphViewer;
 
         /// <summary>
-        /// The _graph panel.
+        /// The graph panel.
         /// </summary>
-        private Panel _graphPanel;
+        private Panel graphPanel;
 
         /// <summary>
-        /// The _tree view create.
+        /// The tree view create.
         /// </summary>
-        private TreeView _treeViewCreate;
+        private TreeView treeViewCreate;
 
         #endregion
 
@@ -83,18 +83,21 @@ namespace ForRest
         public Search(Provider.Provider provider, int graphMode)
         {
             this.InitializeComponent();
-            this._provider = provider;
+            this.provider = provider;
             this.GraphMode = graphMode;
             this.FillSelectedTreeComboBox();
             switch (this.GraphMode)
             {
                 case 0:
-                    this.InitializeTreeView();
+                    // do nothing
                     break;
                 case 1:
-                    this.InitializeGraph();
+                    this.InitializeTreeView();
                     break;
                 case 2:
+                    this.InitializeGraph();
+                    break;
+                case 3:
                     this.InitializeGleeGraph();
                     break;
             }
@@ -121,40 +124,57 @@ namespace ForRest
             switch (this.GraphMode)
             {
                 case 0:
-                    if (this._graphPanel != null)
+                    if (this.treeViewCreate != null)
                     {
-                        this.Controls.Remove(this._graphPanel);
+                        this.Controls.Remove(this.treeViewCreate);
                     }
 
-                    if (this._gleeGraphViewer != null)
+                    if (this.graphPanel != null)
                     {
-                        this.Controls.Remove(this._gleeGraphViewer);
+                        this.Controls.Remove(this.graphPanel);
+                    }
+
+                    if (this.gleeGraphViewer != null)
+                    {
+                        this.Controls.Remove(this.gleeGraphViewer);
+                    }
+
+                    break;
+                case 1:
+                    if (this.graphPanel != null)
+                    {
+                        this.Controls.Remove(this.graphPanel);
+                    }
+
+                    if (this.gleeGraphViewer != null)
+                    {
+                        this.Controls.Remove(this.gleeGraphViewer);
                     }
 
                     this.InitializeTreeView();
                     break;
-                case 1:
-                    if (this._treeViewCreate != null)
+                case 2:
+                    if (this.treeViewCreate != null)
                     {
-                        this.Controls.Remove(this._treeViewCreate);
+                        this.Controls.Remove(this.treeViewCreate);
                     }
 
-                    if (this._gleeGraphViewer != null)
+                    if (this.gleeGraphViewer != null)
                     {
-                        this.Controls.Remove(this._gleeGraphViewer);
+                        this.Controls.Remove(this.gleeGraphViewer);
                     }
 
                     this.InitializeGraph();
                     break;
-                case 2:
-                    if (this._treeViewCreate != null)
+                case 3:
+                    if (this.treeViewCreate != null)
                     {
-                        this.Controls.Remove(this._treeViewCreate);
+                        this.Controls.Remove(this.treeViewCreate);
                     }
 
-                    if (this._graphPanel != null)
+                    if (this.graphPanel != null)
                     {
-                        this.Controls.Remove(this._graphPanel);
+                        this.Controls.Remove(this.graphPanel);
                     }
 
                     this.InitializeGleeGraph();
@@ -171,7 +191,7 @@ namespace ForRest
         public void FillSelectedTreeComboBox()
         {
             this.comboBoxSelectTree.Items.Clear();
-            foreach (var treeObject in this._provider.TreeObjects)
+            foreach (var treeObject in this.provider.TreeObjects)
             {
                 this.comboBoxSelectTree.Items.Add(treeObject);
                 this.comboBoxSelectTree.DisplayMember = "Name";
@@ -289,115 +309,6 @@ namespace ForRest
         }
 
         /// <summary>
-        /// The background worker search do work.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void BackgroundWorkerSearchDoWork(object sender, DoWorkEventArgs e)
-        {
-            var treeObject = e.Argument as TreeObject;
-            if (treeObject != null && (treeObject.Type.Equals("text") && this.textBoxSearchFor.Text != null))
-            {
-                var watch = new Stopwatch();
-                string textValue = this.textBoxSearchFor.Text;
-                watch.Start();
-                List<int> result = treeObject.TextTree.Contains(textValue);
-                watch.Stop();
-                if (result != null)
-                {
-                    var peroformanceSet = new PerformanceSet();
-                    this.labelTime.Invoke((MethodInvoker)(() => this.labelTime.ResetText()));
-                    this.labelTime.Invoke(
-                        (MethodInvoker)(() => this.labelTime.Text = watch.ElapsedMilliseconds + " ms"));
-                    peroformanceSet.TreeName = treeObject.Name;
-                    peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
-                    peroformanceSet.TypeOfNodes = "String";
-                    peroformanceSet.TypeOfTree = treeObject.TextTree.TreeType;
-                    peroformanceSet.NoOfNodes = "notImplemented";
-                    this._provider.PerformanceSets.Add(peroformanceSet);
-                }
-                else
-                {
-                    var peroformanceSet = new PerformanceSet();
-                    this.labelTime.Invoke((MethodInvoker)(() => this.labelTime.ResetText()));
-                    this.labelTime.Invoke(
-                        (MethodInvoker)(() => this.labelTime.Text = watch.ElapsedMilliseconds + " ms - Item not found "));
-                    peroformanceSet.TreeName = treeObject.Name;
-                    peroformanceSet.SearchTime = watch.ElapsedMilliseconds + "/Not Found";
-                    peroformanceSet.TypeOfNodes = "String";
-                    peroformanceSet.TypeOfTree = treeObject.TextTree.TreeType;
-                    peroformanceSet.NoOfNodes = "notImplemented";
-                    this._provider.PerformanceSets.Add(peroformanceSet);
-                }
-
-                e.Result = result;
-            }
-            else if (treeObject != null && (treeObject.Type.Equals("numeric") && this.textBoxSearchFor.Text != null))
-            {
-                var watch = new Stopwatch();
-                double numericValue;
-                if (double.TryParse(
-                    this.textBoxSearchFor.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
-                {
-                    watch.Start();
-                    List<int> result = treeObject.NumericTree.Contains(numericValue);
-                    watch.Stop();
-                    if (result != null)
-                    {
-                        var peroformanceSet = new PerformanceSet();
-                        this.labelTime.Invoke((MethodInvoker)(() => this.labelTime.ResetText()));
-                        this.labelTime.Invoke(
-                            (MethodInvoker)(() => this.labelTime.Text = watch.ElapsedMilliseconds + " ms"));
-                        peroformanceSet.TreeName = treeObject.Name;
-                        peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
-                        peroformanceSet.TypeOfNodes = "Double";
-                        peroformanceSet.TypeOfTree = treeObject.NumericTree.TreeType;
-                        peroformanceSet.NoOfNodes = "notImplemented";
-                        this._provider.PerformanceSets.Add(peroformanceSet);
-                    }
-                    else
-                    {
-                        var peroformanceSet = new PerformanceSet();
-                        this.labelTime.Invoke((MethodInvoker)(() => this.labelTime.ResetText()));
-                        this.labelTime.Invoke(
-                            (MethodInvoker)
-                            (() => this.labelTime.Text = watch.ElapsedMilliseconds + " ms - Item not found "));
-                        peroformanceSet.TreeName = treeObject.Name;
-                        peroformanceSet.SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture)
-                                                     + "/Not Found";
-                        peroformanceSet.TypeOfNodes = "Double";
-                        peroformanceSet.TypeOfTree = treeObject.NumericTree.TreeType;
-                        peroformanceSet.NoOfNodes = "notImplemented";
-                        this._provider.PerformanceSets.Add(peroformanceSet);
-                    }
-
-                    e.Result = result;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The background worker search run worker completed.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void BackgroundWorkerSearchRunWorkerCompleted(
-            object sender, RunWorkerCompletedEventArgs e)
-        {
-            var result = e.Result as List<int>;
-            this.ShowTree(ref result);
-            this.btnSearch.Enabled = true;
-        }
-
-        /// <summary>
         /// The btn reset results set click.
         /// </summary>
         /// <param name="sender">
@@ -408,7 +319,7 @@ namespace ForRest
         /// </param>
         private void BtnResetResultsSetClick(object sender, EventArgs e)
         {
-            this._provider.PerformanceSets.Clear();
+            this.provider.PerformanceSets.Clear();
         }
 
         /// <summary>
@@ -424,10 +335,10 @@ namespace ForRest
         {
             if (this.comboBoxSelectTree.SelectedItem != null)
             {
-                double numericValue;
                 var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
                 if (treeObject.Type.Equals("numeric") && this.textBoxSearchFor.Text != null)
                 {
+                    double numericValue;
                     if (
                         !double.TryParse(
                             this.textBoxSearchFor.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
@@ -440,6 +351,7 @@ namespace ForRest
 
                 this.btnSearch.Enabled = false;
                 this.backgroundWorkerSearch.RunWorkerAsync(treeObject);
+                Application.DoEvents();
             }
             else
             {
@@ -460,7 +372,7 @@ namespace ForRest
         /// </param>
         private void BtnShowResultsSetClick(object sender, EventArgs e)
         {
-            var resultsSet = new ResultsSet(this._provider);
+            var resultsSet = new ResultsSet(this.provider);
             resultsSet.ShowDialog();
         }
 
@@ -477,16 +389,278 @@ namespace ForRest
         {
             List<int> result = null;
             this.ShowTree(ref result);
-            if (this.comboBoxSelectTree.SelectedItem == null)
+            this.btnSearch.Enabled = this.comboBoxSelectTree.SelectedItem != null;
+        }
+        
+        /// <summary>
+        /// The background worker search do work.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BackgroundWorkerSearchDoWork(object sender, DoWorkEventArgs e)
+        {
+            List<int> result = null;
+            var treeObject = e.Argument as TreeObject;
+            var searchPerformer = new SearchPerformer(this.provider, this.backgroundWorkerSearch);
+            if (treeObject != null && (treeObject.Type.Equals("text") && this.textBoxSearchFor.Text != null))
             {
-                this.btnSearch.Enabled = false;
+                result = searchPerformer.GenericSearch(treeObject, textBoxSearchFor.Text);
             }
-            else
+            else if (treeObject != null && (treeObject.Type.Equals("numeric") && this.textBoxSearchFor.Text != null))
             {
-                this.btnSearch.Enabled = true;
+                double numericValue;
+                if (double.TryParse(
+                    this.textBoxSearchFor.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
+                {
+                    result = searchPerformer.GenericSearch(treeObject, numericValue);
+                }
             }
+
+            e.Result = result;
         }
 
+        /// <summary>
+        /// The background worker batch process progress changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void BackgroundWorkerSearchProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var progress = (string)e.UserState;
+            labelTime.ResetText();
+            labelTime.Text = progress;
+        }
+
+        /// <summary>
+        /// The background worker search run worker completed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BackgroundWorkerSearchRunWorkerCompleted(
+            object sender, RunWorkerCompletedEventArgs e)
+        {
+            var result = e.Result as List<int>;
+            this.ShowTree(ref result);
+            this.btnSearch.Enabled = true;
+        }
+
+        /// <summary>
+        /// The search form closing.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void SearchFormClosing(object sender, FormClosingEventArgs e)
+        {
+            var mainForm = (MainForm)this.MdiParent;
+            mainForm.SearchClosing();
+        }
+
+        /// <summary>
+        /// The search resize.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void SearchResize(object sender, EventArgs e)
+        {
+            List<int> result = null;
+            this.ShowTree(ref result);
+        }
+        
+        /// <summary>
+        /// The initialize tree view.
+        /// </summary>
+        private void InitializeTreeView()
+        {
+            this.treeViewCreate = new TreeView
+                {
+                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right,
+                    Location = new Point(195, 16),
+                    Name = "treeViewCreate",
+                    Size = new Size(this.Width - 220, this.Height - 65),
+                };
+            this.Controls.Add(this.treeViewCreate);
+        }
+
+        /// <summary>
+        /// The initialize graph.
+        /// </summary>
+        private void InitializeGraph()
+        {
+            this.graphPanel = new Panel
+                {
+                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
+                    Location = new Point(195, 16), 
+                    Name = "graphPanel", 
+                    Size = new Size(this.Width - 220, this.Height - 65), 
+                    AutoScroll = true
+                };
+            this.Controls.Add(this.graphPanel);
+        }
+
+        /// <summary>
+        /// The initialize glee graph.
+        /// </summary>
+        private void InitializeGleeGraph()
+        {
+            this.gleeGraphViewer = new GViewer
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right,
+                AsyncLayout = false,
+                AutoScroll = true,
+                BackwardEnabled = false,
+                ForwardEnabled = false,
+                Graph = null,
+                Location = new Point(195, 16),
+                MouseHitDistance = 0.05D,
+                Name = "graphViewer",
+                NavigationVisible = true,
+                PanButtonPressed = false,
+                SaveButtonVisible = true,
+                Size = new Size(this.Width - 220, this.Height - 65),
+                ZoomF = 1D,
+                ZoomFraction = 0.5D,
+                ZoomWindowThreshold = 0.05D
+            };
+            this.Controls.Add(this.gleeGraphViewer);
+        }
+
+        /// <summary>
+        /// The show tree.
+        /// </summary>
+        /// <param name="result">
+        /// The result.
+        /// </param>
+        private void ShowTree(ref List<int> result)
+        {
+            switch (this.GraphMode)
+            {
+                case 0:
+                    // do nothing
+                    break;
+                case 1:
+                    this.ShowTreeView();
+                    break;
+                case 2:
+                    this.DrawGraph(ref result);
+                    break;
+                case 3:
+                    this.DrawGleeGraph(ref result);
+                    break;
+            }
+        }
+        
+        /// <summary>
+        /// The show tree view.
+        /// </summary>
+        private void ShowTreeView()
+        {
+            this.treeViewCreate.Nodes.Clear();
+            if (this.comboBoxSelectTree.SelectedItem == null)
+            {
+                return;
+            }
+
+            var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
+            if (treeObject.Type.Equals("text"))
+            {
+                ITree<string> iTree = treeObject.TextTree;
+                TreeNode tn;
+                if (iTree.Root == null)
+                {
+                    return;
+                }
+
+                string print = iTree.Root.NodeInfo;
+                for (int i = 0; i < iTree.Root.Values.Count; i++)
+                {
+                    print += iTree.Root.Values[i] + " ";
+                }
+
+                if (NextLevel(iTree.Root) == null)
+                {
+                    tn = new TreeNode(print);
+                }
+                else
+                {
+                    tn = new TreeNode(print, NextLevel(iTree.Root));
+                }
+
+                this.treeViewCreate.Nodes.Add(tn);
+                this.treeViewCreate.ExpandAll();
+            }
+
+            if (treeObject.Type.Equals("numeric"))
+            {
+                ITree<double> iTree = treeObject.NumericTree;
+                TreeNode tn;
+                if (iTree.Root == null)
+                {
+                    return;
+                }
+
+                string print = iTree.Root.NodeInfo;
+                for (int i = 0; i < iTree.Root.Values.Count; i++)
+                {
+                    print += iTree.Root.Values[i] + " ";
+                }
+
+                if (NextLevel(iTree.Root) == null)
+                {
+                    tn = new TreeNode(print);
+                }
+                else
+                {
+                    tn = new TreeNode(print, NextLevel(iTree.Root));
+                }
+                this.treeViewCreate.Nodes.Add(tn);
+                this.treeViewCreate.ExpandAll();
+            }
+        }
+        
+        /// <summary>
+        /// The draw graph.
+        /// </summary>
+        /// <param name="result">
+        /// The result.
+        /// </param>
+        private void DrawGraph(ref List<int> result)
+        {
+            this.graphPanel.Controls.Clear();
+            var treeObject = comboBoxSelectTree.SelectedItem as TreeObject;
+            if (treeObject != null && treeObject.Type.Equals("text"))
+            {
+                ITree<string> iTree = treeObject.TextTree;
+                var rootRectangle = new Rectangle(5, 5, this.graphPanel.Width - 27, 24);
+                this.NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
+            }
+            else if (treeObject != null && treeObject.Type.Equals("numeric"))
+            {
+                ITree<double> iTree = treeObject.NumericTree;
+                var rootRectangle = new Rectangle(5, 5, this.graphPanel.Width - 27, 24);
+                this.NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
+            }
+        }
+        
         /// <summary>
         /// The draw glee graph.
         /// </summary>
@@ -502,7 +676,7 @@ namespace ForRest
 
             var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
             string graphName = treeObject.Name;
-            this._gleeGraph = new Graph(graphName);
+            this.gleeGraph = new Graph(graphName);
             if (treeObject.Type.Equals("text"))
             {
                 ITree<string> iTree = treeObject.TextTree;
@@ -512,7 +686,7 @@ namespace ForRest
                     return;
                 }
 
-                Node root = this._gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
+                Node root = this.gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
                 string rootText = string.Empty;
                 for (int i = 0; i < iTreeRoot.Values.Count; i++)
                 {
@@ -528,10 +702,10 @@ namespace ForRest
                 if (result != null)
                 {
                     root.Attr.Color = new Microsoft.Glee.Drawing.Color(
-                        this._graphPanelMarkColor.A, 
-                        this._graphPanelMarkColor.R, 
-                        this._graphPanelMarkColor.G, 
-                        this._graphPanelMarkColor.B);
+                        this.graphPanelMarkColor.A,
+                        this.graphPanelMarkColor.R,
+                        this.graphPanelMarkColor.G,
+                        this.graphPanelMarkColor.B);
                     root.Attr.LineWidth = GraphPanelMarkLineWidth;
                 }
                 else
@@ -551,7 +725,7 @@ namespace ForRest
                     return;
                 }
 
-                Node root = this._gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
+                Node root = this.gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
                 string rootText = string.Empty;
                 for (int i = 0; i < iTreeRoot.Values.Count; i++)
                 {
@@ -567,10 +741,10 @@ namespace ForRest
                 if (result != null)
                 {
                     root.Attr.Color = new Microsoft.Glee.Drawing.Color(
-                        this._graphPanelMarkColor.A, 
-                        this._graphPanelMarkColor.R, 
-                        this._graphPanelMarkColor.G, 
-                        this._graphPanelMarkColor.B);
+                        this.graphPanelMarkColor.A,
+                        this.graphPanelMarkColor.R,
+                        this.graphPanelMarkColor.G,
+                        this.graphPanelMarkColor.B);
                     root.Attr.LineWidth = GraphPanelMarkLineWidth;
                 }
                 else
@@ -582,106 +756,7 @@ namespace ForRest
                 this.NextGleeNodes(iTreeRoot, ref result);
             }
 
-            this._gleeGraphViewer.Graph = this._gleeGraph;
-        }
-
-        /// <summary>
-        /// The draw graph.
-        /// </summary>
-        /// <param name="result">
-        /// The result.
-        /// </param>
-        private void DrawGraph(ref List<int> result)
-        {
-            this._graphPanel.Invoke((MethodInvoker)(() => this._graphPanel.Controls.Clear()));
-            object comboBoxSelectTreeSelectedItem = null;
-            if (this.comboBoxSelectTree.InvokeRequired)
-            {
-                this.comboBoxSelectTree.Invoke(
-                    new MethodInvoker(
-                        delegate { comboBoxSelectTreeSelectedItem = this.comboBoxSelectTree.SelectedItem; }));
-            }
-            else
-            {
-                comboBoxSelectTreeSelectedItem = this.comboBoxSelectTree.SelectedItem;
-            }
-
-            if (comboBoxSelectTreeSelectedItem == null)
-            {
-                return;
-            }
-
-            var treeObject = (TreeObject)comboBoxSelectTreeSelectedItem;
-            if (treeObject.Type.Equals("text"))
-            {
-                ITree<string> iTree = treeObject.TextTree;
-                var rootRectangle = new Rectangle(5, 5, this._graphPanel.Width - 27, 24);
-                this.NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
-            }
-            else if (treeObject.Type.Equals("numeric"))
-            {
-                ITree<double> iTree = treeObject.NumericTree;
-                var rootRectangle = new Rectangle(5, 5, this._graphPanel.Width - 27, 24);
-                this.NextControls(rootRectangle, 0, iTree.Root, ref result, -1);
-            }
-        }
-
-        /// <summary>
-        /// The initialize glee graph.
-        /// </summary>
-        private void InitializeGleeGraph()
-        {
-            this._gleeGraphViewer = new GViewer
-                {
-                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
-                    AsyncLayout = false, 
-                    AutoScroll = true, 
-                    BackwardEnabled = false, 
-                    ForwardEnabled = false, 
-                    Graph = null, 
-                    Location = new Point(195, 16), 
-                    MouseHitDistance = 0.05D, 
-                    Name = "graphViewer", 
-                    NavigationVisible = true, 
-                    PanButtonPressed = false, 
-                    SaveButtonVisible = true, 
-                    Size = new Size(this.Width - 220, this.Height - 65), 
-                    ZoomF = 1D, 
-                    ZoomFraction = 0.5D, 
-                    ZoomWindowThreshold = 0.05D
-                };
-            this.Controls.Add(this._gleeGraphViewer);
-        }
-
-        /// <summary>
-        /// The initialize graph.
-        /// </summary>
-        private void InitializeGraph()
-        {
-            this._graphPanel = new Panel
-                {
-                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
-                    Location = new Point(195, 16), 
-                    Name = "graphPanel", 
-                    Size = new Size(this.Width - 220, this.Height - 65), 
-                    AutoScroll = true
-                };
-            this.Controls.Add(this._graphPanel);
-        }
-
-        /// <summary>
-        /// The initialize tree view.
-        /// </summary>
-        private void InitializeTreeView()
-        {
-            this._treeViewCreate = new TreeView
-                {
-                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
-                    Location = new Point(195, 16), 
-                    Name = "treeViewCreate", 
-                    Size = new Size(this.Width - 220, this.Height - 65), 
-                };
-            this.Controls.Add(this._treeViewCreate);
+            this.gleeGraphViewer.Graph = this.gleeGraph;
         }
 
         /// <summary>
@@ -721,7 +796,7 @@ namespace ForRest
             if (result != null && (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
                 ucn = new UserControlNode(
-                    text, node.NodeInfo, rectangle, this._graphPanelMarkColor, GraphPanelMarkLineWidth);
+                    text, node.NodeInfo, rectangle, this.graphPanelMarkColor, GraphPanelMarkLineWidth);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -849,7 +924,7 @@ namespace ForRest
                     UserControlEdge uce;
                     if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
                     {
-                        uce = new UserControlEdge(ltr, this._graphPanelMarkColor, GraphPanelMarkLineWidth);
+                        uce = new UserControlEdge(ltr, this.graphPanelMarkColor, GraphPanelMarkLineWidth);
                         allEdgesMarked = true;
                     }
                     else
@@ -859,7 +934,7 @@ namespace ForRest
 
                     uce.Location = e.Location;
                     uce.Size = e.Size;
-                    this._graphPanel.Controls.Add(uce);
+                    this.graphPanel.Controls.Add(uce);
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -886,7 +961,7 @@ namespace ForRest
                 }
             }
 
-            this._graphPanel.Controls.Add(ucn);
+            this.graphPanel.Controls.Add(ucn);
         }
 
         /// <summary>
@@ -926,7 +1001,7 @@ namespace ForRest
             if (result != null && (result.Count == 0 || result[0] == nodeIndex || nodeIndex == -1))
             {
                 ucn = new UserControlNode(
-                    text, node.NodeInfo, rectangle, this._graphPanelMarkColor, GraphPanelMarkLineWidth);
+                    text, node.NodeInfo, rectangle, this.graphPanelMarkColor, GraphPanelMarkLineWidth);
                 if (nodeIndex > -1)
                 {
                     if (result.Count < 2)
@@ -1054,7 +1129,7 @@ namespace ForRest
                     UserControlEdge uce;
                     if (result != null && result.Count > 0 && result[0] == j && !allEdgesMarked)
                     {
-                        uce = new UserControlEdge(ltr, this._graphPanelMarkColor, GraphPanelMarkLineWidth);
+                        uce = new UserControlEdge(ltr, this.graphPanelMarkColor, GraphPanelMarkLineWidth);
                         allEdgesMarked = true;
                     }
                     else
@@ -1064,7 +1139,7 @@ namespace ForRest
 
                     uce.Location = e.Location;
                     uce.Size = e.Size;
-                    this._graphPanel.Controls.Add(uce);
+                    this.graphPanel.Controls.Add(uce);
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -1091,7 +1166,7 @@ namespace ForRest
                 }
             }
 
-            this._graphPanel.Controls.Add(ucn);
+            this.graphPanel.Controls.Add(ucn);
         }
 
         /// <summary>
@@ -1123,7 +1198,7 @@ namespace ForRest
                     }
 
                     string childHashCode = node.Neighbors[j].GetHashCode().ToString();
-                    Node child = this._gleeGraph.FindNode(childHashCode);
+                    Node child = this.gleeGraph.FindNode(childHashCode);
                     if (child == null)
                     {
                         string childText = string.Empty;
@@ -1137,15 +1212,15 @@ namespace ForRest
                             childText += node.Neighbors[j].Values[i].ToString();
                         }
 
-                        child = this._gleeGraph.AddNode(childHashCode);
+                        child = this.gleeGraph.AddNode(childHashCode);
                         child.Attr.Label = childText;
                         if (result != null && result.Count > 0 && result[0] == j)
                         {
                             child.Attr.Color = new Microsoft.Glee.Drawing.Color(
-                                this._graphPanelMarkColor.A, 
-                                this._graphPanelMarkColor.R, 
-                                this._graphPanelMarkColor.G, 
-                                this._graphPanelMarkColor.B);
+                                this.graphPanelMarkColor.A, 
+                                this.graphPanelMarkColor.R, 
+                                this.graphPanelMarkColor.G, 
+                                this.graphPanelMarkColor.B);
                             child.Attr.LineWidth = GraphPanelMarkLineWidth;
                         }
                         else
@@ -1163,14 +1238,14 @@ namespace ForRest
                     }
 
                     // Draw edge
-                    Edge edge = this._gleeGraph.AddEdge(parentHashCode, childHashCode);
+                    Edge edge = this.gleeGraph.AddEdge(parentHashCode, childHashCode);
                     if (result != null && result.Count > 0 && result[0] == j)
                     {
                         edge.Attr.Color = new Microsoft.Glee.Drawing.Color(
-                            this._graphPanelMarkColor.A, 
-                            this._graphPanelMarkColor.R, 
-                            this._graphPanelMarkColor.G, 
-                            this._graphPanelMarkColor.B);
+                            this.graphPanelMarkColor.A, 
+                            this.graphPanelMarkColor.R, 
+                            this.graphPanelMarkColor.G, 
+                            this.graphPanelMarkColor.B);
                         edge.Attr.LineWidth = GraphPanelMarkLineWidth;
                     }
                 }
@@ -1225,7 +1300,7 @@ namespace ForRest
                     }
 
                     string childHashCode = node.Neighbors[j].GetHashCode().ToString();
-                    Node child = this._gleeGraph.FindNode(childHashCode);
+                    Node child = this.gleeGraph.FindNode(childHashCode);
                     if (child == null)
                     {
                         string childText = string.Empty;
@@ -1239,15 +1314,15 @@ namespace ForRest
                             childText += node.Neighbors[j].Values[i];
                         }
 
-                        child = this._gleeGraph.AddNode(childHashCode);
+                        child = this.gleeGraph.AddNode(childHashCode);
                         child.Attr.Label = childText;
                         if (result != null && result.Count > 0 && result[0] == j)
                         {
                             child.Attr.Color = new Microsoft.Glee.Drawing.Color(
-                                this._graphPanelMarkColor.A, 
-                                this._graphPanelMarkColor.R, 
-                                this._graphPanelMarkColor.G, 
-                                this._graphPanelMarkColor.B);
+                                this.graphPanelMarkColor.A, 
+                                this.graphPanelMarkColor.R, 
+                                this.graphPanelMarkColor.G, 
+                                this.graphPanelMarkColor.B);
                             child.Attr.LineWidth = GraphPanelMarkLineWidth;
                         }
                         else
@@ -1265,14 +1340,14 @@ namespace ForRest
                     }
 
                     // Draw edge
-                    Edge edge = this._gleeGraph.AddEdge(parentHashCode, childHashCode);
+                    Edge edge = this.gleeGraph.AddEdge(parentHashCode, childHashCode);
                     if (result != null && result.Count > 0 && result[0] == j)
                     {
                         edge.Attr.Color = new Microsoft.Glee.Drawing.Color(
-                            this._graphPanelMarkColor.A, 
-                            this._graphPanelMarkColor.R, 
-                            this._graphPanelMarkColor.G, 
-                            this._graphPanelMarkColor.B);
+                            this.graphPanelMarkColor.A, 
+                            this.graphPanelMarkColor.R, 
+                            this.graphPanelMarkColor.G, 
+                            this.graphPanelMarkColor.B);
                         edge.Attr.LineWidth = GraphPanelMarkLineWidth;
                     }
                 }
@@ -1295,127 +1370,6 @@ namespace ForRest
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// The search form closing.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void SearchFormClosing(object sender, FormClosingEventArgs e)
-        {
-            var mainForm = (MainForm)this.MdiParent;
-            mainForm.SearchClosing();
-        }
-
-        /// <summary>
-        /// The search resize.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void SearchResize(object sender, EventArgs e)
-        {
-            List<int> result = null;
-            this.ShowTree(ref result);
-        }
-
-        /// <summary>
-        /// The show tree.
-        /// </summary>
-        /// <param name="result">
-        /// The result.
-        /// </param>
-        private void ShowTree(ref List<int> result)
-        {
-            switch (this.GraphMode)
-            {
-                case 0:
-                    this.ShowTreeView();
-                    break;
-                case 1:
-                    this.DrawGraph(ref result);
-                    break;
-                case 2:
-                    this.DrawGleeGraph(ref result);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// The show tree view.
-        /// </summary>
-        private void ShowTreeView()
-        {
-            this._treeViewCreate.Nodes.Clear();
-            if (this.comboBoxSelectTree.SelectedItem == null)
-            {
-                return;
-            }
-
-            var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
-            if (treeObject.Type.Equals("text"))
-            {
-                ITree<string> iTree = treeObject.TextTree;
-                TreeNode tn;
-                if (iTree.Root == null)
-                {
-                    return;
-                }
-
-                string print = iTree.Root.NodeInfo;
-                for (int i = 0; i < iTree.Root.Values.Count; i++)
-                {
-                    print += iTree.Root.Values[i] + " ";
-                }
-
-                if (NextLevel(iTree.Root) == null)
-                {
-                    tn = new TreeNode(print);
-                }
-                else
-                {
-                    tn = new TreeNode(print, NextLevel(iTree.Root));
-                }
-
-                this._treeViewCreate.Nodes.Add(tn);
-                this._treeViewCreate.ExpandAll();
-            }
-
-            if (treeObject.Type.Equals("numeric"))
-            {
-                ITree<double> iTree = treeObject.NumericTree;
-                TreeNode tn;
-                if (iTree.Root == null)
-                {
-                    return;
-                }
-
-                string print = iTree.Root.NodeInfo;
-                for (int i = 0; i < iTree.Root.Values.Count; i++)
-                {
-                    print += iTree.Root.Values[i] + " ";
-                }
-
-                if (NextLevel(iTree.Root) == null)
-                {
-                    tn = new TreeNode(print);
-                }
-                else
-                {
-                    tn = new TreeNode(print, NextLevel(iTree.Root));
-                }
-
-                this._treeViewCreate.Nodes.Add(tn);
-                this._treeViewCreate.ExpandAll();
             }
         }
 

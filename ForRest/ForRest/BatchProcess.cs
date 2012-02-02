@@ -12,13 +12,13 @@ namespace ForRest
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Globalization;
+    using System.Linq;
     using System.Threading;
     using System.Windows.Forms;
 
-    using ForRest.Provider.BLL;
+    using ForRest.BLL;
 
     /// <summary>
     /// The batch process.
@@ -28,19 +28,19 @@ namespace ForRest
         #region Constants and Fields
 
         /// <summary>
-        /// The _numeric items.
+        /// The provider.
         /// </summary>
-        private readonly List<double> _numericItems = new List<double>();
+        private readonly Provider.Provider provider;
 
         /// <summary>
-        /// The _provider.
+        /// The numeric items.
         /// </summary>
-        private readonly Provider.Provider _provider;
+        private List<double> numericItems;
 
         /// <summary>
-        /// The _is help shown.
+        /// The is help shown.
         /// </summary>
-        private bool _isHelpShown = true;
+        private bool isHelpShown = true;
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace ForRest
             this.InitializeComponent();
             this.PrepareDialog();
             this.InitializeEditBox();
-            this._provider = provider;
+            this.provider = provider;
             this.IsAdd = false;
         }
 
@@ -97,9 +97,10 @@ namespace ForRest
         /// </param>
         public void UpdateLogOnCreate(int noOfTrees, string treeType, string groupTreeName)
         {
+            var currentDateTime = DateTime.Now.TimeOfDay.ToString();
             this.textBoxLog.AppendText(
-                "[" + DateTime.Now.TimeOfDay + "]" + "\t" + noOfTrees + " tree(s) created, type of " + treeType
-                + ", group tree name " + groupTreeName + ".\n");
+                "[" + currentDateTime.Substring(0, 13) + "]" + "\t" + noOfTrees + " tree(s) created, type of "
+                + treeType + ", group tree name " + groupTreeName + "." + Environment.NewLine);
         }
 
         #endregion
@@ -117,145 +118,40 @@ namespace ForRest
         /// </param>
         private void BackgroundWorkerBatchProcessDoWork(object sender, DoWorkEventArgs e)
         {
-            string comboBoxDataTypeSelectedItem = string.Empty;
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            if (this.comboBoxDataType.InvokeRequired)
+            var threadId = Thread.CurrentThread.ManagedThreadId;
+            var currentDateTime = DateTime.Now.TimeOfDay.ToString();
+            backgroundWorkerBatchProcess.ReportProgress(
+                0,
+                "[" + currentDateTime.Substring(0, 13) + "]" + "\tThread ID " + threadId + " started." + Environment.NewLine);
+            var type = e.Argument as string;
+            var searchPerformer = new SearchPerformer(this.provider, this.backgroundWorkerBatchProcess);
+            if (type != null && type.Equals("Text"))
             {
-                this.comboBoxDataType.Invoke(
-                    new MethodInvoker(
-                        delegate { comboBoxDataTypeSelectedItem = this.comboBoxDataType.SelectedItem.ToString(); }));
+                searchPerformer.GenericBatchSearch(this.ListBoxToList(), "text");
             }
             else
             {
-                comboBoxDataTypeSelectedItem = this.comboBoxDataType.SelectedItem.ToString();
-            }
-
-            this.textBoxLog.Invoke(
-                (MethodInvoker)
-                (() =>
-                 this.textBoxLog.AppendText(
-                     "[" + DateTime.Now.TimeOfDay + "]" + "\tThread ID " + threadId + " is started.\n")));
-            switch (comboBoxDataTypeSelectedItem)
-            {
-                case "Text":
-                    foreach (var item in this.listBoxSearchItems.Items)
-                    {
-                        foreach (var batchTextTree in this._provider.BatchTreeObject)
-                        {
-                            if (!batchTextTree.Type.Equals("text"))
-                            {
-                                continue;
-                            }
-
-                            var watch = new Stopwatch();
-                            watch.Start();
-                            List<int> result = batchTextTree.TextTree.Contains(item.ToString());
-                            watch.Stop();
-                            if (result != null)
-                            {
-                                var peroformanceSet = new PerformanceSet
-                                    {
-                                        TreeName = batchTextTree.Name, 
-                                        SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture), 
-                                        TypeOfNodes = "String", 
-                                        TypeOfTree = batchTextTree.TextTree.TreeType, 
-                                        NoOfNodes = "notImplemented"
-                                    };
-                                this._provider.BatchPerformanceSet.Add(peroformanceSet);
-
-                                this.textBoxLog.Invoke(
-                                    (MethodInvoker)
-                                    (() =>
-                                     this.textBoxLog.AppendText(
-                                         "[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: " + batchTextTree.Name
-                                         + " Value: " + item + " Found in " + watch.ElapsedMilliseconds
-                                         + " ms for tree type: " + batchTextTree.TextTree.TreeType + "\n")));
-                            }
-                            else
-                            {
-                                var peroformanceSet = new PerformanceSet
-                                    {
-                                        TreeName = batchTextTree.Name, 
-                                        SearchTime = watch.ElapsedMilliseconds + "/Not Found", 
-                                        TypeOfNodes = "String", 
-                                        TypeOfTree = batchTextTree.TextTree.TreeType, 
-                                        NoOfNodes = "notImplemented"
-                                    };
-                                this._provider.BatchPerformanceSet.Add(peroformanceSet);
-
-                                this.textBoxLog.Invoke(
-                                    (MethodInvoker)
-                                    (() =>
-                                     this.textBoxLog.AppendText(
-                                         "[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: " + batchTextTree.Name
-                                         + " Value: " + item + " Not found in " + watch.ElapsedMilliseconds
-                                         + " ms for tree type: " + batchTextTree.TextTree.TreeType + "\n")));
-                            }
-                        }
-                    }
-
-                    break;
-                case "Numeric":
-                    foreach (var item in this._numericItems)
-                    {
-                        foreach (var batchNumericTree in this._provider.BatchTreeObject)
-                        {
-                            if (!batchNumericTree.Type.Equals("numeric"))
-                            {
-                                continue;
-                            }
-
-                            var watch = new Stopwatch();
-                            watch.Start();
-                            List<int> result = batchNumericTree.NumericTree.Contains(item);
-                            watch.Stop();
-                            if (result != null)
-                            {
-                                var performanceSet = new PerformanceSet
-                                    {
-                                        TreeName = batchNumericTree.Name, 
-                                        SearchTime = watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture), 
-                                        TypeOfNodes = "Double", 
-                                        TypeOfTree = batchNumericTree.NumericTree.TreeType, 
-                                        NoOfNodes = "notImplemented"
-                                    };
-                                this._provider.BatchPerformanceSet.Add(performanceSet);
-                                this.textBoxLog.Invoke(
-                                    (MethodInvoker)
-                                    (() =>
-                                     this.textBoxLog.AppendText(
-                                         "[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: "
-                                         + batchNumericTree.Name + " Value: " + item + " Found in "
-                                         + watch.ElapsedMilliseconds + " ms for tree type: "
-                                         + batchNumericTree.NumericTree.TreeType + "\n")));
-                            }
-                            else
-                            {
-                                var peroformanceSet = new PerformanceSet
-                                    {
-                                        TreeName = batchNumericTree.Name, 
-                                        SearchTime = watch.ElapsedMilliseconds + "/Not Found", 
-                                        TypeOfNodes = "Double", 
-                                        TypeOfTree = batchNumericTree.NumericTree.TreeType, 
-                                        NoOfNodes = "notImplemented"
-                                    };
-                                this._provider.BatchPerformanceSet.Add(peroformanceSet);
-                                this.textBoxLog.Invoke(
-                                    (MethodInvoker)
-                                    (() =>
-                                     this.textBoxLog.AppendText(
-                                         "[" + DateTime.Now.TimeOfDay + "]" + "\tGroup tree name: "
-                                         + batchNumericTree.Name + " Value: " + item + " Not found in "
-                                         + watch.ElapsedMilliseconds + " ms for tree type: "
-                                         + batchNumericTree.NumericTree.TreeType + "\n")));
-                            }
-                        }
-                    }
-
-                    break;
+                searchPerformer.GenericBatchSearch(this.numericItems, "numeric");
             }
 
             e.Result = Thread.CurrentThread.ManagedThreadId;
+        }
+
+        /// <summary>
+        /// The background worker batch process progress changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void BackgroundWorkerBatchProcessProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var progress = (string)e.UserState;
+            textBoxLog.AppendText(progress);
+
+            this.progressBarBatchSearch.Value = e.ProgressPercentage;
         }
 
         /// <summary>
@@ -267,16 +163,18 @@ namespace ForRest
         /// <param name="e">
         /// The e.
         /// </param>
-        private void BackgroundWorkerBatchProcessRunWorkerCompleted(
-            object sender, RunWorkerCompletedEventArgs e)
+        private void BackgroundWorkerBatchProcessRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.textBoxLog.Invoke(
-                (MethodInvoker)
-                (() =>
-                 this.textBoxLog.AppendText(
-                     "[" + DateTime.Now.TimeOfDay + "]" + "\tThread ID " + e.Result + " is done.\n")));
-            this.EnableExportButton();
-            this.btnBatchSearch.Enabled = true;
+            var currentDateTime = DateTime.Now.TimeOfDay.ToString();
+            this.textBoxLog.AppendText(
+                "[" + currentDateTime.Substring(0, 13) + "]" + "\tThread ID " + e.Result + " is done." + Environment.NewLine);
+            
+            if (!backgroundWorkerBatchProcess.IsBusy)
+            {
+                this.EnableExportButton();
+                this.listBoxSearchItems.Enabled = true;
+                this.btnBatchSearch.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -308,24 +206,29 @@ namespace ForRest
             bool result = this.ConvertToDouble();
             if (this.comboBoxDataType.SelectedItem.Equals("Numeric") && result == false)
             {
+                var currentDateTime = DateTime.Now.TimeOfDay.ToString();
                 this.textBoxLog.AppendText(
-                    "[" + DateTime.Now.TimeOfDay
-                    + "]\tNone value has been processed. Please provide correct input for numeric trees!\n");
+                    "[" + currentDateTime.Substring(0, 13)
+                    + "]\tNone value has been processed. Please provide correct input for numeric trees!"
+                    + Environment.NewLine);
             }
             else if (this.comboBoxDataType.SelectedItem.Equals("Numeric") && result)
             {
+                var currentDateTime = DateTime.Now.TimeOfDay.ToString();
                 this.textBoxLog.AppendText(
-                    "[" + DateTime.Now.TimeOfDay + "]\tSuccessfully converted " + this._numericItems.Count
-                    + " items out of " + this.listBoxSearchItems.Items.Count + " items.\n");
-                this.backgroundWorkerBatchProcess.RunWorkerAsync();
-                this.EnableExportButton();
+                    "[" + currentDateTime.Substring(0, 13) + "]\tSuccessfully converted " + this.numericItems.Count
+                    + " items out of " + this.listBoxSearchItems.Items.Count + " items." + Environment.NewLine);
+                this.listBoxSearchItems.Enabled = false;
                 this.btnBatchSearch.Enabled = false;
+                this.backgroundWorkerBatchProcess.RunWorkerAsync(this.comboBoxDataType.SelectedItem.Equals("Numeric"));
+                Application.DoEvents();
             }
             else if (this.comboBoxDataType.SelectedItem.Equals("Text"))
             {
-                this.backgroundWorkerBatchProcess.RunWorkerAsync();
-                this.EnableExportButton();
+                this.listBoxSearchItems.Enabled = false;
                 this.btnBatchSearch.Enabled = false;
+                this.backgroundWorkerBatchProcess.RunWorkerAsync(comboBoxDataType.SelectedItem.ToString());
+                Application.DoEvents();
             }
         }
 
@@ -340,12 +243,12 @@ namespace ForRest
         /// </param>
         private void BtnCreateNumericTreesClick(object sender, EventArgs e)
         {
-            if (this._provider.BatchNumericData.Count == 0)
+            if (this.provider.BatchNumericData.Count == 0)
             {
                 return;
             }
 
-            var addTree = new AddTree(this._provider, true, 1, true) { Owner = this };
+            var addTree = new AddTree(this.provider, true, 1, true) { Owner = this };
             addTree.ShowDialog();
             this.VerifyLayout();
         }
@@ -361,12 +264,12 @@ namespace ForRest
         /// </param>
         private void BtnCreateTextTreesClick(object sender, EventArgs e)
         {
-            if (this._provider.BatchTextData.Count == 0)
+            if (this.provider.BatchTextData.Count == 0)
             {
                 return;
             }
 
-            var addTree = new AddTree(this._provider, true, 0, true) { Owner = this };
+            var addTree = new AddTree(this.provider, true, 0, true) { Owner = this };
             addTree.ShowDialog();
             this.VerifyLayout();
         }
@@ -389,7 +292,7 @@ namespace ForRest
             DialogResult result = this.saveFileDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this._provider.WriteResults(this._provider.BatchPerformanceSet, this.saveFileDialog.FileName);
+                this.provider.WriteResults(this.provider.BatchPerformanceSet, this.saveFileDialog.FileName);
             }
         }
 
@@ -404,9 +307,10 @@ namespace ForRest
         /// </param>
         private void BtnOpenFilesClick(object sender, EventArgs e)
         {
-            var openDialog = new OpenDialog(this._provider, true) { Owner = this };
+            var openDialog = new OpenDialog(this.provider, true) { Owner = this };
             openDialog.ShowDialog();
-            this.textBoxLog.AppendText("[" + DateTime.Now.TimeOfDay + "]" + "\tFiles loaded.\n");
+            var currentDateTime = DateTime.Now.TimeOfDay.ToString();
+            this.textBoxLog.AppendText("[" + currentDateTime.Substring(0, 13) + "]" + "\tFiles loaded." + Environment.NewLine);
             this.EnableCreateButtons();
             this.PopulateComboBox();
         }
@@ -427,15 +331,16 @@ namespace ForRest
                 this.listBoxSearchItems.Enabled = true;
             }
 
-            if (this._isHelpShown)
+            if (this.isHelpShown)
             {
                 this.listBoxSearchItems.Items.Clear();
-                this._isHelpShown = false;
+                this.isHelpShown = false;
             }
 
+            var currentDateTime = DateTime.Now.TimeOfDay.ToString();
             this.textBoxLog.AppendText(
-                "[" + DateTime.Now.TimeOfDay + "]" + "\t" + this.comboBoxDataType.SelectedItem
-                + " data type selected.\n");
+                "[" + currentDateTime.Substring(0, 13) + "]" + "\t" + this.comboBoxDataType.SelectedItem
+                + " data type selected." + Environment.NewLine);
         }
 
         /// <summary>
@@ -446,16 +351,28 @@ namespace ForRest
         /// </returns>
         private bool ConvertToDouble()
         {
+            this.numericItems = new List<double>();
             foreach (var item in this.listBoxSearchItems.Items)
             {
                 double numericValue;
                 if (double.TryParse(item.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out numericValue))
                 {
-                    this._numericItems.Add(numericValue);
+                    this.numericItems.Add(numericValue);
                 }
             }
 
-            return this._numericItems.Count > 0;
+            return this.numericItems.Count > 0;
+        }
+
+        /// <summary>
+        /// Method that converts a listbox items into a string list.
+        /// </summary>
+        /// <returns>
+        /// Returns string list containing listbox items.
+        /// </returns>
+        private List<string> ListBoxToList()
+        {
+            return (from object item in this.listBoxSearchItems.Items select item.ToString()).ToList();
         }
 
         /// <summary>
@@ -516,22 +433,14 @@ namespace ForRest
         /// </summary>
         private void EnableCreateButtons()
         {
-            switch (this.Mode)
+            if (this.Mode == 0 && !this.btnCreateTextTrees.Enabled)
             {
-                case 0:
-                    if (this.btnCreateTextTrees.Enabled == false)
-                    {
-                        this.btnCreateTextTrees.Enabled = true;
-                    }
+                this.btnCreateTextTrees.Enabled = true;
+            }
 
-                    break;
-                case 1:
-                    if (this.btnCreateNumericTrees.Enabled == false)
-                    {
-                        this.btnCreateNumericTrees.Enabled = true;
-                    }
-
-                    break;
+            if (this.Mode == 1 && !this.btnCreateNumericTrees.Enabled)
+            {
+                this.btnCreateNumericTrees.Enabled = true;
             }
         }
 
@@ -545,7 +454,7 @@ namespace ForRest
                 return;
             }
 
-            if (this._provider.BatchPerformanceSet.Count > 0)
+            if (this.provider.BatchPerformanceSet.Count > 0)
             {
                 this.btnExport.Enabled = true;
             }
@@ -601,32 +510,32 @@ namespace ForRest
         /// </param>
         private void ListBoxSearchItemsEditOver(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 13)
+            if (e.KeyChar == 13 && this.IsAdd)
             {
-                switch (this.IsAdd)
+                if (this.listBoxSearchItems.Items.Contains(this.editBox.Text))
                 {
-                    case true:
-                        if (this.listBoxSearchItems.Items.Contains(this.editBox.Text))
-                        {
-                            return;
-                        }
-
-                        this.listBoxSearchItems.Items.Add(this.editBox.Text);
-                        this.editBox.Hide();
-                        break;
-                    case false:
-                        var itemSelected = this.listBoxSearchItems.SelectedIndex;
-                        this.listBoxSearchItems.Items[itemSelected] = this.editBox.Text;
-                        this.editBox.Hide();
-                        this.listBoxSearchItems.SelectedItem = null;
-                        break;
+                    return;
                 }
+
+                this.listBoxSearchItems.Items.Add(this.editBox.Text);
+                this.editBox.Hide();
+                this.listBoxSearchItems.SelectedIndex = listBoxSearchItems.Items.Count - 1;
+                this.listBoxSearchItems.SelectedIndex = -1;
+            }
+
+            if (e.KeyChar == 13 && !this.IsAdd)
+            {
+                var itemSelected = this.listBoxSearchItems.SelectedIndex;
+                this.listBoxSearchItems.Items[itemSelected] = this.editBox.Text;
+                this.editBox.Hide();
+                this.listBoxSearchItems.SelectedItem = null;
             }
 
             if (e.KeyChar == 27)
             {
                 this.editBox.Hide();
-                this.listBoxSearchItems.SelectedItem = null;
+                this.listBoxSearchItems.SelectedIndex = listBoxSearchItems.Items.Count - 1;
+                this.listBoxSearchItems.SelectedIndex = -1;
             }
 
             this.VerifyLayout();
@@ -643,23 +552,25 @@ namespace ForRest
         /// </param>
         private void ListBoxSearchItemsFocusOver(object sender, EventArgs e)
         {
-            switch (this.IsAdd)
+            if (this.IsAdd)
             {
-                case true:
-                    if (this.listBoxSearchItems.Items.Contains(this.editBox.Text))
-                    {
-                        return;
-                    }
+                if (this.listBoxSearchItems.Items.Contains(this.editBox.Text))
+                {
+                    return;
+                }
 
-                    this.listBoxSearchItems.Items.Add(this.editBox.Text);
-                    this.editBox.Hide();
-                    break;
-                case false:
-                    var itemSelected = this.listBoxSearchItems.SelectedIndex;
-                    this.listBoxSearchItems.Items[itemSelected] = this.editBox.Text;
-                    this.editBox.Hide();
-                    this.listBoxSearchItems.SelectedItem = null;
-                    break;
+                this.listBoxSearchItems.Items.Add(this.editBox.Text);
+                this.editBox.Hide();
+                this.listBoxSearchItems.SelectedIndex = listBoxSearchItems.Items.Count - 1;
+                this.listBoxSearchItems.SelectedIndex = -1;
+            }
+
+            if (!this.IsAdd)
+            {
+                var itemSelected = this.listBoxSearchItems.SelectedIndex;
+                this.listBoxSearchItems.Items[itemSelected] = this.editBox.Text;
+                this.editBox.Hide();
+                this.listBoxSearchItems.SelectedItem = null;
             }
 
             this.VerifyLayout();
@@ -679,18 +590,21 @@ namespace ForRest
             if (e.KeyData == Keys.F2)
             {
                 this.CreateEditBox(sender);
+                this.IsAdd = false;
             }
 
             if (e.KeyData == Keys.Delete && this.listBoxSearchItems.SelectedIndex != -1)
             {
                 this.listBoxSearchItems.Items.RemoveAt(this.listBoxSearchItems.SelectedIndex);
                 this.listBoxSearchItems.SelectedItem = null;
+                this.IsAdd = false;
             }
 
             if (e.KeyData == Keys.Escape)
             {
                 this.editBox.Hide();
                 this.listBoxSearchItems.SelectedItem = null;
+                this.IsAdd = false;
             }
 
             this.VerifyLayout();
@@ -707,28 +621,20 @@ namespace ForRest
         /// </param>
         private void ListBoxSearchItemsKeyPress(object sender, KeyPressEventArgs e)
         {
-            switch (this.IsAdd)
+            if (e.KeyChar == 13 && this.IsAdd)
             {
-                case true:
-                    if (e.KeyChar == 13)
-                    {
-                        this.CreateEditBoxAdd(sender);
-                    }
+                this.CreateEditBoxAdd(sender);
+            }
 
-                    break;
-                case false:
-                    if (e.KeyChar == 13)
-                    {
-                        this.CreateEditBox(sender);
-                    }
+            if (e.KeyChar == 13 && !this.IsAdd)
+            {
+                this.CreateEditBox(sender);
+            }
 
-                    if (e.KeyChar == 27)
-                    {
-                        this.editBox.Hide();
-                        this.listBoxSearchItems.SelectedItem = null;
-                    }
-
-                    break;
+            if (e.KeyChar == 27 && !this.IsAdd)
+            {
+                this.editBox.Hide();
+                this.listBoxSearchItems.SelectedItem = null;
             }
 
             this.VerifyLayout();
@@ -739,14 +645,24 @@ namespace ForRest
         /// </summary>
         private void PopulateComboBox()
         {
-            switch (this.Mode)
+            if (this.Mode == 0 && comboBoxDataType.Items.Contains("Text"))
             {
-                case 0:
-                    this.comboBoxDataType.Items.Add("Text");
-                    break;
-                case 1:
-                    this.comboBoxDataType.Items.Add("Numeric");
-                    break;
+                return;
+            }
+
+            if (this.Mode == 0 && !comboBoxDataType.Items.Contains("Text"))
+            {
+                this.comboBoxDataType.Items.Add("Text");
+            }
+
+            if (this.Mode == 1 && comboBoxDataType.Items.Contains("Numeric"))
+            {
+                return;
+            }
+
+            if (this.Mode == 1 && !comboBoxDataType.Items.Contains("Numeric"))
+            {
+                this.comboBoxDataType.Items.Add("Numeric");
             }
         }
 
@@ -768,29 +684,33 @@ namespace ForRest
         /// </summary>
         private void VerifyLayout()
         {
-            bool existBatchTextTree = false;
-            bool existBatchNumericTree = false;
-            foreach (var batchTree in _provider.BatchTreeObject)
+            var existBatchTextTree = false;
+            var existBatchNumericTree = false;
+            foreach (var batchTree in this.provider.BatchTreeObject)
             {
                 if (batchTree.Type.Equals("text"))
                 {
                     existBatchTextTree = true;
                 }
+
                 if (batchTree.Type.Equals("numeric"))
                 {
                     existBatchNumericTree = true;
                 }
+
                 if (existBatchTextTree && existBatchNumericTree)
                 {
                     break;
                 }
             }
+
             if (this.listBoxSearchItems.Enabled && this.listBoxSearchItems.Items.Count > 0
                 && (existBatchTextTree || existBatchNumericTree))
             {
                 this.btnBatchSearch.Enabled = true;
                 return;
             }
+
             this.btnBatchSearch.Enabled = false;
         }
 

@@ -89,9 +89,8 @@
             this.labelTime.AutoSize = true;
             this.labelTime.Location = new System.Drawing.Point(6, 54);
             this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(26, 13);
+            this.labelTime.Size = new System.Drawing.Size(0, 13);
             this.labelTime.TabIndex = 2;
-            this.labelTime.Text = "";
             // 
             // labelNodesVisited
             // 
@@ -187,7 +186,9 @@
             // 
             // backgroundWorkerSearch
             // 
+            this.backgroundWorkerSearch.WorkerReportsProgress = true;
             this.backgroundWorkerSearch.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerSearchDoWork);
+            this.backgroundWorkerSearch.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorkerSearchProgressChanged);
             this.backgroundWorkerSearch.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerSearchRunWorkerCompleted);
             // 
             // Search

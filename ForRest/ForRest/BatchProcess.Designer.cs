@@ -41,6 +41,7 @@
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.editBox = new System.Windows.Forms.TextBox();
             this.groupBoxLog = new System.Windows.Forms.GroupBox();
+            this.progressBarBatchSearch = new System.Windows.Forms.ProgressBar();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.backgroundWorkerBatchProcess = new System.ComponentModel.BackgroundWorker();
             this.groupBoxControlsBatchProcess.SuspendLayout();
@@ -77,9 +78,11 @@
             // listBoxSearchItems
             // 
             this.listBoxSearchItems.FormattingEnabled = true;
+            this.listBoxSearchItems.IntegralHeight = false;
             this.listBoxSearchItems.Location = new System.Drawing.Point(6, 251);
             this.listBoxSearchItems.Name = "listBoxSearchItems";
-            this.listBoxSearchItems.Size = new System.Drawing.Size(149, 134);
+            this.listBoxSearchItems.ScrollAlwaysVisible = true;
+            this.listBoxSearchItems.Size = new System.Drawing.Size(149, 130);
             this.listBoxSearchItems.TabIndex = 7;
             this.listBoxSearchItems.DoubleClick += new System.EventHandler(this.ListBoxSearchItemsDoubleClick);
             this.listBoxSearchItems.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxSearchItemsKeyDown);
@@ -156,7 +159,8 @@
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
-            this.textBoxLog.Size = new System.Drawing.Size(363, 413);
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxLog.Size = new System.Drawing.Size(363, 387);
             this.textBoxLog.TabIndex = 1;
             // 
             // editBox
@@ -171,6 +175,7 @@
             this.groupBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxLog.Controls.Add(this.progressBarBatchSearch);
             this.groupBoxLog.Controls.Add(this.textBoxLog);
             this.groupBoxLog.Location = new System.Drawing.Point(197, 12);
             this.groupBoxLog.Name = "groupBoxLog";
@@ -179,9 +184,20 @@
             this.groupBoxLog.TabStop = false;
             this.groupBoxLog.Text = "Actions Log";
             // 
+            // progressBarBatchSearch
+            // 
+            this.progressBarBatchSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarBatchSearch.Location = new System.Drawing.Point(6, 412);
+            this.progressBarBatchSearch.Name = "progressBarBatchSearch";
+            this.progressBarBatchSearch.Size = new System.Drawing.Size(363, 15);
+            this.progressBarBatchSearch.TabIndex = 2;
+            // 
             // backgroundWorkerBatchProcess
             // 
+            this.backgroundWorkerBatchProcess.WorkerReportsProgress = true;
             this.backgroundWorkerBatchProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerBatchProcessDoWork);
+            this.backgroundWorkerBatchProcess.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorkerBatchProcessProgressChanged);
             this.backgroundWorkerBatchProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerBatchProcessRunWorkerCompleted);
             // 
             // BatchProcess
@@ -222,5 +238,6 @@
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.ComponentModel.BackgroundWorker backgroundWorkerBatchProcess;
+        private System.Windows.Forms.ProgressBar progressBarBatchSearch;
     }
 }
