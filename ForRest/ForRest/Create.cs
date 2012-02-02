@@ -31,29 +31,29 @@ namespace ForRest
         #region Constants and Fields
 
         /// <summary>
-        /// The _provider.
+        /// The provider.
         /// </summary>
-        private readonly Provider.Provider _provider;
+        private readonly Provider.Provider provider;
 
         /// <summary>
-        /// The _glee graph.
+        /// The glee graph.
         /// </summary>
-        private Graph _gleeGraph;
+        private Graph gleeGraph;
 
         /// <summary>
-        /// The _glee graph viewer.
+        /// The glee graph viewer.
         /// </summary>
-        private GViewer _gleeGraphViewer;
+        private GViewer gleeGraphViewer;
 
         /// <summary>
-        /// The _graph panel.
+        /// The graph panel.
         /// </summary>
-        private Panel _graphPanel;
+        private Panel graphPanel;
 
         /// <summary>
-        /// The _tree view create.
+        /// The tree view create.
         /// </summary>
-        private TreeView _treeViewCreate;
+        private TreeView treeViewCreate;
 
         #endregion
 
@@ -74,19 +74,22 @@ namespace ForRest
         public Create(Provider.Provider provider, int mode, int graphMode)
         {
             this.InitializeComponent();
-            this._provider = provider;
+            this.provider = provider;
             this.Mode = mode;
             this.GraphMode = graphMode;
             this.FillSelectedTreeComboBox();
             switch (this.GraphMode)
             {
                 case 0:
-                    this.InitializeTreeView();
+                    // do nothing
                     break;
                 case 1:
-                    this.InitializeGraph();
+                    this.InitializeTreeView();
                     break;
                 case 2:
+                    this.InitializeGraph();
+                    break;
+                case 3:
                     this.InitializeGleeGraph();
                     break;
             }
@@ -118,40 +121,57 @@ namespace ForRest
             switch (this.GraphMode)
             {
                 case 0:
-                    if (this._graphPanel != null)
+                    if (this.treeViewCreate != null)
                     {
-                        this.Controls.Remove(this._graphPanel);
+                        this.Controls.Remove(this.treeViewCreate);
                     }
 
-                    if (this._gleeGraphViewer != null)
+                    if (this.graphPanel != null)
                     {
-                        this.Controls.Remove(this._gleeGraphViewer);
+                        this.Controls.Remove(this.graphPanel);
+                    }
+
+                    if (this.gleeGraphViewer != null)
+                    {
+                        this.Controls.Remove(this.gleeGraphViewer);
+                    }
+
+                    break;
+                case 1:
+                    if (this.graphPanel != null)
+                    {
+                        this.Controls.Remove(this.graphPanel);
+                    }
+
+                    if (this.gleeGraphViewer != null)
+                    {
+                        this.Controls.Remove(this.gleeGraphViewer);
                     }
 
                     this.InitializeTreeView();
                     break;
-                case 1:
-                    if (this._treeViewCreate != null)
+                case 2:
+                    if (this.treeViewCreate != null)
                     {
-                        this.Controls.Remove(this._treeViewCreate);
+                        this.Controls.Remove(this.treeViewCreate);
                     }
 
-                    if (this._gleeGraphViewer != null)
+                    if (this.gleeGraphViewer != null)
                     {
-                        this.Controls.Remove(this._gleeGraphViewer);
+                        this.Controls.Remove(this.gleeGraphViewer);
                     }
 
                     this.InitializeGraph();
                     break;
-                case 2:
-                    if (this._treeViewCreate != null)
+                case 3:
+                    if (this.treeViewCreate != null)
                     {
-                        this.Controls.Remove(this._treeViewCreate);
+                        this.Controls.Remove(this.treeViewCreate);
                     }
 
-                    if (this._graphPanel != null)
+                    if (this.graphPanel != null)
                     {
-                        this.Controls.Remove(this._graphPanel);
+                        this.Controls.Remove(this.graphPanel);
                     }
 
                     this.InitializeGleeGraph();
@@ -167,7 +187,7 @@ namespace ForRest
         public void FillSelectedTreeComboBox()
         {
             this.comboBoxSelectTree.Items.Clear();
-            foreach (var treeObject in this._provider.TreeObjects)
+            foreach (var treeObject in this.provider.TreeObjects)
             {
                 this.comboBoxSelectTree.Items.Add(treeObject);
                 this.comboBoxSelectTree.DisplayMember = "Name";
@@ -348,7 +368,7 @@ namespace ForRest
         /// </param>
         private void BtnAddTreeClick(object sender, EventArgs e)
         {
-            var addTree = new AddTree(this._provider, false) { Owner = this };
+            var addTree = new AddTree(this.provider, false) { Owner = this };
             addTree.ShowDialog();
             this.VerifyLayout();
         }
@@ -364,9 +384,9 @@ namespace ForRest
         /// </param>
         private void BtnAddTreeFromFileClick(object sender, EventArgs e)
         {
-            if (this._provider.NumericData.Count != 0 || this._provider.TextData.Count != 0)
+            if (this.provider.NumericData.Count != 0 || this.provider.TextData.Count != 0)
             {
-                var addTree = new AddTree(this._provider, true, this.Mode) { Owner = this };
+                var addTree = new AddTree(this.provider, true, this.Mode) { Owner = this };
                 addTree.ShowDialog();
             }
             else
@@ -471,7 +491,7 @@ namespace ForRest
             if (this.comboBoxSelectTree.SelectedItem != null)
             {
                 var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
-                this._provider.TreeObjects.Remove(treeObject);
+                this.provider.TreeObjects.Remove(treeObject);
                 this.FillSelectedTreeComboBox();
                 this.labelResult.ResetText();
                 this.labelResult.ForeColor = Color.Green;
@@ -531,6 +551,200 @@ namespace ForRest
         }
 
         /// <summary>
+        /// The verify layout.
+        /// </summary>
+        private void VerifyLayout()
+        {
+            this.ShowTree();
+            if (this.comboBoxSelectTree.SelectedItem == null)
+            {
+                this.btnRemoveTree.Enabled = false;
+                this.btnAddNode.Enabled = false;
+                this.btnRemoveNode.Enabled = false;
+            }
+            else
+            {
+                this.btnRemoveTree.Enabled = true;
+                this.btnAddNode.Enabled = true;
+                this.btnRemoveNode.Enabled = true;
+            }
+        }
+        
+        /// <summary>
+        /// The initialize tree view.
+        /// </summary>
+        private void InitializeTreeView()
+        {
+            this.treeViewCreate = new TreeView
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right,
+                Location = new Point(195, 16),
+                Name = "treeViewCreate",
+                Size = new Size(this.Width - 220, this.Height - 65),
+            };
+            this.Controls.Add(this.treeViewCreate);
+        }
+
+        /// <summary>
+        /// The initialize graph.
+        /// </summary>
+        private void InitializeGraph()
+        {
+            this.graphPanel = new Panel
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right,
+                Location = new Point(195, 16),
+                Name = "graphPanel",
+                Size = new Size(this.Width - 220, this.Height - 65),
+                AutoScroll = true
+            };
+            this.Controls.Add(this.graphPanel);
+        }
+
+        /// <summary>
+        /// The initialize glee graph.
+        /// </summary>
+        private void InitializeGleeGraph()
+        {
+            this.gleeGraphViewer = new GViewer
+            {
+                Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right,
+                AsyncLayout = false,
+                AutoScroll = true,
+                BackwardEnabled = false,
+                ForwardEnabled = false,
+                Graph = null,
+                Location = new Point(195, 16),
+                MouseHitDistance = 0.05D,
+                Name = "graphViewer",
+                NavigationVisible = true,
+                PanButtonPressed = false,
+                SaveButtonVisible = true,
+                Size = new Size(this.Width - 220, this.Height - 65),
+                ZoomF = 1D,
+                ZoomFraction = 0.5D,
+                ZoomWindowThreshold = 0.05D
+            };
+            this.Controls.Add(this.gleeGraphViewer);
+        }
+
+        /// <summary>
+        /// The show tree.
+        /// </summary>
+        private void ShowTree()
+        {
+            switch (this.GraphMode)
+            {
+                case 0:
+                    // do nothing
+                    break;
+                case 1:
+                    this.ShowTreeView();
+                    break;
+                case 2:
+                    this.DrawGraph();
+                    break;
+                case 3:
+                    this.DrawGleeGraph();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// The show tree view.
+        /// </summary>
+        private void ShowTreeView()
+        {
+            this.treeViewCreate.Nodes.Clear();
+            if (this.comboBoxSelectTree.SelectedItem == null)
+            {
+                return;
+            }
+
+            var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
+            if (treeObject.Type.Equals("text"))
+            {
+                ITree<string> iTree = treeObject.TextTree;
+                TreeNode tn;
+                if (iTree.Root == null)
+                {
+                    return;
+                }
+
+                string print = iTree.Root.NodeInfo;
+                for (int i = 0; i < iTree.Root.Values.Count; i++)
+                {
+                    print += iTree.Root.Values[i] + " ";
+                }
+
+                if (NextLevel(iTree.Root) == null)
+                {
+                    tn = new TreeNode(print);
+                }
+                else
+                {
+                    tn = new TreeNode(print, NextLevel(iTree.Root));
+                }
+
+                this.treeViewCreate.Nodes.Add(tn);
+                this.treeViewCreate.ExpandAll();
+            }
+
+            if (treeObject.Type.Equals("numeric"))
+            {
+                ITree<double> iTree = treeObject.NumericTree;
+                TreeNode tn;
+                if (iTree.Root == null)
+                {
+                    return;
+                }
+
+                string print = iTree.Root.NodeInfo;
+                for (int i = 0; i < iTree.Root.Values.Count; i++)
+                {
+                    print += iTree.Root.Values[i] + " ";
+                }
+
+                if (NextLevel(iTree.Root) == null)
+                {
+                    tn = new TreeNode(print);
+                }
+                else
+                {
+                    tn = new TreeNode(print, NextLevel(iTree.Root));
+                }
+
+                this.treeViewCreate.Nodes.Add(tn);
+                this.treeViewCreate.ExpandAll();
+            }
+        }
+        
+        /// <summary>
+        /// The draw graph.
+        /// </summary>
+        private void DrawGraph()
+        {
+            this.graphPanel.Controls.Clear();
+            if (this.comboBoxSelectTree.SelectedItem == null)
+            {
+                return;
+            }
+            var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
+            if (treeObject.Type.Equals("text"))
+            {
+                ITree<string> iTree = treeObject.TextTree;
+                var rootRectangle = new Rectangle(5, 5, this.graphPanel.Width - 27, 24);
+                NextControls(rootRectangle, 0, iTree.Root);
+            }
+            else if (treeObject.Type.Equals("numeric"))
+            {
+                ITree<double> iTree = treeObject.NumericTree;
+                var rootRectangle = new Rectangle(5, 5, this.graphPanel.Width - 27, 24);
+                NextControls(rootRectangle, 0, iTree.Root);
+            }
+        }
+        
+        /// <summary>
         /// The draw glee graph.
         /// </summary>
         private void DrawGleeGraph()
@@ -542,7 +756,7 @@ namespace ForRest
 
             var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
             string graphName = treeObject.Name;
-            this._gleeGraph = new Graph(graphName);
+            this.gleeGraph = new Graph(graphName);
             if (treeObject.Type.Equals("text"))
             {
                 ITree<string> iTree = treeObject.TextTree;
@@ -552,7 +766,7 @@ namespace ForRest
                     return;
                 }
 
-                Node root = this._gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
+                Node root = this.gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
                 string rootText = string.Empty;
                 for (int i = 0; i < iTreeRoot.Values.Count; i++)
                 {
@@ -567,7 +781,7 @@ namespace ForRest
                 root.Attr.Label = rootText;
                 root.Attr.Color = new Microsoft.Glee.Drawing.Color(
                     iTreeRoot.NodeColor.A, iTreeRoot.NodeColor.R, iTreeRoot.NodeColor.G, iTreeRoot.NodeColor.B);
-                NextGleeNodes(iTreeRoot);
+                this.NextGleeNodes(iTreeRoot);
             }
             else if (treeObject.Type.Equals("numeric"))
             {
@@ -578,7 +792,7 @@ namespace ForRest
                     return;
                 }
 
-                Node root = this._gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
+                Node root = this.gleeGraph.AddNode(iTreeRoot.GetHashCode().ToString());
                 string rootText = string.Empty;
                 for (int i = 0; i < iTreeRoot.Values.Count; i++)
                 {
@@ -596,91 +810,7 @@ namespace ForRest
                 NextGleeNodes(iTreeRoot);
             }
 
-            this._gleeGraphViewer.Graph = this._gleeGraph;
-        }
-
-        /// <summary>
-        /// The draw graph.
-        /// </summary>
-        private void DrawGraph()
-        {
-            this._graphPanel.Controls.Clear();
-            if (this.comboBoxSelectTree.SelectedItem == null)
-            {
-                return;
-            }
-
-            var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
-            if (treeObject.Type.Equals("text"))
-            {
-                ITree<string> iTree = treeObject.TextTree;
-                var rootRectangle = new Rectangle(5, 5, this._graphPanel.Width - 27, 24);
-                NextControls(rootRectangle, 0, iTree.Root);
-            }
-            else if (treeObject.Type.Equals("numeric"))
-            {
-                ITree<double> iTree = treeObject.NumericTree;
-                var rootRectangle = new Rectangle(5, 5, this._graphPanel.Width - 27, 24);
-                NextControls(rootRectangle, 0, iTree.Root);
-            }
-        }
-
-        /// <summary>
-        /// The initialize glee graph.
-        /// </summary>
-        private void InitializeGleeGraph()
-        {
-            this._gleeGraphViewer = new GViewer
-                {
-                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
-                    AsyncLayout = false, 
-                    AutoScroll = true, 
-                    BackwardEnabled = false, 
-                    ForwardEnabled = false, 
-                    Graph = null, 
-                    Location = new Point(195, 16), 
-                    MouseHitDistance = 0.05D, 
-                    Name = "graphViewer", 
-                    NavigationVisible = true, 
-                    PanButtonPressed = false, 
-                    SaveButtonVisible = true, 
-                    Size = new Size(this.Width - 220, this.Height - 65), 
-                    ZoomF = 1D, 
-                    ZoomFraction = 0.5D, 
-                    ZoomWindowThreshold = 0.05D
-                };
-            this.Controls.Add(this._gleeGraphViewer);
-        }
-
-        /// <summary>
-        /// The initialize graph.
-        /// </summary>
-        private void InitializeGraph()
-        {
-            this._graphPanel = new Panel
-                {
-                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
-                    Location = new Point(195, 16), 
-                    Name = "graphPanel", 
-                    Size = new Size(this.Width - 220, this.Height - 65), 
-                    AutoScroll = true
-                };
-            this.Controls.Add(this._graphPanel);
-        }
-
-        /// <summary>
-        /// The initialize tree view.
-        /// </summary>
-        private void InitializeTreeView()
-        {
-            this._treeViewCreate = new TreeView
-                {
-                    Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right, 
-                    Location = new Point(195, 16), 
-                    Name = "treeViewCreate", 
-                    Size = new Size(this.Width - 220, this.Height - 65), 
-                };
-            this.Controls.Add(this._treeViewCreate);
+            this.gleeGraphViewer.Graph = this.gleeGraph;
         }
 
         /// <summary>
@@ -816,21 +946,19 @@ namespace ForRest
                         ltr = true;
                     }
 
-                    var uce = new UserControlEdge(ltr);
-                    uce.Location = e.Location;
-                    uce.Size = e.Size;
-                    this._graphPanel.Controls.Add(uce);
+                    var uce = new UserControlEdge(ltr) { Location = e.Location, Size = e.Size };
+                    this.graphPanel.Controls.Add(uce);
                     notNullChildrenIndex++;
 
                     // Draw child
                     if (drawChild == -1)
                     {
-                        NextControls(r, blank, node.Neighbors[j]);
+                        this.NextControls(r, blank, node.Neighbors[j]);
                     }
                 }
             }
 
-            this._graphPanel.Controls.Add(ucn);
+            this.graphPanel.Controls.Add(ucn);
         }
 
         /// <summary>
@@ -965,10 +1093,8 @@ namespace ForRest
                         ltr = true;
                     }
 
-                    var uce = new UserControlEdge(ltr);
-                    uce.Location = e.Location;
-                    uce.Size = e.Size;
-                    this._graphPanel.Controls.Add(uce);
+                    var uce = new UserControlEdge(ltr) { Location = e.Location, Size = e.Size };
+                    this.graphPanel.Controls.Add(uce);
                     notNullChildrenIndex++;
 
                     // Draw child
@@ -979,7 +1105,7 @@ namespace ForRest
                 }
             }
 
-            this._graphPanel.Controls.Add(ucn);
+            this.graphPanel.Controls.Add(ucn);
         }
 
         /// <summary>
@@ -1008,7 +1134,7 @@ namespace ForRest
                     }
 
                     string childHashCode = node.Neighbors[j].GetHashCode().ToString();
-                    Node child = this._gleeGraph.FindNode(childHashCode);
+                    Node child = this.gleeGraph.FindNode(childHashCode);
                     if (child == null)
                     {
                         string childText = string.Empty;
@@ -1022,7 +1148,7 @@ namespace ForRest
                             childText += node.Neighbors[j].Values[i].ToString();
                         }
 
-                        child = this._gleeGraph.AddNode(childHashCode);
+                        child = this.gleeGraph.AddNode(childHashCode);
                         child.Attr.Label = childText;
                         child.Attr.Color = new Microsoft.Glee.Drawing.Color(
                             node.Neighbors[j].NodeColor.A, 
@@ -1036,7 +1162,7 @@ namespace ForRest
                     }
 
                     // Draw edge
-                    this._gleeGraph.AddEdge(parentHashCode, childHashCode);
+                    this.gleeGraph.AddEdge(parentHashCode, childHashCode);
                 }
 
                 for (int k = 0; k < node.Neighbors.Count; k++)
@@ -1075,7 +1201,7 @@ namespace ForRest
                     }
 
                     string childHashCode = node.Neighbors[j].GetHashCode().ToString();
-                    Node child = this._gleeGraph.FindNode(childHashCode);
+                    Node child = this.gleeGraph.FindNode(childHashCode);
                     if (child == null)
                     {
                         string childText = string.Empty;
@@ -1089,7 +1215,7 @@ namespace ForRest
                             childText += node.Neighbors[j].Values[i];
                         }
 
-                        child = this._gleeGraph.AddNode(childHashCode);
+                        child = this.gleeGraph.AddNode(childHashCode);
                         child.Attr.Label = childText;
                         child.Attr.Color = new Microsoft.Glee.Drawing.Color(
                             node.Neighbors[j].NodeColor.A, 
@@ -1103,7 +1229,7 @@ namespace ForRest
                     }
 
                     // Draw edge
-                    this._gleeGraph.AddEdge(parentHashCode, childHashCode);
+                    this.gleeGraph.AddEdge(parentHashCode, childHashCode);
                 }
 
                 for (int k = 0; k < node.Neighbors.Count; k++)
@@ -1113,114 +1239,6 @@ namespace ForRest
                         this.NextGleeNodes(node.Neighbors[k]);
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// The show tree.
-        /// </summary>
-        private void ShowTree()
-        {
-            switch (this.GraphMode)
-            {
-                case 0:
-                    this.ShowTreeView();
-                    break;
-                case 1:
-                    this.DrawGraph();
-                    break;
-                case 2:
-                    this.DrawGleeGraph();
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// The show tree view.
-        /// </summary>
-        private void ShowTreeView()
-        {
-            this._treeViewCreate.Nodes.Clear();
-            if (this.comboBoxSelectTree.SelectedItem == null)
-            {
-                return;
-            }
-
-            var treeObject = (TreeObject)this.comboBoxSelectTree.SelectedItem;
-            if (treeObject.Type.Equals("text"))
-            {
-                ITree<string> iTree = treeObject.TextTree;
-                TreeNode tn;
-                if (iTree.Root == null)
-                {
-                    return;
-                }
-
-                string print = iTree.Root.NodeInfo;
-                for (int i = 0; i < iTree.Root.Values.Count; i++)
-                {
-                    print += iTree.Root.Values[i] + " ";
-                }
-
-                if (NextLevel(iTree.Root) == null)
-                {
-                    tn = new TreeNode(print);
-                }
-                else
-                {
-                    tn = new TreeNode(print, NextLevel(iTree.Root));
-                }
-
-                this._treeViewCreate.Nodes.Add(tn);
-                this._treeViewCreate.ExpandAll();
-            }
-
-            if (treeObject.Type.Equals("numeric"))
-            {
-                ITree<double> iTree = treeObject.NumericTree;
-                TreeNode tn;
-                if (iTree.Root == null)
-                {
-                    return;
-                }
-
-                string print = iTree.Root.NodeInfo;
-                for (int i = 0; i < iTree.Root.Values.Count; i++)
-                {
-                    print += iTree.Root.Values[i] + " ";
-                }
-
-                if (NextLevel(iTree.Root) == null)
-                {
-                    tn = new TreeNode(print);
-                }
-                else
-                {
-                    tn = new TreeNode(print, NextLevel(iTree.Root));
-                }
-
-                this._treeViewCreate.Nodes.Add(tn);
-                this._treeViewCreate.ExpandAll();
-            }
-        }
-
-        /// <summary>
-        /// The verify layout.
-        /// </summary>
-        private void VerifyLayout()
-        {
-            this.ShowTree();
-            if (this.comboBoxSelectTree.SelectedItem == null)
-            {
-                this.btnRemoveTree.Enabled = false;
-                this.btnAddNode.Enabled = false;
-                this.btnRemoveNode.Enabled = false;
-            }
-            else
-            {
-                this.btnRemoveTree.Enabled = true;
-                this.btnAddNode.Enabled = true;
-                this.btnRemoveNode.Enabled = true;
             }
         }
 
