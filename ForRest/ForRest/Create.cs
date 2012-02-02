@@ -734,13 +734,13 @@ namespace ForRest
             {
                 ITree<string> iTree = treeObject.TextTree;
                 var rootRectangle = new Rectangle(5, 5, this.graphPanel.Width - 27, 24);
-                NextControls(rootRectangle, 0, iTree.Root);
+                this.NextControls(rootRectangle, 0, iTree.Root);
             }
             else if (treeObject.Type.Equals("numeric"))
             {
                 ITree<double> iTree = treeObject.NumericTree;
                 var rootRectangle = new Rectangle(5, 5, this.graphPanel.Width - 27, 24);
-                NextControls(rootRectangle, 0, iTree.Root);
+                this.NextControls(rootRectangle, 0, iTree.Root);
             }
         }
         
@@ -807,7 +807,7 @@ namespace ForRest
                 root.Attr.Label = rootText;
                 root.Attr.Color = new Microsoft.Glee.Drawing.Color(
                     iTreeRoot.NodeColor.A, iTreeRoot.NodeColor.R, iTreeRoot.NodeColor.G, iTreeRoot.NodeColor.B);
-                NextGleeNodes(iTreeRoot);
+                this.NextGleeNodes(iTreeRoot);
             }
 
             this.gleeGraphViewer.Graph = this.gleeGraph;
