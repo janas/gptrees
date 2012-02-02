@@ -42,9 +42,9 @@ namespace ForRest.Provider.BLL
         /// The data.
         /// </param>
         /// <returns>
-        /// Returns list of initigers as a path to searched node, null otherwise.
+        /// Returns list of initigers as a path to searched node and number of visited nodes.
         /// </returns>
-        public abstract List<int> Contains(T data);
+        public abstract SearchResult Contains(T data);
 
         /// <summary>
         /// The add.

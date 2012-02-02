@@ -121,29 +121,32 @@ namespace ForRest._234Tree
         /// </param>
         /// <returns>
         /// </returns>
-        public override List<int> Contains(T data)
+        public override SearchResult Contains(T data)
         {
-            var path = new List<int>();
+            SearchResult searchResult;
+            searchResult.searchPath = new List<int>();
+            searchResult.nodesVisited = 0;
             _234TreeNode<T> current = this._root;
             while (current != null)
             {
+                searchResult.nodesVisited++;
                 for (int i = 0; i < current.Values.Count; i++)
                 {
                     int result = this._comparer.Compare(current.Values[i], data);
                     if (result == 0)
                     {
-                        return path;
+                        return searchResult;
                     }
 
                     if (result > 0)
                     {
                         if (current.Neighbors == null)
                         {
-                            return null;
+                            searchResult.searchPath = null;
+                            return searchResult;
                         }
-
                         current = (_234TreeNode<T>)current.Neighbors[i];
-                        path.Add(i);
+                        searchResult.searchPath.Add(i);
                         break;
                     }
 
@@ -151,17 +154,18 @@ namespace ForRest._234Tree
                     {
                         if (current.Neighbors == null)
                         {
-                            return null;
+                            searchResult.searchPath = null;
+                            return searchResult;
                         }
 
                         current = (_234TreeNode<T>)current.Neighbors[i + 1];
-                        path.Add(i + 1);
+                        searchResult.searchPath.Add(i + 1);
                         break;
                     }
                 }
             }
-
-            return null;
+            searchResult.searchPath = null;
+            return searchResult;
         }
 
         /// <summary>
