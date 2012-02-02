@@ -155,7 +155,7 @@ namespace ForRest.Provider
             {
                 try
                 {
-                    Assembly assembly = Assembly.LoadFile(file);
+                    var assembly = Assembly.LoadFile(file);
                     foreach (Type type in assembly.GetTypes())
                     {
                         if (!type.IsClass || type.IsNotPublic)

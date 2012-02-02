@@ -394,7 +394,7 @@ namespace ForRest
             this.ShowTree(ref result);
             this.btnSearch.Enabled = this.comboBoxSelectTree.SelectedItem != null;
         }
-        
+
         /// <summary>
         /// The background worker search do work.
         /// </summary>
@@ -440,10 +440,10 @@ namespace ForRest
         private void BackgroundWorkerSearchProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var progress = (string[])e.UserState;
-            labelTime.ResetText();
-            labelTime.Text = progress[0];
-            labelNodes.ResetText();
-            labelNodes.Text = progress[1];
+            this.labelTime.ResetText();
+            this.labelTime.Text = progress[0];
+            this.labelNodes.ResetText();
+            this.labelNodes.Text = progress[1];
         }
 
         /// <summary>
@@ -639,6 +639,7 @@ namespace ForRest
                 {
                     tn = new TreeNode(print, NextLevel(iTree.Root));
                 }
+
                 this.treeViewCreate.Nodes.Add(tn);
                 this.treeViewCreate.ExpandAll();
             }
@@ -653,7 +654,7 @@ namespace ForRest
         private void DrawGraph(ref List<int> result)
         {
             this.graphPanel.Controls.Clear();
-            var treeObject = comboBoxSelectTree.SelectedItem as TreeObject;
+            var treeObject = this.comboBoxSelectTree.SelectedItem as TreeObject;
             if (treeObject != null && treeObject.Type.Equals("text"))
             {
                 ITree<string> iTree = treeObject.TextTree;
@@ -1154,13 +1155,13 @@ namespace ForRest
                     {
                         if (result != null && result.Count > 0 && result[0] == j)
                         {
-                            NextControls(r, blank, node.Neighbors[j], ref result, j);
+                            this.NextControls(r, blank, node.Neighbors[j], ref result, j);
                         }
                         else
                         {
                             // Dumb C#... I have to pass it this way
                             List<int> nullResult = null;
-                            NextControls(r, blank, node.Neighbors[j], ref nullResult, j);
+                            this.NextControls(r, blank, node.Neighbors[j], ref nullResult, j);
                         }
                     }
                     else
