@@ -91,6 +91,8 @@
     <Compile Include="BatchProcess.Designer.cs">
       <DependentUpon>BatchProcess.cs</DependentUpon>
     </Compile>
+    <Compile Include="BLL\SearchPerformer.cs" />
+    <Compile Include="BLL\TreeBuilder.cs" />
     <Compile Include="Create.cs">
       <SubType>Form</SubType>
     </Compile>
