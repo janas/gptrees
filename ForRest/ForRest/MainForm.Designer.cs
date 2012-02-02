@@ -36,6 +36,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gLEEGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,6 +117,7 @@
             // 
             this.viewToolStripMenuItem.CheckOnClick = true;
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.noGraphToolStripMenuItem,
             this.treeViewToolStripMenuItem,
             this.graphToolStripMenuItem,
             this.gLEEGraphToolStripMenuItem});
@@ -123,11 +125,19 @@
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "&View";
             // 
+            // noGraphToolStripMenuItem
+            // 
+            this.noGraphToolStripMenuItem.Checked = true;
+            this.noGraphToolStripMenuItem.CheckOnClick = true;
+            this.noGraphToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.noGraphToolStripMenuItem.Name = "noGraphToolStripMenuItem";
+            this.noGraphToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.noGraphToolStripMenuItem.Text = "&No Graph";
+            this.noGraphToolStripMenuItem.Click += new System.EventHandler(this.NoGraphToolStripMenuItemClick);
+            // 
             // treeViewToolStripMenuItem
             // 
-            this.treeViewToolStripMenuItem.Checked = true;
             this.treeViewToolStripMenuItem.CheckOnClick = true;
-            this.treeViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.treeViewToolStripMenuItem.Name = "treeViewToolStripMenuItem";
             this.treeViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.treeViewToolStripMenuItem.Text = "&Tree View";
@@ -380,5 +390,6 @@
         private System.Windows.Forms.ToolStripMenuItem treeViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem graphToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gLEEGraphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noGraphToolStripMenuItem;
     }
 }

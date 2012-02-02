@@ -26,44 +26,44 @@ namespace ForRest
         public int Mode;
 
         /// <summary>
-        /// The _provider.
+        /// The provider.
         /// </summary>
-        private readonly Provider.Provider _provider = new Provider.Provider();
+        private readonly Provider.Provider provider = new Provider.Provider();
 
         /// <summary>
-        /// The _batch process.
+        /// The batch process.
         /// </summary>
-        private BatchProcess _batchProcess;
+        private BatchProcess batchProcess;
 
         /// <summary>
-        /// The _batch process state.
+        /// The batch process state.
         /// </summary>
-        private int _batchProcessState;
+        private int batchProcessState;
 
         /// <summary>
-        /// The _create.
+        /// The create.
         /// </summary>
-        private Create _create;
+        private Create create;
 
         /// <summary>
-        /// The _create state.
+        /// The create state.
         /// </summary>
-        private int _createState;
+        private int createState;
 
         /// <summary>
-        /// The _graph mode.
+        /// The graph mode.
         /// </summary>
-        private int _graphMode;
+        private int graphMode;
 
         /// <summary>
-        /// The _search.
+        /// The search.
         /// </summary>
-        private Search _search;
+        private Search search;
 
         /// <summary>
-        /// The _search state.
+        /// The search state.
         /// </summary>
-        private int _searchState;
+        private int searchState;
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace ForRest
         public MainForm(bool isGleeEnabled)
         {
             this.InitializeComponent();
-            this._provider.CheckDirectoryExists(Application.ExecutablePath);
+            this.provider.CheckDirectoryExists(Application.ExecutablePath);
             this.EnableGleeMode(isGleeEnabled);
         }
 
@@ -91,7 +91,7 @@ namespace ForRest
         /// </summary>
         public void BatchProcessClosing()
         {
-            this._batchProcessState = 0;
+            this.batchProcessState = 0;
             this.batchProcessToolStripMenuItem.Checked = false;
         }
 
@@ -100,7 +100,7 @@ namespace ForRest
         /// </summary>
         public void CreateClosing()
         {
-            this._createState = 0;
+            this.createState = 0;
             this.createToolStripMenuItem.Checked = false;
         }
 
@@ -109,7 +109,7 @@ namespace ForRest
         /// </summary>
         public void SearchClosing()
         {
-            this._searchState = 0;
+            this.searchState = 0;
             this.searchToolStripMenuItem.Checked = false;
         }
 
@@ -143,42 +143,42 @@ namespace ForRest
         /// </param>
         private void BtnBatchProcessClick(object sender, EventArgs e)
         {
-            if (this._batchProcessState == 0)
+            if (this.batchProcessState == 0)
             {
-                if (this._batchProcess != null && !this._batchProcess.IsDisposed)
+                if (this.batchProcess != null && !this.batchProcess.IsDisposed)
                 {
                     return;
                 }
 
-                this._batchProcess = new BatchProcess(this._provider)
+                this.batchProcess = new BatchProcess(this.provider)
                     {
-                       MdiParent = this, WindowState = FormWindowState.Maximized 
+                        MdiParent = this, WindowState = FormWindowState.Maximized
                     };
-                this._batchProcess.Show();
+                this.batchProcess.Show();
                 this.ActivateMdiChild(null);
-                this.ActivateMdiChild(this._batchProcess);
-                this._batchProcess.BringToFront();
-                this._batchProcessState = 1;
+                this.ActivateMdiChild(this.batchProcess);
+                this.batchProcess.BringToFront();
+                this.batchProcessState = 1;
                 this.batchProcessToolStripMenuItem.Checked = true;
-                if (this._create != null && (this._create != null || !this._create.IsDisposed))
+                if (this.create != null && (this.create != null || !this.create.IsDisposed))
                 {
-                    this._create.Close();
+                    this.create.Close();
                 }
 
-                this._createState = 0;
+                this.createState = 0;
                 this.createToolStripMenuItem.Checked = false;
-                if (this._search != null && (this._search != null || !this._search.IsDisposed))
+                if (this.search != null && (this.search != null || !this.search.IsDisposed))
                 {
-                    this._search.Close();
+                    this.search.Close();
                 }
 
-                this._searchState = 0;
+                this.searchState = 0;
                 this.searchToolStripMenuItem.Checked = false;
             }
             else
             {
-                this._batchProcess.Close();
-                this._batchProcessState = 0;
+                this.batchProcess.Close();
+                this.batchProcessState = 0;
                 this.batchProcessToolStripMenuItem.Checked = false;
             }
         }
@@ -194,42 +194,42 @@ namespace ForRest
         /// </param>
         private void BtnCreateClick(object sender, EventArgs e)
         {
-            if (this._createState == 0)
+            if (this.createState == 0)
             {
-                if (this._create != null && !this._create.IsDisposed)
+                if (this.create != null && !this.create.IsDisposed)
                 {
                     return;
                 }
 
-                this._create = new Create(this._provider, this.Mode, this._graphMode)
+                this.create = new Create(this.provider, this.Mode, this.graphMode)
                     {
-                       MdiParent = this, WindowState = FormWindowState.Maximized 
+                        MdiParent = this, WindowState = FormWindowState.Maximized
                     };
-                this._create.Show();
+                this.create.Show();
                 this.ActivateMdiChild(null);
-                this.ActivateMdiChild(this._create);
-                this._create.BringToFront();
-                this._createState = 1;
+                this.ActivateMdiChild(this.create);
+                this.create.BringToFront();
+                this.createState = 1;
                 this.createToolStripMenuItem.Checked = true;
-                if (this._search != null && (this._search != null || !this._search.IsDisposed))
+                if (this.search != null && (this.search != null || !this.search.IsDisposed))
                 {
-                    this._search.Close();
+                    this.search.Close();
                 }
 
-                this._searchState = 0;
+                this.searchState = 0;
                 this.searchToolStripMenuItem.Checked = false;
-                if (this._batchProcess != null && (this._batchProcess != null || !this._batchProcess.IsDisposed))
+                if (this.batchProcess != null && (this.batchProcess != null || !this.batchProcess.IsDisposed))
                 {
-                    this._batchProcess.Close();
+                    this.batchProcess.Close();
                 }
 
-                this._batchProcessState = 0;
+                this.batchProcessState = 0;
                 this.batchProcessToolStripMenuItem.Checked = false;
             }
             else
             {
-                this._create.Close();
-                this._createState = 0;
+                this.create.Close();
+                this.createState = 0;
                 this.createToolStripMenuItem.Checked = false;
             }
         }
@@ -245,7 +245,7 @@ namespace ForRest
         /// </param>
         private void BtnExportClick(object sender, EventArgs e)
         {
-            if (this._provider.PerformanceSets.Count > 0)
+            if (this.provider.PerformanceSets.Count > 0)
             {
                 this.saveFileDialog.Filter = "CSV Files (*.csv)|*.csv";
                 this.saveFileDialog.FilterIndex = 1;
@@ -254,15 +254,15 @@ namespace ForRest
                 DialogResult result = this.saveFileDialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    this._provider.WriteResults(this._provider.PerformanceSets, this.saveFileDialog.FileName);
+                    this.provider.WriteResults(this.provider.PerformanceSets, this.saveFileDialog.FileName);
                 }
             }
             else
             {
                 MessageBox.Show(
-                    "None tree has been processed. Can not save the results. Proceed with tree first!", 
-                    "Error!", 
-                    MessageBoxButtons.OK, 
+                    "None tree has been processed. Can not save the results. Proceed with tree first!",
+                    "Error!",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
@@ -279,7 +279,7 @@ namespace ForRest
         private void BtnLoadedModulesClick(object sender, EventArgs e)
         {
             string applicationPath = Application.ExecutablePath;
-            List<string[]> pluginList = this._provider.GetPluginDescription(applicationPath);
+            List<string[]> pluginList = this.provider.GetPluginDescription(applicationPath);
             var loadedModules = new LoadedModules();
             loadedModules.GetData(pluginList);
             loadedModules.ShowDialog();
@@ -296,15 +296,15 @@ namespace ForRest
         /// </param>
         private void BtnOpenClick(object sender, EventArgs e)
         {
-            var openDialog = new OpenDialog(this._provider) { Owner = this };
+            var openDialog = new OpenDialog(this.provider) { Owner = this };
             openDialog.ShowDialog();
             if (this.ActiveMdiChild == null || this.ActiveMdiChild.IsDisposed || this.ActiveMdiChild.Name != "Create")
             {
                 return;
             }
 
-            var create = (Create)this.ActiveMdiChild;
-            create.Mode = this.Mode;
+            var activeMdiChild = (Create)this.ActiveMdiChild;
+            activeMdiChild.Mode = this.Mode;
         }
 
         /// <summary>
@@ -318,42 +318,42 @@ namespace ForRest
         /// </param>
         private void BtnSearchClick(object sender, EventArgs e)
         {
-            if (this._searchState == 0)
+            if (this.searchState == 0)
             {
-                if (this._search != null && !this._search.IsDisposed)
+                if (this.search != null && !this.search.IsDisposed)
                 {
                     return;
                 }
 
-                this._search = new Search(this._provider, this._graphMode)
+                this.search = new Search(this.provider, this.graphMode)
                     {
-                       MdiParent = this, WindowState = FormWindowState.Maximized 
+                        MdiParent = this, WindowState = FormWindowState.Maximized
                     };
-                this._search.Show();
+                this.search.Show();
                 this.ActivateMdiChild(null);
-                this.ActivateMdiChild(this._search);
-                this._search.BringToFront();
-                this._searchState = 1;
+                this.ActivateMdiChild(this.search);
+                this.search.BringToFront();
+                this.searchState = 1;
                 this.searchToolStripMenuItem.Checked = true;
-                if (this._create != null && (this._create != null || !this._create.IsDisposed))
+                if (this.create != null && (this.create != null || !this.create.IsDisposed))
                 {
-                    this._create.Close();
+                    this.create.Close();
                 }
 
-                this._createState = 0;
+                this.createState = 0;
                 this.createToolStripMenuItem.Checked = false;
-                if (this._batchProcess != null && (this._batchProcess != null || !this._batchProcess.IsDisposed))
+                if (this.batchProcess != null && (this.batchProcess != null || !this.batchProcess.IsDisposed))
                 {
-                    this._batchProcess.Close();
+                    this.batchProcess.Close();
                 }
 
-                this._batchProcessState = 0;
+                this.batchProcessState = 0;
                 this.batchProcessToolStripMenuItem.Checked = false;
             }
             else
             {
-                this._search.Close();
-                this._searchState = 0;
+                this.search.Close();
+                this.searchState = 0;
                 this.searchToolStripMenuItem.Checked = false;
             }
         }
@@ -366,15 +366,7 @@ namespace ForRest
         /// </param>
         private void EnableGleeMode(bool isGleeEnabled)
         {
-            switch (isGleeEnabled)
-            {
-                case true:
-                    this.gLEEGraphToolStripMenuItem.Visible = true;
-                    break;
-                default:
-                    this.gLEEGraphToolStripMenuItem.Visible = false;
-                    break;
-            }
+            this.gLEEGraphToolStripMenuItem.Visible = isGleeEnabled;
         }
 
         /// <summary>
@@ -392,7 +384,7 @@ namespace ForRest
         }
 
         /// <summary>
-        /// The g lee graph tool strip menu item click.
+        /// No graph view tool strip menu item click.
         /// </summary>
         /// <param name="sender">
         /// The sender.
@@ -400,86 +392,42 @@ namespace ForRest
         /// <param name="e">
         /// The e.
         /// </param>
-        private void GLeeGraphToolStripMenuItemClick(object sender, EventArgs e)
+        private void NoGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (this._graphMode == 2)
+            if (this.graphMode == 0)
             {
-                this.gLEEGraphToolStripMenuItem.Checked = true;
+                this.noGraphToolStripMenuItem.Checked = true;
                 return;
             }
 
-            if (this.gLEEGraphToolStripMenuItem.Checked)
+            if (this.noGraphToolStripMenuItem.Checked)
             {
-                this._graphMode = 2;
-                this.graphToolStripMenuItem.Checked = false;
-                this.treeViewToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                this.gLEEGraphToolStripMenuItem.Checked = true;
+                this.graphMode = 0;
                 this.treeViewToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
-                this._graphMode = 2;
-            }
-
-            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
-            {
-                var create = (Create)this.ActiveMdiChild;
-                create.GraphMode = this._graphMode;
-                create.ChangeGraphMode();
-            }
-
-            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
-            {
-                var search = (Search)this.ActiveMdiChild;
-                search.GraphMode = this._graphMode;
-                search.ChangeGraphMode();
-            }
-        }
-
-        /// <summary>
-        /// The graph tool strip menu item click.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void GraphToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (this._graphMode == 1)
-            {
-                this.graphToolStripMenuItem.Checked = true;
-                return;
-            }
-
-            if (this.graphToolStripMenuItem.Checked)
-            {
-                this._graphMode = 1;
-                this.treeViewToolStripMenuItem.Checked = false;
                 this.gLEEGraphToolStripMenuItem.Checked = false;
             }
             else
             {
-                this.graphToolStripMenuItem.Checked = true;
+                this.noGraphToolStripMenuItem.Checked = true;
                 this.treeViewToolStripMenuItem.Checked = false;
+                this.graphToolStripMenuItem.Checked = false;
                 this.gLEEGraphToolStripMenuItem.Checked = false;
-                this._graphMode = 1;
+                this.graphMode = 0;
             }
 
             if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
             {
-                var create = (Create)this.ActiveMdiChild;
-                create.GraphMode = this._graphMode;
-                create.ChangeGraphMode();
+                var activeMdiChild = (Create)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
             }
 
             if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
             {
-                var search = (Search)this.ActiveMdiChild;
-                search.GraphMode = this._graphMode;
-                search.ChangeGraphMode();
+                var activeMdiChild = (Search)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
             }
         }
 
@@ -494,7 +442,7 @@ namespace ForRest
         /// </param>
         private void TreeViewToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (this._graphMode == 0)
+            if (this.graphMode == 1)
             {
                 this.treeViewToolStripMenuItem.Checked = true;
                 return;
@@ -502,30 +450,128 @@ namespace ForRest
 
             if (this.treeViewToolStripMenuItem.Checked)
             {
-                this._graphMode = 0;
+                this.graphMode = 1;
+                this.noGraphToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
                 this.gLEEGraphToolStripMenuItem.Checked = false;
             }
             else
             {
                 this.treeViewToolStripMenuItem.Checked = true;
+                this.noGraphToolStripMenuItem.Checked = false;
                 this.graphToolStripMenuItem.Checked = false;
                 this.gLEEGraphToolStripMenuItem.Checked = false;
-                this._graphMode = 0;
+                this.graphMode = 1;
             }
 
             if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
             {
-                var create = (Create)this.ActiveMdiChild;
-                create.GraphMode = this._graphMode;
-                create.ChangeGraphMode();
+                var activeMdiChild = (Create)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
             }
 
             if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
             {
-                var search = (Search)this.ActiveMdiChild;
-                search.GraphMode = this._graphMode;
-                search.ChangeGraphMode();
+                var activeMdiChild = (Search)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
+            }
+        }
+
+        /// <summary>
+        /// The graph tool strip menu item click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void GraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.graphMode == 2)
+            {
+                this.graphToolStripMenuItem.Checked = true;
+                return;
+            }
+
+            if (this.graphToolStripMenuItem.Checked)
+            {
+                this.graphMode = 2;
+                this.noGraphToolStripMenuItem.Checked = false;
+                this.treeViewToolStripMenuItem.Checked = false;
+                this.gLEEGraphToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this.graphToolStripMenuItem.Checked = true;
+                this.noGraphToolStripMenuItem.Checked = false;
+                this.treeViewToolStripMenuItem.Checked = false;
+                this.gLEEGraphToolStripMenuItem.Checked = false;
+                this.graphMode = 2;
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
+            {
+                var activeMdiChild = (Create)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
+            {
+                var activeMdiChild = (Search)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
+            }
+        }
+
+        /// <summary>
+        /// The g lee graph tool strip menu item click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void GLeeGraphToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.graphMode == 3)
+            {
+                this.gLEEGraphToolStripMenuItem.Checked = true;
+                return;
+            }
+
+            if (this.gLEEGraphToolStripMenuItem.Checked)
+            {
+                this.graphMode = 3;
+                this.noGraphToolStripMenuItem.Checked = false;
+                this.graphToolStripMenuItem.Checked = false;
+                this.treeViewToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                this.gLEEGraphToolStripMenuItem.Checked = true;
+                this.noGraphToolStripMenuItem.Checked = false;
+                this.treeViewToolStripMenuItem.Checked = false;
+                this.graphToolStripMenuItem.Checked = false;
+                this.graphMode = 3;
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Create")
+            {
+                var activeMdiChild = (Create)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
+            }
+
+            if (this.ActiveMdiChild != null && !this.ActiveMdiChild.IsDisposed && this.ActiveMdiChild.Name == "Search")
+            {
+                var activeMdiChild = (Search)this.ActiveMdiChild;
+                activeMdiChild.GraphMode = this.graphMode;
+                activeMdiChild.ChangeGraphMode();
             }
         }
 
