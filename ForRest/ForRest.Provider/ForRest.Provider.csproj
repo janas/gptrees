@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\SearchResult.cs" />
     <Compile Include="BLL\ITree.cs" />
     <Compile Include="BLL\ITreeFactory.cs" />
     <Compile Include="BLL\Node.cs" />

@@ -174,6 +174,7 @@ namespace ForRest
                 this.EnableExportButton();
                 this.listBoxSearchItems.Enabled = true;
                 this.btnBatchSearch.Enabled = true;
+                this.progressBarBatchSearch.Value = 0;
             }
         }
 

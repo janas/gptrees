@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using ForRest._23Tree;
+using ForRest.Provider.BLL;
 
 namespace UnitTesting
 {
@@ -76,9 +77,8 @@ namespace UnitTesting
             target.Add(1);
             target.Add(2);
             target.Add(data);
-            List<int> actual;
-            actual = target.Contains(data);
-            Assert.IsNotNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -116,9 +116,8 @@ namespace UnitTesting
             target.Add(1);
             target.Add(2);
             target.Add(data);
-            List<int> actual;
-            actual = target.Contains(data);
-            Assert.IsNotNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -138,8 +137,8 @@ namespace UnitTesting
             target.Add(2);
             target.Add(data);
             target.Remove(data);
-            List<int> actual = target.Contains(data);
-            Assert.IsNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -158,9 +157,8 @@ namespace UnitTesting
             target.Add(1);
             target.Add(2);
             target.Add(data);
-            List<int> actual;
-            actual = target.Contains(data);
-            Assert.IsNotNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -198,9 +196,8 @@ namespace UnitTesting
             target.Add(1);
             target.Add(2);
             target.Add(data);
-            List<int> actual;
-            actual = target.Contains(data);
-            Assert.IsNotNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]
@@ -220,8 +217,8 @@ namespace UnitTesting
             target.Add(2);
             target.Add(data);
             target.Remove(data);
-            List<int> actual = target.Contains(data);
-            Assert.IsNull(actual);
+            SearchResult actual = target.Contains(data);
+            Assert.IsNotNull(actual.searchPath);
         }
 
         [TestMethod()]

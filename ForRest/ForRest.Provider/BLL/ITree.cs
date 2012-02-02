@@ -40,9 +40,10 @@ namespace ForRest.Provider.BLL
         /// The data.
         /// </param>
         /// <returns>
-        /// List of intigers as a sequence in which one has to traverse the tree to find the value.
+        /// SearchResult struct as a sequence in which one has to traverse the tree to find the value
+        /// and number of visited nodes.
         /// </returns>
-        List<int> Contains(T data);
+        SearchResult Contains(T data);
 
         /// <summary>
         /// The add.
