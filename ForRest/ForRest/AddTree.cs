@@ -35,15 +35,15 @@ namespace ForRest
         private readonly bool @group;
 
         /// <summary>
-        ///   The mode.
-        /// </summary>
-        private readonly int mode;
-
-        /// <summary>
         ///   The provider.
         /// </summary>
         private readonly Provider.Provider provider;
 
+        /// <summary>
+        ///   The mode.
+        /// </summary>
+        private int mode;
+        
         /// <summary>
         ///   The group tree name.
         /// </summary>
@@ -603,6 +603,7 @@ namespace ForRest
         /// </param>
         private void ComboBoxDataTypeSelectedIndexChanged(object sender, EventArgs e)
         {
+            this.mode = comboBoxDataType.SelectedIndex;
             this.BtnAddEnableDisable();
         }
 
