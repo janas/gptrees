@@ -101,6 +101,10 @@ namespace ForRest.AVLTree
             {
                 return this._height;
             }
+            set
+            {
+                this._height = value;
+            }
         }
 
         /// <summary>
@@ -261,6 +265,20 @@ namespace ForRest.AVLTree
                 }
 
                 z.Parent = y;
+
+                if (b != null)
+                {
+                    b.UpdateHeight();
+                }
+                if (z != null)
+                {
+                    z.UpdateHeight();
+                }
+                if (y != null)
+                {
+                    y.UpdateHeight();
+                }
+
                 return true;
             }
 
@@ -295,6 +313,20 @@ namespace ForRest.AVLTree
                 }
 
                 z.Parent = y;
+
+                if (b != null)
+                {
+                    b.UpdateHeight();
+                }
+                if (z != null)
+                {
+                    z.UpdateHeight();
+                }
+                if (y != null)
+                {
+                    y.UpdateHeight();
+                }
+
                 return true;
             }
 
@@ -313,12 +345,12 @@ namespace ForRest.AVLTree
             int rightHeight = 0;
             if (this.Left != null)
             {
-                leftHeight = this.Left.UpdateHeight();
+                leftHeight = this.Left._height;
             }
 
             if (this.Right != null)
             {
-                rightHeight = this.Right.UpdateHeight();
+                rightHeight = this.Right._height;
             }
 
             if (rightHeight > leftHeight)
