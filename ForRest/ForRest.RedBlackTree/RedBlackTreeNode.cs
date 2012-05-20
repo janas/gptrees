@@ -150,6 +150,10 @@ namespace ForRest.RedBlackTree
             {
                 return this._maxHeight;
             }
+            set
+            {
+                this._maxHeight = value;
+            }
         }
 
         /// <summary>
@@ -160,6 +164,10 @@ namespace ForRest.RedBlackTree
             get
             {
                 return this._minHeight;
+            }
+            set
+            {
+                this._minHeight = value;
             }
         }
 
@@ -311,6 +319,22 @@ namespace ForRest.RedBlackTree
                     }
 
                     z.Parent = y;
+
+                    if (b != null)
+                    {
+                        b.UpdateMaxHeight();
+                        b.UpdateMinHeight();
+                    } 
+                    if (z != null)
+                    {
+                        z.UpdateMaxHeight();
+                        z.UpdateMinHeight();
+                    }
+                    if (y != null)
+                    {
+                        y.UpdateMaxHeight();
+                        y.UpdateMinHeight();
+                    }
                 }
 
                 return true;
@@ -350,6 +374,22 @@ namespace ForRest.RedBlackTree
                     }
 
                     z.Parent = y;
+
+                    if (b != null)
+                    {
+                        b.UpdateMaxHeight();
+                        b.UpdateMinHeight();
+                    }
+                    if (z != null)
+                    {
+                        z.UpdateMaxHeight();
+                        z.UpdateMinHeight();
+                    }
+                    if (y != null)
+                    {
+                        y.UpdateMaxHeight();
+                        y.UpdateMinHeight();
+                    }
                 }
 
                 return true;
@@ -370,12 +410,12 @@ namespace ForRest.RedBlackTree
             int rightHeight = 0;
             if (this.Left != null)
             {
-                leftHeight = this.Left.UpdateMaxHeight();
+                leftHeight = this.Left._maxHeight;
             }
 
             if (this.Right != null)
             {
-                rightHeight = this.Right.UpdateMaxHeight();
+                rightHeight = this.Right._maxHeight;
             }
 
             if (rightHeight > leftHeight)
@@ -402,12 +442,12 @@ namespace ForRest.RedBlackTree
             int rightHeight = 0;
             if (this.Left != null)
             {
-                leftHeight = this.Left.UpdateMinHeight();
+                leftHeight = this.Left._minHeight;
             }
 
             if (this.Right != null)
             {
-                rightHeight = this.Right.UpdateMinHeight();
+                rightHeight = this.Right._minHeight;
             }
 
             if (rightHeight > leftHeight)
