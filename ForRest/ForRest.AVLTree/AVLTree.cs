@@ -125,6 +125,7 @@ namespace ForRest.AVLTree
             }
 
             node.Parent = parent;
+
             while (this._root.Parent != null)
             {
                 this._root = (AVLTreeNode<T>)this._root.Parent;
